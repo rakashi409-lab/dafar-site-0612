@@ -1,0 +1,1671 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="大方设计 DAFAR DESIGN — 集品牌建设、设计研究、外观设计、结构设计、样机制作、模具加工、生产监理、品牌推广于一体的综合性专业设计公司。专注交通工具、医疗设备、消费电子、军工装备设计开发。">
+<meta name="keywords" content="大方设计,工业设计,品牌设计,交互设计,动画制作,武汉工业设计,DAFAR DESIGN">
+<title>大方设计 DAFAR DESIGN — 专注设计是我们不变的追求</title>
+<style>
+/* ============ 全局变量 & 复位 ============ */
+:root{
+  --red:#e60012;
+  --red-bright:#ff1f2d;
+  --red-deep:#b3000e;
+  --red-glow:rgba(230,0,18,.55);
+  --bg:#000000;
+  --bg-soft:#0c0608;
+  --bg-card:#141414;
+  --bg-card-2:#1c1c1c;
+  --text:#f5f5f5;
+  --text-dim:#9a9a9a;
+  --text-faint:#666;
+  --line:rgba(255,255,255,.08);
+  --radius:16px;
+  --shadow:0 20px 50px rgba(0,0,0,.5);
+  --ease-spring:cubic-bezier(.16,1,.3,1);
+  --ease-out:cubic-bezier(.22,.61,.36,1);
+  --maxw:1280px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{
+  font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB","Noto Sans SC",-apple-system,sans-serif;
+  background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+ul{list-style:none}
+.container{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+
+/* ============ 通用标题 ============ */
+.section{padding:110px 0;position:relative}
+.sec-head{text-align:center;margin-bottom:64px}
+.sec-head h2{
+  font-size:clamp(28px,4vw,44px);font-weight:800;line-height:1.2;
+  opacity:0;filter:blur(12px);letter-spacing:18px;transform:translateY(14px);
+  transition:opacity 1s var(--ease-out),filter 1s var(--ease-out),
+             letter-spacing 1.2s var(--ease-spring),transform 1s var(--ease-spring);
+}
+.sec-head.in h2{opacity:1;filter:blur(0);letter-spacing:2px;transform:none}
+.sec-head h2 em{
+  font-style:normal;color:transparent;
+  background:linear-gradient(110deg,#b3000e 0%,#ff1f2d 30%,#ffd6d9 48%,#ff5560 52%,#ff1f2d 70%,#b3000e 100%);
+  background-size:240% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  animation:shine 4.5s linear infinite;
+}
+@keyframes shine{to{background-position:-240% center}}
+.sec-head p{color:var(--text-dim);font-size:clamp(15px,1.6vw,19px);margin-top:14px;letter-spacing:3px;
+  opacity:0;transform:translateY(10px);transition:opacity .9s .28s var(--ease-out),transform .9s .28s var(--ease-out)}
+.sec-head.in p{opacity:1;transform:none}
+
+/* 红色按钮 */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  background:linear-gradient(135deg,var(--red-bright),var(--red-deep));
+  color:#fff;padding:13px 38px;border-radius:40px;font-size:15px;font-weight:600;
+  box-shadow:0 4px 14px rgba(230,0,18,.16);
+  transition:transform .35s var(--ease-spring),box-shadow .35s var(--ease-spring),filter .3s;
+  position:relative;overflow:hidden;
+}
+.btn::after{
+  content:"";position:absolute;top:0;left:-120%;width:60%;height:100%;
+  background:linear-gradient(120deg,transparent,rgba(255,255,255,.45),transparent);
+  transform:skewX(-20deg);transition:left .6s var(--ease-out);
+}
+.btn:hover{transform:translateY(-3px) scale(1.03);box-shadow:0 8px 22px rgba(230,0,18,.25);filter:brightness(1.06)}
+.btn:hover::after{left:130%}
+.btn-ghost{background:transparent;border:1px solid var(--red);box-shadow:none}
+
+/* ============ 导航 ============ */
+.nav{
+  position:fixed;top:0;left:0;width:100%;z-index:1000;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px 40px;transition:background .4s,backdrop-filter .4s,padding .4s,box-shadow .4s;
+}
+.nav.scrolled{
+  background:rgba(8,4,5,.85);backdrop-filter:blur(14px);padding:12px 40px;
+  box-shadow:0 4px 30px rgba(0,0,0,.6);border-bottom:1px solid var(--line);
+}
+.logo{display:flex;align-items:center;gap:10px}
+.logo img{height:46px;width:auto;display:block;transition:height .4s,filter .4s;filter:drop-shadow(0 2px 8px rgba(0,0,0,.5))}
+.nav.scrolled .logo img{height:40px}
+.nav-menu{display:flex;gap:36px}
+.nav-menu a{font-size:16px;font-weight:500;position:relative;padding:6px 0;color:#e8e8e8;transition:color .3s}
+.nav-menu a::after{
+  content:"";position:absolute;left:0;bottom:0;width:0;height:2px;
+  background:var(--red-bright);transition:width .35s var(--ease-out);
+}
+.nav-menu a:hover,.nav-menu a.active{color:var(--red-bright)}
+.nav-menu a:hover::after,.nav-menu a.active::after{width:100%}
+.nav-cta{padding:10px 30px;font-size:14px}
+.nav-toggle{display:none;flex-direction:column;gap:5px;padding:8px}
+.nav-toggle span{width:26px;height:2px;background:#fff;transition:.3s}
+
+/* ============ HERO ============ */
+.hero{
+  min-height:100vh;position:relative;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(160deg,#0c0405 0%,#070202 55%,#000 100%);
+  overflow:hidden;
+}
+/* Spline 3D 背景层 */
+.hero-bg{position:absolute;inset:0;overflow:hidden;z-index:0;pointer-events:none}
+.hero-bg .spline{
+  position:absolute;inset:0;width:100%;height:100%;border:0;pointer-events:none;
+  /* 把灰色场景染成主题红黑高级配色 */
+  filter:brightness(.72) contrast(1.12) sepia(.5) saturate(2.6) hue-rotate(-18deg);
+}
+/* ===== 等距工厂场景层（视觉位于 3D 流线下层）=====
+   lighten 混合：场景亮部从黑底中透出，Spline 亮色流线永远压在其上，形成"线条悬浮于厂景之上"的层次。
+   动效设计（克制、缓慢、不抢主体）：
+   ① 入场「显影」—— 大模糊 + 透明度缓慢褪去，似暗房照片显影浮现；
+   ② 常驻「呼吸漂移」—— 40s 超慢 Ken Burns 缩放游移，赋予静态图生命感；
+   ③ 周期「掠光」—— 每 12s 一道极淡红色斜光扫过厂房，呼应金属质感。
+   全程只动 transform/opacity（合成器动画），模糊仅入场一次性。 */
+.hero-factory{position:absolute;inset:0;pointer-events:none;mix-blend-mode:lighten;overflow:hidden;
+  opacity:0;filter:blur(16px);
+  animation:factoryIn 2.8s 1s cubic-bezier(.22,1,.36,1) forwards;
+  /* 四周羽化收边，使场景融入黑底而非生硬贴图 */
+  -webkit-mask:radial-gradient(120% 95% at 50% 46%,#000 55%,transparent 96%);
+          mask:radial-gradient(120% 95% at 50% 46%,#000 55%,transparent 96%);}
+.hero-factory img{width:100%;height:100%;object-fit:cover;object-position:50% 42%;
+  filter:brightness(1.18) saturate(1.12);
+  transform:scale(1.12);transform-origin:50% 45%;will-change:transform;
+  animation:factoryDrift 40s ease-in-out 1s infinite alternate;}
+.hero-factory::after{ /* 掠光：极淡红色斜向高光带，长间歇缓慢扫过 */
+  content:"";position:absolute;inset:-15%;pointer-events:none;
+  background:linear-gradient(112deg,transparent 40%,rgba(255,90,100,.12) 50%,rgba(255,180,186,.05) 54%,transparent 62%);
+  transform:translateX(-65%);
+  animation:factorySheen 12s ease-in-out 5s infinite;}
+@keyframes factoryIn{to{opacity:.88;filter:blur(0)}}
+@keyframes factoryDrift{
+  0%{transform:scale(1.12) translate(0,0)}
+  50%{transform:scale(1.18) translate(-1.4%,1.1%)}
+  100%{transform:scale(1.09) translate(1.4%,-.9%)}}
+@keyframes factorySheen{0%,58%{transform:translateX(-65%)}88%,100%{transform:translateX(65%)}}
+/* 叠一层红色，加强主题色（colorize 灰场景），延迟渐现避免闪红 */
+.spline-color{position:absolute;inset:0;pointer-events:none;mix-blend-mode:overlay;
+  background:radial-gradient(ellipse at 50% 45%,rgba(230,0,18,.22),rgba(120,4,12,.12) 55%,rgba(0,0,0,.25));
+  opacity:0;animation:fadeInRed .6s .35s ease forwards;}
+/* 叠加深色 + 红色渐隐，融入主题并保证可读性 */
+.hero-tint{position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse at 50% 42%,rgba(150,12,22,.10),transparent 55%),
+    radial-gradient(ellipse at 50% 100%,rgba(0,0,0,.7),transparent 60%),
+    linear-gradient(180deg,rgba(8,2,3,.55) 0%,rgba(8,2,3,.15) 30%,rgba(8,2,3,.25) 70%,#000 100%);
+  opacity:0;animation:fadeInRed .6s .35s ease forwards;}
+@keyframes fadeInRed{to{opacity:1}}
+/* 遮住右下角 Spline 水印，保持干净 */
+.spline-mask{position:absolute;right:0;bottom:0;width:190px;height:56px;z-index:2;pointer-events:none;
+  background:linear-gradient(135deg,transparent,#000 55%)}
+.hero::before{ /* 顶部渐隐保证导航可读 */
+  content:"";position:absolute;top:0;left:0;right:0;height:160px;
+  background:linear-gradient(to bottom,rgba(0,0,0,.75),transparent);z-index:2;
+}
+/* iOS 液态玻璃名片：白玻璃 + 内部红色弥散极光（对照新版设计稿） */
+.hero-card{
+  position:relative;z-index:5;width:min(880px,92vw);overflow:hidden;
+  background:linear-gradient(135deg,rgba(255,255,255,.94),rgba(255,255,255,.80) 50%,rgba(255,248,248,.88) 100%);
+  -webkit-backdrop-filter:blur(30px) saturate(1.3);
+  backdrop-filter:blur(30px) saturate(1.3); /* 30px 与 40px 肉眼几乎无差，但在 3D 背景上 GPU 开销低不少 */
+  border-radius:28px;padding:54px 60px;display:flex;gap:60px;align-items:stretch;
+  border:1px solid rgba(255,255,255,.75);
+  box-shadow:0 30px 80px rgba(0,0,0,.5),0 2px 8px rgba(0,0,0,.2),
+    inset 0 1px 0 rgba(255,255,255,.95),inset 0 0 30px rgba(255,255,255,.4);
+  color:#1a1a1a;transform:translateZ(0);
+  animation:cardIn .9s ease both;
+}
+/* 角落静态粉晕：呼应设计稿四角的淡粉色洇染 */
+.hero-card::before{
+  content:"";position:absolute;inset:0;border-radius:28px;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(120% 85% at 86% 4%,rgba(255,130,140,.20),transparent 50%),
+    radial-gradient(110% 90% at 4% 100%,rgba(255,150,158,.16),transparent 52%),
+    radial-gradient(80% 70% at 100% 90%,rgba(255,170,176,.12),transparent 55%);
+}
+/* iOS 对角镜面反光（左上玻璃高光） */
+.hero-card::after{
+  content:"";position:absolute;inset:0;border-radius:28px;pointer-events:none;z-index:1;
+  background:linear-gradient(132deg,rgba(255,255,255,.55) 0%,rgba(255,255,255,.12) 20%,transparent 42%);
+}
+/* 红色流体层：四团高斯模糊光斑各自横穿卡片游动（熔岩灯式流体动效）。
+   每团是独立合成层、内容静态、只动 transform/opacity —— 模糊结果被 GPU 缓存，逐帧零重绘。
+   translate 百分比相对光斑自身尺寸：±50%~140% ≈ 横穿小半张到大半张卡片，肉眼明显。 */
+.card-fluid{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden;border-radius:28px}
+.card-fluid i{position:absolute;border-radius:50%;will-change:transform,opacity;filter:blur(20px)}
+.card-fluid .f1{width:58%;aspect-ratio:1;left:38%;top:-22%;
+  background:radial-gradient(circle at 44% 44%,rgba(225,0,18,.58),rgba(255,80,92,.3) 48%,transparent 68%);
+  animation:fluidA 6s ease-in-out infinite alternate}
+.card-fluid .f2{width:50%;aspect-ratio:1;left:54%;top:36%;
+  background:radial-gradient(circle at 55% 50%,rgba(255,50,64,.48),rgba(255,120,130,.22) 52%,transparent 72%);
+  animation:fluidB 8s ease-in-out infinite alternate}
+.card-fluid .f3{width:44%;aspect-ratio:1;left:-12%;top:46%;
+  background:radial-gradient(circle at 50% 50%,rgba(255,130,140,.42),transparent 68%);
+  animation:fluidC 10s ease-in-out infinite alternate}
+.card-fluid .f4{width:24%;aspect-ratio:1;left:16%;top:2%;
+  background:radial-gradient(circle at 50% 50%,rgba(255,60,72,.45),transparent 68%);
+  animation:fluidD 4.5s ease-in-out infinite alternate}
+@keyframes fluidA{0%{transform:translate(0,0) scale(1)}45%{transform:translate(-75%,40%) scale(1.3)}100%{transform:translate(-25%,75%) scale(.8)}}
+@keyframes fluidB{0%{transform:translate(0,0) scale(1)}50%{transform:translate(-85%,-45%) scale(1.35)}100%{transform:translate(-125%,15%) scale(.95)}}
+@keyframes fluidC{0%{transform:translate(0,0) scale(1)}50%{transform:translate(80%,-40%) scale(1.25)}100%{transform:translate(125%,20%) scale(.9)}}
+@keyframes fluidD{0%{transform:translate(0,0) scale(1);opacity:.65}50%{transform:translate(190%,120%) scale(1.6);opacity:1}100%{transform:translate(60%,220%) scale(.75);opacity:.55}}
+@keyframes cardIn{from{opacity:0}to{opacity:1}}
+.hero-card.closed{display:none}
+/* 液态变形期间的轻量化外观：收掉 80px 大模糊阴影与装饰光层，逐帧重绘成本降到最低 */
+.hero-card.morphing{box-shadow:0 18px 44px rgba(0,0,0,.45)}
+.hero-card.morphing::before{content:none}
+/* 红色羽化层：飞行后半程“凝”成按钮红 / 展开时再褪回玻璃（纯 opacity 合成动画，零重绘） */
+.card-veil{
+  position:absolute;inset:0;z-index:4;pointer-events:none;opacity:0;
+  background:linear-gradient(135deg,var(--red-bright),var(--red-deep));
+  box-shadow:inset 0 2px 6px rgba(255,255,255,.4),inset 0 -6px 12px rgba(120,0,8,.35);
+}
+.card-close{
+  position:absolute;top:16px;right:16px;width:34px;height:34px;border-radius:50%;
+  background:var(--red);color:#fff;font-size:18px;display:flex;align-items:center;justify-content:center;
+  transition:transform .3s,background .3s;z-index:3;
+}
+.card-close:hover{transform:rotate(90deg) scale(1.1);background:var(--red-deep)}
+/* 左列纵向两端对齐：二维码顶部对齐右侧标题，联系信息底部对齐右侧按钮 */
+.card-left{flex:0 0 auto;text-align:left;position:relative;z-index:2;
+  display:flex;flex-direction:column;justify-content:space-between}
+.qr{width:140px;height:140px;border-radius:12px;background:#fff;padding:8px;box-shadow:0 6px 18px rgba(0,0,0,.10),0 0 0 1px rgba(0,0,0,.05)}
+.card-left .meta{margin-top:28px}
+.card-left .meta b{display:block;color:#2e2e2e;font-size:15px;margin-bottom:8px;font-weight:600;letter-spacing:2px}
+.card-left .meta .row{margin-bottom:22px;font-size:16px;color:#454545;font-weight:500;letter-spacing:.5px;font-variant-numeric:tabular-nums}
+.card-left .meta .row:last-child{margin-bottom:0}
+.card-right{flex:1;position:relative;z-index:2}
+.card-right h3{font-size:clamp(25px,3.1vw,35px);font-weight:700;color:#111;letter-spacing:2px;line-height:1.5}
+.card-right .hotline-label{margin-top:48px;font-size:clamp(17px,2.2vw,26px);color:#555;font-weight:400;letter-spacing:6px}
+.card-right .hotline{font-size:clamp(40px,5.4vw,58px);font-weight:700;color:#111;letter-spacing:4px;line-height:1.15;margin-top:10px}
+/* 行动按钮胶囊：三等分均布（对照设计稿：立即咨询 / 微信咨询 / 项目合作） */
+.card-actions{display:flex;gap:14px;margin-top:42px}
+.card-actions .tag{
+  flex:1;min-width:0;text-align:center;white-space:nowrap;
+  background:linear-gradient(135deg,var(--red-bright),var(--red-deep));color:#fff;
+  padding:9px 0;border-radius:30px;font-size:13.5px;font-weight:500;letter-spacing:1.5px;
+  box-shadow:0 4px 12px rgba(230,0,18,.22),inset 0 1px 0 rgba(255,255,255,.32);
+  transition:transform .3s var(--ease-spring),box-shadow .3s;
+}
+.card-actions .tag:hover{transform:translateY(-3px) scale(1.04);box-shadow:0 8px 18px rgba(230,0,18,.38),inset 0 1px 0 rgba(255,255,255,.32)}
+/* 重新打开名片的悬浮电话按钮（液态玻璃收束的终点形态） */
+.card-reopen{
+  position:fixed;right:24px;bottom:28px;z-index:900;width:60px;height:60px;border-radius:50%;
+  background:linear-gradient(135deg,var(--red-bright),var(--red-deep));color:#fff;
+  display:none;align-items:center;justify-content:center;font-size:26px;line-height:1;
+  box-shadow:0 12px 28px rgba(230,0,18,.42),0 2px 6px rgba(0,0,0,.3),
+    inset 0 2px 6px rgba(255,255,255,.4),inset 0 -5px 10px rgba(120,0,8,.35);
+  animation:float 3s ease-in-out infinite;
+  transition:transform .3s var(--ease-spring),box-shadow .3s;
+  -webkit-tap-highlight-color:transparent;
+}
+.card-reopen::before{ /* 顶部玻璃高光，呼应名片质感 */
+  content:"";position:absolute;inset:0;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle at 34% 26%,rgba(255,255,255,.55),transparent 48%);
+}
+.card-reopen:hover{transform:scale(1.12);box-shadow:0 16px 34px rgba(230,0,18,.55),inset 0 2px 6px rgba(255,255,255,.4),inset 0 -5px 10px rgba(120,0,8,.35)}
+.card-reopen:active{transform:scale(.94)}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+/* ===== 关闭名片后浮现的中央主张文案 =====
+   入场：模糊晕染散开 + 字距从松到收 + 上浮，三段错落；重开名片时快速退场让位 */
+.hero-slogan{position:absolute;inset:0;z-index:4;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;padding:0 24px;pointer-events:none}
+.hero-slogan .sl-cn{
+  font-size:clamp(36px,5.8vw,74px);font-weight:200;line-height:1.25;
+  background:linear-gradient(92deg,#f23945 0%,#ff949c 16%,#ffd9db 34%,#ffffff 50%,#ffd9db 66%,#ff8d95 84%,#e82935 100%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;
+  opacity:0;transform:translateY(36px);filter:blur(16px);letter-spacing:16px;
+  transition:opacity .3s ease,transform .3s ease,filter .3s ease,letter-spacing .3s ease;
+}
+.hero-slogan .sl-en{
+  margin-top:22px;font-size:clamp(13px,1.7vw,22px);font-weight:200;color:rgba(255,255,255,.92);
+  letter-spacing:clamp(4px,.8vw,11px);text-transform:uppercase;
+  opacity:0;transform:translateY(26px);filter:blur(10px);
+  transition:opacity .25s ease,transform .25s ease,filter .25s ease;
+}
+.hero-slogan .sl-act{margin-top:46px;opacity:0;transform:translateY(24px);pointer-events:none;
+  transition:opacity .25s ease,transform .25s ease}
+.hero-slogan .sl-act .btn{padding:14px 46px;font-size:16px}
+.hero-slogan.show .sl-cn{opacity:1;transform:none;filter:blur(0);letter-spacing:4px;
+  transition:opacity 1s var(--ease-out),filter 1s var(--ease-out),
+             transform 1s var(--ease-spring),letter-spacing 1.4s var(--ease-spring)}
+.hero-slogan.show .sl-en{opacity:1;transform:none;filter:blur(0);
+  transition:opacity .9s .18s var(--ease-out),filter .9s .18s var(--ease-out),transform .9s .18s var(--ease-spring)}
+.hero-slogan.show .sl-act{opacity:1;transform:none;pointer-events:auto;
+  transition:opacity .8s .34s var(--ease-out),transform .8s .34s var(--ease-spring)}
+/* 滚动指示器：发光环 + 中间胶囊 + 旋转炫光 */
+.scroll-ind{
+  position:absolute;bottom:42px;left:50%;transform:translateX(-50%);z-index:5;
+  width:76px;height:76px;display:flex;align-items:center;justify-content:center;
+}
+/* 柔光底晕 */
+.scroll-ind::before{content:"";position:absolute;inset:-6px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,40,55,.14),transparent 65%);filter:blur(6px);
+  animation:siGlow 2.8s ease-in-out infinite}
+/* 发光圆环 */
+.si-ring{position:absolute;inset:8px;border-radius:50%;
+  border:2px solid rgba(255,80,90,.55);
+  box-shadow:0 0 10px 1px rgba(255,40,55,.28),inset 0 0 8px rgba(255,70,80,.25);
+  animation:siGlow 2.8s ease-in-out infinite}
+/* 绕环旋转的炫光弧 */
+.si-ring::after{content:"";position:absolute;inset:-2px;border-radius:50%;
+  background:conic-gradient(from 0deg,transparent 0 62%,rgba(255,150,160,.5) 80%,rgba(255,255,255,.7) 88%,transparent 96%);
+  -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 4px),#000 calc(100% - 3px));
+          mask:radial-gradient(farthest-side,transparent calc(100% - 4px),#000 calc(100% - 3px));
+  animation:siSpin 2.6s linear infinite}
+/* 中间红色胶囊 */
+.si-pill{width:14px;height:30px;border-radius:9px;position:relative;z-index:2;
+  background:linear-gradient(180deg,#ff6068,#e0121f 60%,#b3000e);
+  box-shadow:0 0 10px 2px rgba(255,40,55,.4),inset 0 1px 3px rgba(255,190,195,.5),inset 0 -2px 4px rgba(120,0,8,.3);
+  animation:siBob 2s ease-in-out infinite}
+@keyframes siGlow{0%,100%{opacity:.6;box-shadow:0 0 8px 1px rgba(255,40,55,.2),inset 0 0 6px rgba(255,70,80,.2)}
+  50%{opacity:1;box-shadow:0 0 18px 3px rgba(255,40,55,.45),inset 0 0 10px rgba(255,70,80,.4)}}
+@keyframes siSpin{to{transform:rotate(360deg)}}
+@keyframes siBob{0%,100%{transform:translateY(-4px)}50%{transform:translateY(4px)}}
+
+/* ============ 服务范围卡片 ============ */
+.services-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:26px}
+.svc-card{
+  background:linear-gradient(160deg,#fbeaea,#ffffff);
+  border-radius:18px;padding:38px 26px 26px;text-align:center;color:#222;
+  display:flex;flex-direction:column;align-items:center;
+  transition:transform .45s var(--ease-spring),box-shadow .45s;
+  position:relative;overflow:hidden;cursor:pointer;
+}
+.svc-card::before{
+  content:"";position:absolute;top:-40%;left:-40%;width:180%;height:180%;
+  background:radial-gradient(circle,rgba(230,0,18,.12),transparent 60%);
+  opacity:0;transition:opacity .5s;
+}
+.svc-card:hover{transform:translateY(-12px);box-shadow:0 30px 60px rgba(230,0,18,.25)}
+.svc-card:hover::before{opacity:1}
+.svc-icon{width:72px;height:72px;margin-bottom:22px;color:#333;transition:transform .5s var(--ease-spring)}
+.svc-card:hover .svc-icon{transform:scale(1.12) rotate(-4deg);color:var(--red)}
+.svc-card h4{font-size:20px;font-weight:800;color:var(--red);margin-bottom:14px;letter-spacing:1px}
+.svc-card p{font-size:13.5px;color:#555;line-height:1.8;flex:1;margin-bottom:22px;text-align:left;width:100%}
+.svc-card .btn{width:100%;border-radius:8px;padding:12px}
+
+/* ============ 企业实力 ============ */
+.strength{background:linear-gradient(180deg,#000,#0a0405,#000)}
+.circuit{position:relative;width:min(260px,62vw);margin:0 auto 30px}
+.circuit svg{width:100%;height:auto;display:block;overflow:visible}
+.ckt-base{opacity:.35}
+/* 电流流动：亮段沿走线移动 + 自身发光 */
+.ckt-flow path{stroke-dasharray:26 320;stroke-dashoffset:0;
+  filter:drop-shadow(0 0 5px rgba(255,90,100,.95));
+  animation:cktFlow 2.4s linear infinite}
+.ckt-flow path:nth-child(1){animation-delay:0s}
+.ckt-flow path:nth-child(2){animation-delay:.25s}
+.ckt-flow path:nth-child(3){animation-delay:.5s}
+.ckt-flow path:nth-child(4){animation-delay:.15s}
+.ckt-flow path:nth-child(5){animation-delay:.35s}
+.ckt-flow path:nth-child(6){animation-delay:.1s}
+.ckt-flow path:nth-child(7){animation-delay:.45s}
+.ckt-flow path:nth-child(8){animation-delay:.3s}
+@keyframes cktFlow{to{stroke-dashoffset:-346}}
+.ckt-node circle{animation:cktNode 2.2s ease-in-out infinite}
+.ckt-node circle:nth-child(odd){animation-delay:.6s}
+@keyframes cktNode{0%,100%{opacity:.45}50%{opacity:1;filter:drop-shadow(0 0 6px rgba(255,80,90,.9))}}
+.intro{
+  display:grid;grid-template-columns:1fr 1.05fr;gap:40px;align-items:center;
+  border:1px solid rgba(230,0,18,.35);border-radius:18px;padding:44px;margin-bottom:70px;
+  background:rgba(20,8,10,.4);
+}
+.intro h3{font-size:24px;font-weight:800;margin-bottom:16px;position:relative;padding-bottom:14px}
+.intro h3::after{content:"";position:absolute;left:0;bottom:0;width:64px;height:3px;background:var(--red)}
+.intro p{color:#bdbdbd;font-size:15px;line-height:2;letter-spacing:.5px}
+.intro-img{border-radius:14px;overflow:hidden;aspect-ratio:16/9;box-shadow:var(--shadow)}
+.intro-img img{width:100%;height:100%;object-fit:cover;transition:transform .6s var(--ease-out)}
+.intro-img:hover img{transform:scale(1.05)}
+.ph{ /* 图片占位 */
+  width:100%;height:100%;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#2a2a2a,#151515);color:#777;font-size:13px;text-align:center;
+  background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.02) 0 12px,transparent 12px 24px);
+}
+.stats{display:grid;grid-template-columns:repeat(6,1fr);gap:20px;margin-bottom:80px;text-align:center}
+.stat .num{font-size:clamp(34px,4.5vw,56px);font-weight:900;color:var(--red-bright);line-height:1;display:flex;align-items:baseline;justify-content:center}
+.stat .num small{font-size:.5em;margin-left:2px}
+.stat .lbl{color:var(--text-dim);font-size:14px;margin-top:10px}
+/* logo 墙 —— 横向无限滚动 + 悬停可拖拽 */
+.logos{margin-bottom:70px;position:relative}
+.logos::before,.logos::after{ /* 两侧渐隐遮罩，高级感 */
+  content:"";position:absolute;top:0;bottom:0;width:90px;z-index:3;pointer-events:none}
+.logos::before{left:0;background:linear-gradient(90deg,#000,transparent)}
+.logos::after{right:0;background:linear-gradient(270deg,#000,transparent)}
+.marquee{display:flex;gap:18px;overflow-x:hidden;cursor:grab;padding:6px 0;touch-action:pan-y;
+  -ms-overflow-style:none;scrollbar-width:none}
+.marquee::-webkit-scrollbar{display:none}
+.marquee+.marquee{margin-top:18px}
+.marquee.grabbing{cursor:grabbing}
+.logo-item{
+  flex:0 0 auto;width:180px;height:90px;background:#fff;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;padding:3px 5px;overflow:hidden;
+  box-shadow:0 6px 18px rgba(0,0,0,.35);
+  transition:transform .35s var(--ease-spring),box-shadow .35s,filter .35s;
+  filter:grayscale(.25);user-select:none;
+}
+/* width/height 100% + contain 等比铺满居中；再 scale 1.18 抵消源图自带的内部留白，logo 更大更清晰 */
+.logo-item img{width:100%;height:100%;object-fit:contain;object-position:center;
+  transform:scale(1.18);pointer-events:none;-webkit-user-drag:none}
+.marquee:not(.grabbing) .logo-item:hover{transform:translateY(-6px) scale(1.05);
+  box-shadow:0 16px 34px rgba(255,40,55,.28);filter:grayscale(0)}
+.hotline-block{text-align:center}
+.hotline-block .label{display:inline-flex;align-items:center;gap:10px;font-size:20px;font-weight:600;color:#ddd}
+.hotline-block .big{font-size:clamp(40px,6vw,70px);font-weight:900;color:var(--red-bright);letter-spacing:2px;margin:14px 0 28px;text-shadow:0 0 40px rgba(230,0,18,.4)}
+
+/* ============ 案例 ============ */
+.cases-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.case-card{
+  border-radius:14px;overflow:hidden;cursor:pointer;background:#111;
+  transition:transform .45s var(--ease-spring),box-shadow .45s;position:relative;
+}
+.case-card:hover{transform:translateY(-8px);box-shadow:0 26px 54px rgba(0,0,0,.6)}
+.case-img{aspect-ratio:16/10;overflow:hidden;background:#e9e9e9}
+.case-img .ph{background:linear-gradient(135deg,#e8e8e8,#cfcfcf);color:#888}
+.case-img .ph,.case-card:hover .case-img .ph{transition:transform .6s var(--ease-out)}
+.case-card:hover .case-img .ph{transform:scale(1.08)}
+.case-title{
+  background:linear-gradient(135deg,var(--red-bright),var(--red-deep));
+  color:#fff;font-size:18px;font-weight:700;padding:18px 22px;letter-spacing:1px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.case-title .arrow{opacity:0;transform:translateX(-8px);transition:.4s}
+.case-card:hover .case-title .arrow{opacity:1;transform:none}
+
+/* ============ 服务范围 环形 ============ */
+.orbit-wrap{position:relative;width:min(620px,90vw);height:min(620px,90vw);margin:0 auto 30px}
+.orbit-ring{position:absolute;border:1px dashed rgba(230,0,18,.4);border-radius:50%}
+.ring-out{inset:0}
+.ring-in{inset:18%}
+.orbit-spin{position:absolute;inset:8%}
+@keyframes spin{to{transform:rotate(360deg)}}
+.orbit-dash{position:absolute;inset:2%;border-radius:50%;border:1px dashed rgba(230,0,18,.25);animation:spin 50s linear infinite}
+.orbit-comet{position:absolute;inset:8%;animation:spin 12s linear infinite;pointer-events:none}
+.orbit-comet::before{content:"";position:absolute;top:-6px;left:50%;width:12px;height:12px;margin-left:-6px;border-radius:50%;background:#ff5a64;box-shadow:0 0 18px 5px rgba(255,60,70,.85)}
+/* 3D 红色玻璃球 + 白色 logo 贴上 */
+.orbit-center{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:37%;height:37%;border-radius:50%;z-index:2;
+  background:
+    radial-gradient(circle at 32% 26%,rgba(255,255,255,.95),rgba(255,150,156,.45) 13%,transparent 33%),
+    radial-gradient(circle at 40% 34%,#ff6f76,#ec1c2a 44%,#b30410 80%,#760009 100%);
+  box-shadow:
+    inset -20px -24px 52px rgba(110,0,7,.85),
+    inset 14px 16px 40px rgba(255,185,190,.5),
+    0 26px 64px rgba(0,0,0,.6),0 0 60px var(--red-glow);
+  display:flex;align-items:center;justify-content:center;
+  animation:breathe 3.8s ease-in-out infinite;
+}
+.orbit-center::after{content:"";position:absolute;top:9%;left:18%;width:46%;height:26%;border-radius:50%;
+  background:radial-gradient(ellipse at center,rgba(255,255,255,.6),transparent 70%);
+  filter:blur(4px);transform:rotate(-18deg);pointer-events:none;z-index:3}
+@keyframes breathe{0%,100%{filter:drop-shadow(0 0 26px rgba(230,0,18,.45))}50%{filter:drop-shadow(0 0 66px rgba(230,0,18,.85))}}
+.orbit-center .mark{width:32%;height:auto;position:relative;z-index:2;
+  filter:drop-shadow(0 2px 6px rgba(110,0,8,.4))}
+/* 3D 小球 */
+.orbit-node{
+  position:absolute;top:50%;left:50%;width:80px;height:80px;border-radius:50%;
+  margin:-40px 0 0 -40px;
+  background:
+    radial-gradient(circle at 34% 27%,rgba(255,255,255,.92),transparent 32%),
+    radial-gradient(circle at 42% 36%,#ff7c82,#e0121f 56%,#9c0410 100%);
+  display:flex;align-items:center;justify-content:center;text-align:center;
+  font-size:13px;font-weight:700;color:#fff;
+  box-shadow:inset -6px -8px 16px rgba(110,0,7,.7),inset 5px 6px 13px rgba(255,185,190,.5),
+    0 10px 24px rgba(230,0,18,.45),0 0 22px rgba(255,40,55,.3);
+  text-shadow:0 1px 3px rgba(120,0,8,.6);
+  animation:nodeFloat 4.5s ease-in-out infinite;
+  transition:box-shadow .35s,transform .35s;
+}
+.orbit-node:hover{box-shadow:inset -6px -8px 16px rgba(110,0,7,.7),inset 5px 6px 13px rgba(255,185,190,.5),0 14px 34px rgba(255,40,55,.7);z-index:3}
+@keyframes nodeFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+/* 环形区背景呼吸光晕 */
+.orbit-sec{position:relative;overflow:hidden}
+.orbit-sec::before{content:"";position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);
+  width:760px;height:760px;max-width:90vw;max-height:90vw;border-radius:50%;z-index:0;pointer-events:none;
+  background:radial-gradient(circle,rgba(190,12,22,.5),rgba(120,6,14,.2) 40%,transparent 70%);
+  filter:blur(40px);animation:bgBreathe 6.5s ease-in-out infinite}
+@keyframes bgBreathe{0%,100%{opacity:.45;transform:translate(-50%,-50%) scale(.82)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.12)}}
+.orbit-sec .container{position:relative;z-index:1}
+
+/* ============ 业务趋势 ============ */
+.trends-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;align-items:start}
+.trend-card{
+  border-radius:14px;overflow:hidden;position:relative;min-height:330px;
+  display:flex;flex-direction:column;justify-content:flex-end;padding:26px;
+  background:#161616;transition:margin .5s var(--ease-spring),box-shadow .45s,filter .45s;
+}
+/* 高低错落：1、3 在上，2、4 下沉（对照原图） */
+.trend-card:nth-child(2),.trend-card:nth-child(4){margin-top:56px}
+.trend-card:hover{margin-top:0;box-shadow:0 30px 60px rgba(0,0,0,.6);filter:brightness(1.12)}
+.trend-card:nth-child(1):hover,.trend-card:nth-child(3):hover{margin-top:-10px}
+.trend-card .bg{position:absolute;inset:0;opacity:.5}
+.trend-card .bg .ph{background:linear-gradient(135deg,#333,#111)}
+.trend-card::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.92),rgba(0,0,0,.2))}
+.trend-card .ct{position:relative;z-index:2}
+.trend-card h4{font-size:20px;font-weight:800;margin-bottom:12px;position:relative;padding-top:14px}
+.trend-card h4::before{content:"";position:absolute;top:0;left:0;width:34px;height:2px;background:var(--red)}
+.trend-card p{font-size:13px;color:#c4c4c4;line-height:1.8}
+
+/* ============ 业务布局 地球（数字粒子地球：左侧出血 + 右上弧光大气层） ============ */
+.globe-sec{position:relative;overflow:hidden}
+.layout-wrap{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center;min-height:520px;z-index:2}
+.globe-stage{position:absolute;left:-9%;top:47%;transform:translateY(-50%);
+  width:min(600px,42vw);height:min(600px,42vw);z-index:0;pointer-events:none}
+.globe-sphere{position:absolute;inset:0;border-radius:50%;overflow:hidden;
+  background:
+    radial-gradient(circle at 64% 30%,rgba(255,60,72,.26),transparent 52%),
+    radial-gradient(circle at 86% 88%,rgba(255,70,82,.08),transparent 40%),
+    radial-gradient(circle at 50% 50%,#1d0507,#100304 58%,#080102 100%);
+  box-shadow:inset -38px -30px 100px rgba(0,0,0,.78),inset 35px 25px 70px rgba(230,0,18,.12),0 0 130px rgba(230,0,18,.26);
+}
+/* 经度滚动的细点阵（整球底纹，营造自转感） */
+.globe-dots{position:absolute;inset:-2px;border-radius:50%;
+  background-image:radial-gradient(rgba(255,60,72,.85) 1px,transparent 1.6px);
+  background-size:13px 13px;opacity:.38;
+  -webkit-mask:radial-gradient(circle at 50% 50%,#000 62%,rgba(0,0,0,.35) 78%,transparent 92%);
+          mask:radial-gradient(circle at 50% 50%,#000 62%,rgba(0,0,0,.35) 78%,transparent 92%);
+  animation:globeSpin 26s linear infinite}
+/* 粒子“大陆”：更亮更密的点阵，用多块椭圆遮罩拼出大陆轮廓感，与底纹同速转动 */
+.globe-land{position:absolute;inset:-2px;border-radius:50%;
+  background-image:radial-gradient(rgba(255,75,86,.95) 1.5px,transparent 2.2px);
+  background-size:9px 9px;opacity:.75;
+  -webkit-mask:
+    radial-gradient(34% 26% at 33% 34%,#000 0 62%,transparent 78%),
+    radial-gradient(26% 22% at 60% 56%,#000 0 60%,transparent 76%),
+    radial-gradient(22% 16% at 42% 76%,#000 0 58%,transparent 74%),
+    radial-gradient(17% 13% at 70% 28%,#000 0 55%,transparent 72%),
+    radial-gradient(14% 11% at 22% 60%,#000 0 55%,transparent 72%);
+          mask:
+    radial-gradient(34% 26% at 33% 34%,#000 0 62%,transparent 78%),
+    radial-gradient(26% 22% at 60% 56%,#000 0 60%,transparent 76%),
+    radial-gradient(22% 16% at 42% 76%,#000 0 58%,transparent 74%),
+    radial-gradient(17% 13% at 70% 28%,#000 0 55%,transparent 72%),
+    radial-gradient(14% 11% at 22% 60%,#000 0 55%,transparent 72%);
+  animation:globeSpin 26s linear infinite}
+@keyframes globeSpin{to{background-position:240px 0}}
+/* 右上弧光大气层：贴着球缘的一道红色晨昏弧 + 高亮日出点（对照参考图） */
+.globe-atmo{position:absolute;inset:-2.5%;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle at 50% 50%,transparent 62.5%,rgba(255,55,66,.52) 67.5%,rgba(255,120,130,.16) 70.5%,transparent 75%);
+  -webkit-mask:linear-gradient(215deg,#000 24%,transparent 60%);
+          mask:linear-gradient(215deg,#000 24%,transparent 60%);
+  filter:blur(1px)}
+.globe-atmo::after{content:"";position:absolute;left:62%;top:8%;width:26%;height:15%;
+  background:radial-gradient(closest-side,rgba(255,130,140,.6),rgba(255,60,72,.22) 60%,transparent);
+  filter:blur(12px);transform:rotate(32deg)}
+/* 经纬网格线 + 网络连线 */
+.globe-net{position:absolute;inset:0;width:100%;height:100%}
+.globe-net .node{animation:nodePulse 2.6s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 50%}
+.globe-net .node:nth-child(2){animation-delay:.6s}
+.globe-net .node:nth-child(3){animation-delay:1.1s}
+.globe-net .node:nth-child(4){animation-delay:1.6s}
+@keyframes nodePulse{0%,100%{opacity:.4;r:2.5}50%{opacity:1;r:4}}
+/* 标注瞬间：既有节点短促闪亮（替代常驻脉冲一拍） */
+.globe-net .node.hit{animation:nodeHit .85s cubic-bezier(.3,.7,.3,1)}
+@keyframes nodeHit{0%{transform:scale(1)}28%{transform:scale(2.4);opacity:1;filter:drop-shadow(0 0 10px rgba(255,85,95,1))}100%{transform:scale(1);opacity:.7}}
+.globe-glow{position:absolute;right:-2%;top:38%;transform:translateY(-50%);
+  width:45%;height:62%;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,45,55,.35),transparent 70%);filter:blur(22px)}
+/* 城市块靠右排布 */
+.cities{display:flex;flex-direction:column;gap:6px;position:relative;z-index:2;width:max-content;margin-left:auto;margin-right:3%}
+.city{display:flex;align-items:center;gap:14px;font-size:clamp(22px,2.6vw,32px);font-weight:600;padding:7px 0;
+  text-shadow:0 2px 12px rgba(0,0,0,.6);
+  opacity:0;transform:translateX(36px);transition:.7s var(--ease-spring);
+}
+.city.show{opacity:1;transform:none}
+.city:nth-child(1){margin-left:36px}
+.city:nth-child(2){margin-left:108px}
+.city:nth-child(3){margin-left:0}
+.city:nth-child(4){margin-left:120px}
+.city:nth-child(5){margin-left:48px}
+.city .pin{width:30px;height:30px;color:var(--red-bright);flex:0 0 30px;filter:drop-shadow(0 0 6px rgba(255,40,55,.6))}
+
+/* ============ 新闻 ============ */
+.news-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.news-card{border-radius:12px;overflow:hidden;background:linear-gradient(180deg,#161616,#0c0c0c);
+  cursor:pointer;transition:transform .4s var(--ease-spring),box-shadow .4s;border:1px solid var(--line)}
+.news-card:hover{transform:translateY(-8px);box-shadow:0 22px 44px rgba(0,0,0,.6)}
+.news-img{aspect-ratio:16/10;overflow:hidden}
+.news-img .ph{background:linear-gradient(135deg,#2b2b2b,#141414)}
+.news-body{padding:20px}
+.news-body h4{font-size:16px;font-weight:700;margin-bottom:12px;line-height:1.5}
+.news-tag{display:inline-block;font-size:12px;color:var(--red-bright);border:1px solid rgba(230,0,18,.4);
+  padding:3px 10px;border-radius:4px;margin-bottom:12px}
+.news-date{font-size:13px;color:var(--text-faint)}
+
+/* ============ 商务合作表单 ============ */
+.contact{background:linear-gradient(180deg,#000,#0a0405)}
+.contact h2{text-align:center;font-size:clamp(36px,6vw,64px);font-weight:900;color:var(--red-bright);
+  letter-spacing:6px;margin-bottom:54px;animation:titleGlow 3.2s ease-in-out infinite}
+@keyframes titleGlow{0%,100%{text-shadow:0 0 28px rgba(230,0,18,.35)}50%{text-shadow:0 0 60px rgba(230,0,18,.85),0 0 110px rgba(230,0,18,.45)}}
+.form{max-width:980px;margin:0 auto}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-bottom:26px}
+.field label{display:block;font-size:16px;margin-bottom:12px;color:#ddd}
+.field input,.field textarea{
+  width:100%;background:#fff;border:none;border-radius:8px;padding:16px 18px;
+  font-size:15px;color:#222;font-family:inherit;transition:box-shadow .3s,transform .3s;
+}
+.field textarea{min-height:120px;resize:vertical}
+.field input:focus,.field textarea:focus{outline:none;box-shadow:0 0 0 3px rgba(230,0,18,.4)}
+.form .submit{display:block;margin:40px auto 0;min-width:200px;padding:15px}
+
+/* ============ 页脚 ============ */
+.footer{border-top:1px solid rgba(230,0,18,.5);background:#000;padding:64px 0 0}
+/* 左侧品牌块占满弹性空间，右侧三列链接 + 二维码按内容宽度紧密靠右（对照设计稿） */
+.footer-top{display:grid;grid-template-columns:1fr auto auto auto auto;gap:48px 64px;align-items:start;padding-bottom:46px}
+.f-brand{display:flex;align-items:center;gap:44px}
+.f-brand .f-logo{height:110px;width:auto;flex-shrink:0;filter:drop-shadow(0 4px 12px rgba(0,0,0,.5))}
+.f-info{display:flex;flex-direction:column;gap:14px;min-width:0}
+.f-brand .phone{display:flex;align-items:center;gap:16px;font-size:clamp(34px,3.4vw,48px);font-weight:800;letter-spacing:2px;white-space:nowrap;line-height:1.1}
+.f-brand .phone svg{width:clamp(28px,2.4vw,36px);height:auto;color:#fff;flex-shrink:0}
+.f-brand .line{font-size:15px;color:#d6d6d6;margin-top:0}
+.f-brand .line.mail{font-size:clamp(18px,1.6vw,23px);font-weight:300;color:#e8e8e8}
+.f-brand .line b{color:var(--text-faint);font-weight:400;font-size:15px;margin-right:8px}
+/* 链接列：标题与链接均居中（对照设计稿），默认亮白、悬停变红并轻微浮起 */
+.f-col{text-align:center}
+.f-col h5{color:var(--red-bright);font-size:20px;font-weight:700;letter-spacing:3px;margin-bottom:26px}
+.f-col a{display:block;color:#e6e6e6;font-size:16px;margin-bottom:20px;white-space:nowrap;letter-spacing:1px;
+  transition:color .3s,transform .3s,opacity .3s}
+.f-col a:last-child{margin-bottom:0}
+/* 悬停列时其余链接微微退后，被悬停项变红浮起 —— 焦点更聚 */
+.f-col:hover a:not(:hover){opacity:.45}
+.f-col a:hover{color:var(--red-bright);transform:translateY(-2px)}
+.f-qr{text-align:center}
+.f-qr .qr{width:118px;height:118px;margin:0 auto 14px}
+.f-qr .qr img{display:block;width:100%;height:100%;object-fit:contain}
+.f-qr p{font-size:14px;color:#d6d6d6;letter-spacing:1px}
+.copyright{
+  border-top:1px solid var(--line);padding:22px 0;text-align:center;
+  font-size:13px;color:var(--text-faint);line-height:2;
+}
+.copyright a{color:var(--text-faint);transition:color .3s}
+.copyright a:hover{color:var(--red-bright)}
+
+/* ============ 弹窗 Modal ============ */
+.modal{
+  position:fixed;inset:0;z-index:2000;display:flex;align-items:center;justify-content:center;
+  background:rgba(0,0,0,.8);backdrop-filter:blur(6px);opacity:0;visibility:hidden;
+  transition:opacity .4s,visibility .4s;padding:20px;
+}
+.modal.open{opacity:1;visibility:visible}
+.modal-card{
+  background:linear-gradient(160deg,#1c1416,#0c0708);border:1px solid rgba(230,0,18,.4);
+  border-radius:18px;max-width:640px;width:100%;padding:0;overflow:hidden;position:relative;
+  transform:translateY(40px) scale(.92);transition:transform .5s var(--ease-spring);
+  box-shadow:0 40px 90px rgba(0,0,0,.7);
+}
+.modal.open .modal-card{transform:none}
+.modal-img{aspect-ratio:16/9;overflow:hidden}
+.modal-img .ph{background:linear-gradient(135deg,#2a2a2a,#141414)}
+.modal-body{padding:32px 36px 36px}
+.modal-body h3{font-size:26px;font-weight:800;color:var(--red-bright);margin-bottom:14px}
+.modal-body p{color:#bdbdbd;font-size:15px;line-height:1.9}
+.modal-close{position:absolute;top:18px;right:18px;width:38px;height:38px;border-radius:50%;
+  background:var(--red);color:#fff;font-size:20px;display:flex;align-items:center;justify-content:center;
+  transition:transform .3s;z-index:3}
+.modal-close:hover{transform:rotate(90deg)}
+
+/* ============ 滚动揭示动画（变速） ============ */
+.reveal{opacity:0;transform:translateY(48px);transition:opacity .9s var(--ease-out),transform .9s var(--ease-spring)}
+.reveal.in{opacity:1;transform:none}
+.reveal.d1{transition-delay:.08s}
+.reveal.d2{transition-delay:.16s}
+.reveal.d3{transition-delay:.24s}
+.reveal.d4{transition-delay:.32s}
+.reveal.d5{transition-delay:.4s}
+.reveal-l{opacity:0;transform:translateX(-50px);transition:opacity .9s var(--ease-out),transform .9s var(--ease-spring)}
+.reveal-l.in{opacity:1;transform:none}
+.reveal-r{opacity:0;transform:translateX(50px);transition:opacity .9s var(--ease-out),transform .9s var(--ease-spring)}
+.reveal-r.in{opacity:1;transform:none}
+.reveal-sc{opacity:0;transform:scale(.86);transition:opacity .8s var(--ease-out),transform .8s var(--ease-spring)}
+.reveal-sc.in{opacity:1;transform:none}
+
+/* 离屏区域暂停无限 CSS 动画（电流 / 地球 / 光晕呼吸等），整页更省帧 */
+.anim-paused *,.anim-paused *::before,.anim-paused *::after{animation-play-state:paused!important}
+
+/* ============ 开场加载动画：logo 品牌动效 → 溶解揭幕与首屏无缝衔接 ============ */
+.loader{position:fixed;inset:0;z-index:4000;overflow:hidden}
+/* 幕布与首屏 hero 同款底色渐变：揭幕用交叉溶解（纯 opacity 合成动画），
+   黑幕淡去时首屏在同色底上原位浮现，无任何方向性扫过，衔接自然无缝 */
+.ld-veil{position:absolute;inset:0;z-index:1;will-change:opacity;
+  background:
+    radial-gradient(ellipse at 50% 40%,rgba(21,5,8,.9),transparent 60%),
+    linear-gradient(160deg,#0c0405 0%,#070202 55%,#000 100%);
+  transition:opacity .95s ease}
+.loader.done .ld-veil{opacity:0}
+/* 揭幕瞬间收掉光晕呼吸与扫光，把帧全部让给 logo 飞行 */
+.loader.done .ld-wrap::before{animation:none;opacity:0;transition:opacity .25s}
+.loader.done .ld-shine{display:none}
+.ld-box{position:absolute;inset:0;z-index:2;display:flex;align-items:center;justify-content:center;will-change:transform}
+.ld-wrap{position:relative}
+/* 红色光晕在 logo 图标背后轻轻呼吸 */
+.ld-wrap::before{content:"";position:absolute;left:50%;top:30%;width:300px;height:300px;z-index:-1;border-radius:50%;
+  transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(230,0,18,.22),transparent 65%);
+  animation:ldGlow 2.4s ease-in-out infinite alternate}
+@keyframes ldGlow{from{opacity:.5;transform:translate(-50%,-50%) scale(.9)}to{opacity:1;transform:translate(-50%,-50%) scale(1.15)}}
+/* logo 变形动效（三幕，总时长约 1.25s）：
+   ① 红色液滴落入中心，liquid 抖动（border-radius 逐帧变形）凝成 logo 图标的圆角方块轮廓；
+   ② 完整 logo 自图标中心圆形绽放（clip-path 扩张 + 模糊聚焦 + 轻微回落），液滴同步退场——
+      液滴“变成”了 logo，形变与显影连成一体；
+   ③ 一道高光沿笔画扫过收尾。 */
+.ld-wrap{width:min(180px,34vw)}
+.ld-blob{position:absolute;left:17%;top:0;width:66%;aspect-ratio:1;z-index:1;
+  background:linear-gradient(135deg,#ff3140,var(--red-deep));
+  box-shadow:0 10px 40px rgba(230,0,18,.45),inset 0 2px 8px rgba(255,255,255,.35);
+  animation:ldBlob .6s cubic-bezier(.3,1.2,.4,1) both,ldBlobOut .3s .52s ease both}
+@keyframes ldBlob{
+  0%{opacity:0;transform:scale(.15) rotate(-42deg);border-radius:50%}
+  38%{opacity:1;transform:scale(1.1) rotate(9deg);border-radius:46% 54% 52% 48%/52% 46% 54% 48%}
+  64%{transform:scale(.94) rotate(-4deg);border-radius:36% 30% 34% 32%/30% 36% 30% 34%}
+  100%{opacity:1;transform:scale(1) rotate(0);border-radius:19%}}
+@keyframes ldBlobOut{from{opacity:1}to{opacity:0;transform:scale(1.05)}}
+/* logo：自图标中心圆形绽放显影 */
+.ld-logo{width:100%;height:auto;display:block;position:relative;z-index:2;
+  animation:ldReveal .5s .42s cubic-bezier(.25,.9,.35,1) both}
+@keyframes ldReveal{
+  from{opacity:0;clip-path:circle(6% at 50% 26%);filter:blur(8px);transform:scale(1.06)}
+  to{opacity:1;clip-path:circle(125% at 50% 26%);filter:blur(0);transform:scale(1)}}
+/* 一道高光沿 logo 笔画扫过（以 logo 自身为遮罩，光只在笔画上流动） */
+.ld-shine{position:absolute;inset:0;pointer-events:none;z-index:3;
+  background:linear-gradient(115deg,transparent 34%,rgba(255,255,255,.95) 50%,transparent 66%);
+  background-size:260% 100%;background-position:135% 0;
+  -webkit-mask:url(assets/logo-v.png) center/contain no-repeat;
+          mask:url(assets/logo-v.png) center/contain no-repeat;
+  animation:ldShine .5s .85s ease-in-out forwards}
+@keyframes ldShine{to{background-position:-135% 0}}
+
+/* ============ V3 高级感打磨（纯叠加：不改布局、不改配色、不改内容） ============ */
+/* 文字选区与键盘焦点态：交互细节见品质 */
+::selection{background:rgba(230,0,18,.85);color:#fff}
+:where(a,button,input,textarea):focus-visible{outline:2px solid rgba(255,80,90,.75);outline-offset:3px}
+/* 精致深色滚动条（默认灰白滚动条最破坏暗色站的整体感） */
+html{scrollbar-width:thin;scrollbar-color:#8a000b #070707}
+::-webkit-scrollbar{width:10px}
+::-webkit-scrollbar-track{background:#070707}
+::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#7a0009,#b3000e);border-radius:8px;border:2px solid #070707}
+::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,#b3000e,#ff1f2d)}
+/* 全站细腻胶片颗粒：打散大面积纯黑渐变的“数码感”，质感立刻上一档（静态贴图，零逐帧开销） */
+.grain{position:fixed;inset:0;z-index:3000;pointer-events:none;opacity:.045;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:280px 280px}
+/* 数字等宽：热线 / 统计数滚动时不左右抖动，更精密 */
+.stat .num,.hotline,.hotline-block .big,.f-brand .phone{font-variant-numeric:tabular-nums lining-nums}
+/* 红色按钮加玻璃内高光，立体一截（悬停同步保留） */
+.btn{box-shadow:0 4px 14px rgba(230,0,18,.16),inset 0 1px 0 rgba(255,255,255,.28),inset 0 -8px 14px rgba(0,0,0,.16)}
+.btn:hover{box-shadow:0 8px 22px rgba(230,0,18,.28),inset 0 1px 0 rgba(255,255,255,.3),inset 0 -8px 14px rgba(0,0,0,.16)}
+.btn-ghost,.btn-ghost:hover{box-shadow:none}
+/* 毛玻璃层补一点饱和度，更接近 iOS 真实材质 */
+.nav.scrolled{backdrop-filter:blur(14px) saturate(1.5);-webkit-backdrop-filter:blur(14px) saturate(1.5)}
+.modal{backdrop-filter:blur(10px) saturate(1.2);-webkit-backdrop-filter:blur(10px) saturate(1.2)}
+/* 名片指针高光：玻璃表面的镜面反光随鼠标流动（transform 合成动画） */
+.card-glare{position:absolute;left:0;top:0;width:340px;height:340px;border-radius:50%;z-index:1;
+  pointer-events:none;opacity:0;transition:opacity .45s ease;will-change:transform;
+  transform:translate(-9999px,-9999px);
+  background:radial-gradient(circle,rgba(255,255,255,.4),rgba(255,255,255,.12) 42%,transparent 70%)}
+.hero-card:hover .card-glare{opacity:1}
+/* 悬浮电话按钮的呼吸光环：安静地提示“可点击” */
+.card-reopen::after{content:"";position:absolute;inset:-5px;border-radius:50%;pointer-events:none;
+  border:1.5px solid rgba(255,70,80,.6);opacity:0;animation:reopenPing 2.8s ease-out infinite}
+@keyframes reopenPing{0%{transform:scale(.82);opacity:0}28%{opacity:.75}70%,100%{transform:scale(1.5);opacity:0}}
+
+/* ============ 响应式 ============ */
+@media(max-width:1100px){
+  .stats{grid-template-columns:repeat(3,1fr);gap:30px 20px}
+  .logos{grid-template-columns:repeat(4,1fr)}
+  .services-grid,.trends-grid,.news-grid{grid-template-columns:repeat(2,1fr)}
+  .trend-card:nth-child(2),.trend-card:nth-child(4){margin-top:0}
+  .footer-top{grid-template-columns:1fr 1fr 1fr}
+  .f-qr{grid-column:span 3}
+}
+@media(max-width:820px){
+  .nav{padding:14px 20px}
+  .nav.scrolled{padding:10px 20px}
+  .nav-toggle{display:flex}
+  .nav-menu{
+    position:fixed;top:0;right:-100%;width:74%;max-width:320px;height:100vh;
+    flex-direction:column;gap:0;background:rgba(10,5,6,.97);backdrop-filter:blur(16px);
+    padding:90px 30px;transition:right .45s var(--ease-out);box-shadow:-10px 0 40px rgba(0,0,0,.5);
+  }
+  .nav-menu.open{right:0}
+  .nav-menu a{font-size:18px;padding:16px 0;border-bottom:1px solid var(--line)}
+  .nav-cta{display:none}
+  .nav-toggle.active span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+  .nav-toggle.active span:nth-child(2){opacity:0}
+  .nav-toggle.active span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+  .hero-card{flex-direction:column;padding:40px 28px;gap:28px;text-align:center;align-items:center}
+  .card-left{text-align:center}
+  .qr{margin:0 auto}
+  .card-right .hotline-label{margin-top:30px}
+  .card-actions{margin-top:30px;flex-wrap:wrap}
+  .card-actions .tag{flex:0 0 auto;padding:8px 18px}
+  .card-actions{justify-content:center}
+  .cases-grid{grid-template-columns:repeat(2,1fr)}
+  .intro{grid-template-columns:1fr;padding:30px}
+  .layout-wrap{grid-template-columns:1fr;min-height:auto}
+  .globe-stage{left:50%;top:42%;transform:translate(-50%,-50%);width:min(440px,85vw);height:min(440px,85vw);opacity:.45}
+  .cities{align-items:center;margin:0 auto}
+  .city{font-size:22px}
+  .city:nth-child(1),.city:nth-child(3),.city:nth-child(5){margin-left:0}
+  .city:nth-child(2),.city:nth-child(4){margin-left:60px}
+  .section{padding:70px 0}
+}
+@media(max-width:560px){
+  .services-grid,.trends-grid,.news-grid,.cases-grid{grid-template-columns:1fr}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .logos{grid-template-columns:repeat(2,1fr)}
+  .form-row{grid-template-columns:1fr}
+  .footer-top{grid-template-columns:1fr 1fr}
+  .f-brand{flex-direction:column;align-items:center;text-align:center;gap:18px;grid-column:span 2}
+  .f-info{align-items:center}
+  .f-qr{grid-column:span 2}
+  .f-brand .phone{font-size:24px}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;transition-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ 开场加载动画 ============ -->
+<div class="loader" id="loader" aria-hidden="true">
+  <div class="ld-veil"></div>
+  <div class="ld-box" id="ldBox">
+    <div class="ld-wrap">
+      <span class="ld-blob" aria-hidden="true"></span>
+      <img class="ld-logo" src="assets/logo-v.png" alt="大方设计 DAFAR DESIGN">
+      <span class="ld-shine" aria-hidden="true"></span>
+    </div>
+  </div>
+</div>
+
+<!-- 全站胶片颗粒（V3 质感层，纯装饰零开销） -->
+<div class="grain" aria-hidden="true"></div>
+
+<!-- ============ 导航 ============ -->
+<nav class="nav" id="nav">
+  <a class="logo" href="#home">
+    <img src="assets/logo-h.png" alt="大方设计 DAFAR DESIGN">
+  </a>
+  <ul class="nav-menu" id="navMenu">
+    <li><a href="#home" class="active">首页</a></li>
+    <li><a href="#services">服务</a></li>
+    <li><a href="#cases">案例</a></li>
+    <li><a href="#news">动态</a></li>
+    <li><a href="#about">关于</a></li>
+    <li><a href="#contact">联系</a></li>
+  </ul>
+  <button class="btn nav-cta" onclick="document.getElementById('contact').scrollIntoView()">立即咨询</button>
+  <button class="nav-toggle" id="navToggle" aria-label="菜单"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero" id="home">
+  <div class="hero-bg">
+    <iframe class="spline" src="https://my.spline.design/aigreymarketingbanner-MRNiUMUfBAjP5U8O6ZBhapdP/" frameborder="0" loading="lazy" title="3D 背景" allow="autoplay"></iframe>
+    <!-- 等距工厂场景：lighten 混合，亮部自黑底浮现，视觉上位于 3D 流线下层 -->
+    <div class="hero-factory" aria-hidden="true"><img src="assets/hero-factory.jpg" alt=""></div>
+    <div class="spline-color"></div>
+    <div class="hero-tint"></div>
+    <div class="spline-mask"></div>
+  </div>
+
+  <!-- 关闭名片后浮现的中央主张文案 -->
+  <div class="hero-slogan" id="heroSlogan">
+    <div class="sl-cn">专注设计是我们不变的追求</div>
+    <div class="sl-en">Focusing Design Is Our Constant Pursuit</div>
+    <div class="sl-act"><button class="btn" onclick="document.getElementById('services').scrollIntoView()">探索更多</button></div>
+  </div>
+
+  <!-- 弹出名片 -->
+  <div class="hero-card" id="heroCard">
+    <span class="card-fluid" aria-hidden="true"><i class="f1"></i><i class="f2"></i><i class="f3"></i><i class="f4"></i></span>
+    <span class="card-veil" id="cardVeil" aria-hidden="true"></span>
+    <span class="card-glare" id="cardGlare" aria-hidden="true"></span>
+    <button class="card-close" id="cardClose" aria-label="关闭">&times;</button>
+    <div class="card-left">
+      <div class="qr">
+        <img src="assets/qrcode.png" alt="大方设计微信公众号二维码" width="100%" height="100%" style="display:block;width:100%;height:100%;object-fit:contain">
+      </div>
+      <div class="meta">
+        <div class="row"><b>总部电话</b>86+ (27) 87-666-138</div>
+        <div class="row"><b>商务合作</b>info@dafar-design.com</div>
+      </div>
+    </div>
+    <div class="card-right">
+      <h3>专注设计是我们不变的追求</h3>
+      <div class="hotline-label">统一服务热线</div>
+      <div class="hotline">87-666-138</div>
+      <div class="card-actions">
+        <button class="tag" onclick="document.getElementById('contact').scrollIntoView()">立即咨询</button>
+        <button class="tag" onclick="this.closest('.hero-card').querySelector('.qr').animate([{transform:'scale(1)'},{transform:'scale(1.12)'},{transform:'scale(1)'}],{duration:600,easing:'ease'})">微信咨询</button>
+        <button class="tag" onclick="document.getElementById('contact').scrollIntoView()">项目合作</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-ind"><span class="si-ring"></span><span class="si-pill"></span></div>
+</header>
+<button class="card-reopen" id="cardReopen" aria-label="联系名片">&#9742;</button>
+
+<!-- ============ 服务范围 ============ -->
+<section class="section" id="services">
+  <div class="container">
+    <div class="sec-head reveal"><h2>大方设计 <em>服务范围</em></h2><p>深耕产品创新设计领域</p></div>
+    <div class="services-grid">
+      <!-- 工业设计 -->
+      <article class="svc-card reveal-sc d1" onclick="openModal('工业设计','产品外观设计、结构配合设计、手板跟进、量产落地优化、文创产品设计。以制造可行性为根基，打造兼顾美学与工艺的产品。')">
+        <svg class="svc-icon" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M32 6 56 19v26L32 58 8 45V19z"/><path d="M32 6v26m0 0L8 19m24 13 24-13M32 32v26"/></svg>
+        <h4>工业设计</h4>
+        <p>产品外观设计、结构配合设计、手板跟进、量产落地优化、文创产品设计</p>
+        <span class="btn">查看更多</span>
+      </article>
+      <!-- 品牌设计 -->
+      <article class="svc-card reveal-sc d2" onclick="openModal('品牌设计','LOGO设计、VI视觉系统、包装设计、宣传画册、品牌视觉升级。构建系统化品牌识别，提升品牌资产价值。')">
+        <svg class="svc-icon" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M34 6H14a4 4 0 0 0-4 4v20l24 24 24-24z"/><circle cx="22" cy="22" r="4" fill="currentColor" stroke="none"/></svg>
+        <h4>品牌设计</h4>
+        <p>LOGO设计、VI视觉系统、包装设计、宣传画册、品牌视觉升级</p>
+        <span class="btn">查看更多</span>
+      </article>
+      <!-- 交互设计 -->
+      <article class="svc-card reveal-sc d3" onclick="openModal('交互设计','APP / 小程序界面设计、网页 UI、车载界面、操作逻辑优化、原型设计。以用户体验为核心，打磨流畅自然的人机交互。')">
+        <svg class="svc-icon" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="8" y="10" width="20" height="20" rx="4"/><rect x="36" y="34" width="20" height="20" rx="4"/><path d="M40 22a14 14 0 0 0-14-14M24 42a14 14 0 0 0 14 14" stroke-linecap="round"/></svg>
+        <h4>交互设计</h4>
+        <p>APP / 小程序界面设计、网页 UI、车载界面、操作逻辑优化、原型设计</p>
+        <span class="btn">查看更多</span>
+      </article>
+      <!-- 动画制作 -->
+      <article class="svc-card reveal-sc d4" onclick="openModal('动画制作','产品演示动画、品牌宣传片、三维建模动画、MG 动态视觉、短视频内容。用动态影像讲好产品与品牌故事。')">
+        <svg class="svc-icon" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="8" y="20" width="48" height="30" rx="4"/><path d="M8 20l8-10h32l8 10M22 32l12 6-12 6z" stroke-linejoin="round"/></svg>
+        <h4>动画制作</h4>
+        <p>产品演示动画、品牌宣传片、三维建模动画、MG 动态视觉、短视频内容</p>
+        <span class="btn">查看更多</span>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 企业实力 ============ -->
+<section class="section strength" id="about">
+  <div class="container">
+    <div class="circuit reveal">
+      <svg viewBox="0 0 460 120" fill="none">
+        <defs>
+          <linearGradient id="cw" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#ff2b3a" stop-opacity="0"/>
+            <stop offset=".5" stop-color="#ff5560" stop-opacity=".9"/>
+            <stop offset="1" stop-color="#ff2b3a" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <!-- 暗色底走线 -->
+        <g class="ckt-base" stroke="url(#cw)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M30 38 H150 l18 18 H214"/>
+          <path d="M20 60 H120 l18 -18 H214"/>
+          <path d="M40 82 H170 l16 -16 H214"/>
+          <path d="M60 100 H188 l14 -14 H214"/>
+          <path d="M430 38 H310 l-18 18 H246"/>
+          <path d="M440 60 H340 l-18 -18 H246"/>
+          <path d="M420 82 H290 l-16 -16 H246"/>
+          <path d="M400 100 H272 l-14 -14 H246"/>
+          <path d="M214 56 V72 M246 56 V72 M230 30 V90"/>
+        </g>
+        <!-- 流动的电流（亮点沿线移动） -->
+        <g class="ckt-flow" stroke="#ffd0d3" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" fill="none">
+          <path d="M30 38 H150 l18 18 H214"/>
+          <path d="M20 60 H120 l18 -18 H214"/>
+          <path d="M40 82 H170 l16 -16 H214"/>
+          <path d="M60 100 H188 l14 -14 H214"/>
+          <path d="M430 38 H310 l-18 18 H246"/>
+          <path d="M440 60 H340 l-18 -18 H246"/>
+          <path d="M420 82 H290 l-16 -16 H246"/>
+          <path d="M400 100 H272 l-14 -14 H246"/>
+        </g>
+        <g class="ckt-node" fill="#ff5560">
+          <circle cx="30" cy="38" r="3"/><circle cx="20" cy="60" r="3"/><circle cx="40" cy="82" r="3"/><circle cx="60" cy="100" r="3"/>
+          <circle cx="430" cy="38" r="3"/><circle cx="440" cy="60" r="3"/><circle cx="420" cy="82" r="3"/><circle cx="400" cy="100" r="3"/>
+          <circle cx="230" cy="30" r="4"/><circle cx="230" cy="90" r="4"/>
+        </g>
+      </svg>
+    </div>
+    <div class="sec-head reveal"><h2>企业实力 + <em>高端服务商</em></h2><p>未来业内新标杆</p></div>
+
+    <div class="intro">
+      <div class="reveal-l">
+        <h3>公司介绍</h3>
+        <p>一家集品牌建设、设计研究、外观设计、结构设计、样机制作、模具加工制造、生产监理、品牌推广为一体的综合性专业设计公司，专注于交通工具、医疗设备、消费电子、军工装备设计开发服务。</p>
+      </div>
+      <div class="intro-img reveal-r"><img src="assets/building.jpg" alt="大方设计公司大楼实景"></div>
+    </div>
+
+    <div class="stats">
+      <div class="stat reveal-sc d1"><div class="num" data-count="200">0<small>+</small></div><div class="lbl">企业服务数量</div></div>
+      <div class="stat reveal-sc d1"><div class="num" data-count="200">0<small>+</small></div><div class="lbl">专精特新项目</div></div>
+      <div class="stat reveal-sc d2"><div class="num" data-count="800">0<small>+</small></div><div class="lbl">完成项目数量</div></div>
+      <div class="stat reveal-sc d2"><div class="num" data-count="20">0<small>+</small></div><div class="lbl">国内外设计奖</div></div>
+      <div class="stat reveal-sc d3"><div class="num" data-count="16">0<small>+</small></div><div class="lbl">服务行业数量</div></div>
+      <div class="stat reveal-sc d3"><div class="num" data-count="56">0<small>+</small></div><div class="lbl">相关专利数量</div></div>
+    </div>
+
+    <div class="logos reveal">
+      <div class="marquee" data-dir="1" id="mq1"></div>
+      <div class="marquee" data-dir="-1" id="mq2"></div>
+    </div>
+
+    <div class="hotline-block reveal">
+      <div class="label">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.4-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>
+        咨询热线
+      </div>
+      <div class="big">027-87-666-138</div>
+      <button class="btn" onclick="document.getElementById('contact').scrollIntoView()">立即咨询</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 服务案例 ============ -->
+<section class="section" id="cases">
+  <div class="container">
+    <div class="sec-head reveal"><h2>用心打造 <em>服务案例</em></h2><p>蜕变就是不停地革新</p></div>
+    <div class="cases-grid" id="casesGrid">
+      <!-- 由 JS 注入 12 个案例 -->
+    </div>
+    <div style="text-align:center;margin-top:50px" class="reveal"><button class="btn" onclick="openModal('更多案例','更多精彩设计案例正在整理中，欢迎来电 027-87666138 或填写下方表单获取完整作品集。')">探索更多</button></div>
+  </div>
+</section>
+
+<!-- ============ 全线覆盖 服务范围（环形） ============ -->
+<section class="section strength orbit-sec">
+  <div class="container">
+    <div class="sec-head reveal"><h2>全线覆盖 <em>服务范围</em></h2><p>一站式服务解决客户难题</p></div>
+    <div class="orbit-wrap reveal-sc">
+      <div class="orbit-ring ring-out"></div>
+      <div class="orbit-ring ring-in"></div>
+      <div class="orbit-dash"></div>
+      <div class="orbit-comet"></div>
+      <div class="orbit-center">
+        <img class="mark" src="assets/logo-white.png" alt="DAFAR 大方设计">
+      </div>
+      <div class="orbit-spin" id="orbitSpin"></div>
+    </div>
+    <div style="text-align:center;margin-top:30px" class="reveal"><button class="btn" onclick="document.getElementById('contact').scrollIntoView()">探索更多</button></div>
+  </div>
+</section>
+
+<!-- ============ 业务趋势 ============ -->
+<section class="section">
+  <div class="container">
+    <div class="sec-head reveal"><h2>聚焦数字 <em>业务趋势</em></h2><p>值得信赖的合作伙伴</p></div>
+    <div class="trends-grid">
+      <div class="trend-card reveal-sc d1"><div class="bg"><div class="ph"></div></div><div class="ct"><h4>一体化服务</h4><p>多设计业务协同，一站式对接，降低跨团队沟通成本；</p></div></div>
+      <div class="trend-card reveal-sc d2"><div class="bg"><div class="ph"></div></div><div class="ct"><h4>量产落地经验</h4><p>工业设计深耕制造业，方案兼顾颜值与生产工艺；</p></div></div>
+      <div class="trend-card reveal-sc d3"><div class="bg"><div class="ph"></div></div><div class="ct"><h4>定制化服务</h4><p>拒绝模板化设计，按需匹配专属设计团队；</p></div></div>
+      <div class="trend-card reveal-sc d4"><div class="bg"><div class="ph"></div></div><div class="ct"><h4>迅捷响应</h4><p>标准化服务流程，保障项目进度。</p></div></div>
+    </div>
+    <div style="text-align:center;margin-top:50px" class="reveal"><button class="btn" onclick="document.getElementById('contact').scrollIntoView()">探索更多</button></div>
+  </div>
+</section>
+
+<!-- ============ 业务布局 地球 ============ -->
+<section class="section strength globe-sec" id="globeSec">
+  <div class="globe-stage" aria-hidden="true">
+    <div class="globe-sphere">
+      <div class="globe-dots"></div>
+      <div class="globe-land"></div>
+      <svg class="globe-net" viewBox="0 0 400 400" fill="none">
+        <g stroke="rgba(230,0,18,.16)" stroke-width="1">
+          <circle cx="200" cy="200" r="196"/>
+          <ellipse cx="200" cy="200" rx="196" ry="66"/>
+          <ellipse cx="200" cy="200" rx="196" ry="132"/>
+          <ellipse cx="200" cy="200" rx="66" ry="196"/>
+          <ellipse cx="200" cy="200" rx="132" ry="196"/>
+        </g>
+        <g stroke="rgba(255,70,82,.55)" stroke-width="1.3">
+          <path d="M120 150 Q210 92 300 138"/>
+          <path d="M150 252 Q230 304 322 250"/>
+          <path d="M150 118 Q262 184 286 300"/>
+          <path d="M120 150 L150 118 M300 138 L286 300"/>
+        </g>
+        <g fill="#ff4a55">
+          <circle class="node" cx="120" cy="150" r="3"/>
+          <circle class="node" cx="300" cy="138" r="3"/>
+          <circle class="node" cx="150" cy="252" r="3"/>
+          <circle class="node" cx="322" cy="250" r="3"/>
+          <circle class="node" cx="286" cy="300" r="3"/>
+          <circle class="node" cx="150" cy="118" r="3"/>
+        </g>
+      </svg>
+    </div>
+    <div class="globe-atmo"></div>
+    <div class="globe-glow"></div>
+  </div>
+  <div class="container">
+    <div class="sec-head reveal"><h2>战略重点 <em>业务布局</em></h2><p>值得信赖的合作伙伴</p></div>
+    <div class="layout-wrap">
+      <div></div>
+      <div class="cities" id="cities">
+        <div class="city"><svg class="pin" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 14.5 9 2.5 2.5 0 0 1 12 11.5z"/></svg>武汉</div>
+        <div class="city"><svg class="pin" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 14.5 9 2.5 2.5 0 0 1 12 11.5z"/></svg>杭州</div>
+        <div class="city"><svg class="pin" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 14.5 9 2.5 2.5 0 0 1 12 11.5z"/></svg>天津</div>
+        <div class="city"><svg class="pin" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 14.5 9 2.5 2.5 0 0 1 12 11.5z"/></svg>台州</div>
+        <div class="city"><svg class="pin" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 14.5 9 2.5 2.5 0 0 1 12 11.5z"/></svg>临沂</div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:40px" class="reveal"><button class="btn" onclick="document.getElementById('contact').scrollIntoView()">探索更多</button></div>
+  </div>
+</section>
+
+<!-- ============ 动态新闻 ============ -->
+<section class="section" id="news">
+  <div class="container">
+    <div class="sec-head reveal"><h2>实时更新 <em>动态新闻</em></h2><p>值得信赖的合作伙伴</p></div>
+    <div class="news-grid">
+      <article class="news-card reveal-sc d1" onclick="openModal('大方工业走进汉武','【专题讲座】 2019-07-27 — 大方设计走进高校，分享工业设计前沿趋势与产业落地经验。')"><div class="news-img"><div class="ph">新闻图 1</div></div><div class="news-body"><h4>大方工业走进汉武</h4><span class="news-tag">专题讲座</span><div class="news-date">2019-07-27</div></div></article>
+      <article class="news-card reveal-sc d2" onclick="openModal('全国性创客盛会','【武汉大方】 2019-06-24 — 大方设计亮相全国性创客盛会，与行业伙伴共话创新设计未来。')"><div class="news-img"><div class="ph">新闻图 2</div></div><div class="news-body"><h4>全国性创客盛会</h4><span class="news-tag">武汉大方</span><div class="news-date">2019-06-24</div></div></article>
+      <article class="news-card reveal-sc d3" onclick="openModal('国内工业设计发展趋势','【工业设计】 2025-05-20 — 解析国内工业设计发展趋势，把握产业升级新机遇。')"><div class="news-img"><div class="ph">新闻图 3</div></div><div class="news-body"><h4>国内工业设计发展趋势</h4><span class="news-tag">工业设计</span><div class="news-date">2025-05-20</div></div></article>
+      <article class="news-card reveal-sc d4" onclick="openModal('科技转化是创新价值的体现','【值得信赖】 2025-05-20 — 科技成果转化是创新价值的真正体现，大方设计助力技术落地。')"><div class="news-img"><div class="ph">新闻图 4</div></div><div class="news-body"><h4>科技转化是创新价值的体现</h4><span class="news-tag">值得信赖</span><div class="news-date">2025-05-20</div></div></article>
+    </div>
+    <div style="text-align:center;margin-top:50px" class="reveal"><button class="btn" onclick="openModal('更多新闻','更多企业动态与行业资讯持续更新中，敬请关注我们的官方公众号。')">更多新闻</button></div>
+  </div>
+</section>
+
+<!-- ============ 商务合作 表单 ============ -->
+<section class="section contact" id="contact">
+  <div class="container">
+    <h2 class="reveal">商务合作</h2>
+    <form class="form" id="bizForm" onsubmit="return submitForm(event)">
+      <div class="form-row">
+        <div class="field reveal-l"><label>您的姓名 *</label><input type="text" name="name" required placeholder="请输入您的姓名"></div>
+        <div class="field reveal-r"><label>您的电话 *</label><input type="tel" name="phone" required pattern="[0-9\-\+\s]{7,}" placeholder="请输入您的联系电话"></div>
+      </div>
+      <div class="field reveal"><label>咨询内容 *</label><textarea name="msg" required placeholder="请简要描述您的需求"></textarea></div>
+      <button type="submit" class="btn submit reveal">提交</button>
+    </form>
+  </div>
+</section>
+
+<!-- ============ 页脚 ============ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-top">
+      <div class="f-brand">
+        <img class="f-logo" src="assets/logo-v.png" alt="大方设计 DAFAR DESIGN">
+        <div class="f-info">
+          <div class="phone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.4-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>027-87666138</div>
+          <div class="line mail"><b>邮箱</b>info@dafar-design.com</div>
+          <div class="line"><b>地址</b>湖北省武汉市洪山区创意天地06艺术家工作室</div>
+        </div>
+      </div>
+      <div class="f-col"><h5>服务</h5><a href="#services">业务范围</a><a href="#services">服务流程</a><a href="#services">业务趋势</a><a href="#services">售后保障</a></div>
+      <div class="f-col"><h5>案例</h5><a href="#cases">工业设计</a><a href="#cases">品牌设计</a><a href="#cases">交互设计</a><a href="#cases">动画制作</a></div>
+      <div class="f-col"><h5>关于</h5><a href="#about">公司介绍</a><a href="#about">企业荣誉</a><a href="#contact">联系方式</a></div>
+      <div class="f-qr">
+        <div class="qr"><img src="assets/qrcode.png" alt="大方设计微信公众号二维码"></div>
+        <p>关注我们的公众号</p>
+      </div>
+    </div>
+    <div class="copyright">
+      Copyright © 2025 武汉大方工业设计有限公司 版权所有　|　DAFAR DESIGN<br>
+      <a href="https://beian.miit.gov.cn" target="_blank" rel="noopener">鄂ICP备XXXXXXXX号-1</a>
+      　|
+      <a href="http://www.beian.gov.cn/portal/registerSystemInfo" target="_blank" rel="noopener">🛡 鄂公网安备 42011102XXXXXX号</a>
+      　|　技术支持：大方设计
+    </div>
+  </div>
+</footer>
+
+<!-- ============ 通用弹窗 ============ -->
+<div class="modal" id="modal">
+  <div class="modal-card">
+    <button class="modal-close" onclick="closeModal()" aria-label="关闭">&times;</button>
+    <div class="modal-img"><div class="ph" id="modalImg">案例配图</div></div>
+    <div class="modal-body"><h3 id="modalTitle"></h3><p id="modalText"></p></div>
+  </div>
+</div>
+
+<script>
+/* ====== 导航：滚动变色 + 移动菜单 + 高亮 ====== */
+const nav=document.getElementById('nav'),navToggle=document.getElementById('navToggle'),navMenu=document.getElementById('navMenu');
+navToggle.onclick=()=>{navToggle.classList.toggle('active');navMenu.classList.toggle('open')};
+navMenu.querySelectorAll('a').forEach(a=>a.onclick=()=>{navToggle.classList.remove('active');navMenu.classList.remove('open')});
+
+// 滚动逻辑合并为单监听 + rAF 节流（passive），避免高频滚动中反复强制布局导致掉帧
+const secs=[...document.querySelectorAll('section[id],header[id]')];
+const navLinks=[...navMenu.querySelectorAll('a')];
+let scrollTick=false;
+addEventListener('scroll',function(){
+  if(scrollTick) return;
+  scrollTick=true;
+  requestAnimationFrame(function(){
+    scrollTick=false;
+    nav.classList.toggle('scrolled',scrollY>40);
+    let cur='home';
+    secs.forEach(s=>{if(scrollY>=s.offsetTop-120)cur=s.id});
+    navLinks.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+cur));
+  });
+},{passive:true});
+
+/* ====== Hero 名片 ⇄ 悬浮电话按钮：液态玻璃变形 ======
+   流畅性要点（不掉帧的关键）：
+   1) 变形全程关闭 backdrop-filter（实时背景模糊在缩放时逐帧重算 = 卡顿主因），结束后再恢复。
+   2) 变形期挂 .morphing：收掉 80px 大模糊阴影与装饰伪元素 —— border-radius 逐帧变化会触发
+      整层重绘，重绘内容越简单越流畅。
+   3) 子内容只淡 opacity（纯合成器通道），不用 blur 滤镜。
+   4) 颜色过渡交给 .card-veil 的 opacity 动画（GPU 合成）：玻璃在飞行中“凝”成按钮红，
+      展开时红色再褪回玻璃，视觉上真正是“同一块液体”在变形。
+   5) 主体只动 transform / border-radius / opacity，分轴挤压拉伸 + 到位回弹，水滴质感。 */
+const heroCard=document.getElementById('heroCard');
+const cardReopen=document.getElementById('cardReopen');
+const cardVeil=document.getElementById('cardVeil');
+const heroSlogan=document.getElementById('heroSlogan');
+const reduceMotion=matchMedia('(prefers-reduced-motion:reduce)').matches;
+var morphing=false, pendingCheck=0, pendingFallback=0;
+
+/* 入场动画结束后释放 animation 通道 */
+heroCard.addEventListener('animationend',function(){heroCard.style.animation='none'},{once:true});
+
+/* 卡片内部内容（二维码 / 文字 / 关闭键）的快速淡出淡入（仅 opacity，走合成器） */
+function fadeKids(out){
+  ['card-left','card-right','card-close'].forEach(function(c){
+    var el=heroCard.querySelector('.'+c);
+    if(!el) return;
+    el.style.transition=out?'opacity .12s ease':'opacity .3s ease .04s';
+    el.style.opacity=out?'0':'';
+  });
+}
+
+/* 实时计算「卡片中心 → 按钮中心」的位移与缩放比（响应式、抗漂浮误差）
+   注意：必须在卡片可见（非 display:none）时调用，否则量到的尺寸为 0 */
+function morphGeometry(){
+  cardReopen.style.display='flex';
+  cardReopen.style.animation='none';            // 量取静止基线，排除 float 漂浮干扰
+  var c=heroCard.getBoundingClientRect();
+  var b=cardReopen.getBoundingClientRect();
+  return {
+    dx:(b.left+b.width/2)-(c.left+c.width/2),
+    dy:(b.top+b.height/2)-(c.top+c.height/2),
+    sx:b.width/c.width,
+    sy:b.height/c.height
+  };
+}
+
+function prepCard(){
+  heroCard.classList.add('morphing');
+  heroCard.style.willChange='transform,opacity';
+  heroCard.style.transformOrigin='50% 50%';
+  heroCard.style.zIndex='1500';
+  heroCard.style.backdropFilter='none';
+  heroCard.style.webkitBackdropFilter='none';
+}
+function resetCard(){
+  heroCard.classList.remove('morphing');
+  heroCard.style.willChange='';
+  heroCard.style.transform='';
+  heroCard.style.opacity='';
+  heroCard.style.borderRadius='';
+  heroCard.style.zIndex='';
+  heroCard.style.backdropFilter='';
+  heroCard.style.webkitBackdropFilter='';
+  cardVeil.style.opacity='';
+  morphing=false;
+}
+
+/* ---- 关闭：玻璃名片液态收束 → 右下角电话按钮 ---- */
+function morphCardToButton(){
+  if(morphing||heroCard.classList.contains('closed')) return;
+  morphing=true;
+  if(reduceMotion){heroCard.classList.add('closed');cardReopen.style.display='flex';heroSlogan.classList.add('show');morphing=false;return;}
+
+  heroCard.style.transform='';        // 清掉指针倾斜，量取干净几何并以正姿态起飞
+  cardReopen.style.opacity='0';
+  fadeKids(true);
+  var g=morphGeometry(), sx=g.sx, sy=g.sy, DUR=760;
+  var t=function(p){return 'translate('+(g.dx*p).toFixed(1)+'px,'+(g.dy*p).toFixed(1)+'px) '};
+  prepCard();
+
+  // 吸气聚拢（轻微内缩蓄力）→ 加速飞行、沿途收成水滴 → 到位胀大 → 挤压回弹定形，
+  // 全程位移与尺寸耦合，呈现「液态汇聚成水滴落入按钮」的质感。
+  var anim=heroCard.animate([
+    {transform:t(0)+'scale(1,1)',     borderRadius:'28px', opacity:1, offset:0,   easing:'cubic-bezier(.55,.08,.45,.92)'},
+    {transform:t(.05)+'scale(.93,.88)',borderRadius:'44px', opacity:1, offset:.16, easing:'cubic-bezier(.55,0,.62,1)'},
+    {transform:t(.56)+'scale(.42,.5)', borderRadius:'46%',  opacity:1, offset:.55, easing:'cubic-bezier(.22,.55,.32,1)'},
+    {transform:t(1)+'scale('+(sx*1.45).toFixed(3)+','+(sy*1.45).toFixed(3)+')', borderRadius:'50%', opacity:1,  offset:.8,  easing:'cubic-bezier(.6,0,.4,1)'},
+    {transform:t(1)+'scale('+(sx*.9).toFixed(3)+','+(sy*.9).toFixed(3)+')',     borderRadius:'50%', opacity:.9, offset:.92, easing:'cubic-bezier(.4,0,.6,1)'},
+    {transform:t(1)+'scale('+sx.toFixed(3)+','+sy.toFixed(3)+')',               borderRadius:'50%', opacity:0,  offset:1}
+  ],{duration:DUR,fill:'forwards'});
+
+  // 飞行后半程玻璃逐渐“染”上按钮红（纯 opacity 合成动画，不增加重绘）
+  var veil=cardVeil.animate(
+    [{opacity:0},{opacity:0,offset:.42},{opacity:1,offset:.82},{opacity:1}],
+    {duration:DUR,fill:'forwards'});
+
+  // 名片飞离中央后，主张文案从背景晕染浮现
+  setTimeout(function(){heroSlogan.classList.add('show');},DUR*0.5);
+
+  // 尾段：电话按钮在水滴落点「凝结」弹出，与收束的红色水滴无缝交接
+  setTimeout(function(){
+    cardReopen.animate([{opacity:0,transform:'scale(.6)'},{opacity:1,transform:'scale(1)'}],
+      {duration:320,easing:'cubic-bezier(.34,1.56,.64,1)',fill:'forwards'});
+  },DUR*0.7);
+
+  anim.onfinish=function(){
+    anim.cancel();veil.cancel();
+    heroCard.classList.add('closed');
+    cardReopen.style.opacity='';cardReopen.style.transform='';cardReopen.style.animation='';  // 恢复漂浮
+    resetCard();
+  };
+}
+
+/* ---- 打开：电话按钮液态舒展 → 玻璃名片 ---- */
+function morphButtonToCard(){
+  if(morphing||!heroCard.classList.contains('closed')) return;
+  morphing=true;
+  heroSlogan.classList.remove('show');   // 文案先退场，给名片让位
+  if(reduceMotion){heroCard.classList.remove('closed');cardReopen.style.display='none';fadeKids(false);morphing=false;return;}
+
+  // 先以透明态恢复布局再量几何 —— display:none 时 rect 全为 0，缩放比会算成 Infinity（旧版 bug）
+  fadeKids(true);
+  heroCard.style.opacity='0';
+  heroCard.classList.remove('closed');
+  var g=morphGeometry(), sx=g.sx, sy=g.sy, DUR=740;
+  var t=function(p){return 'translate('+(g.dx*p).toFixed(1)+'px,'+(g.dy*p).toFixed(1)+'px) '};
+
+  // 把卡片钉在「按钮态」（与按钮同位同大、红色羽化层全开），避免闪现整张大卡片
+  heroCard.style.transform=t(1)+'scale('+sx.toFixed(3)+','+sy.toFixed(3)+')';
+  heroCard.style.borderRadius='50%';
+  cardVeil.style.opacity='1';
+  prepCard();
+  heroCard.offsetHeight;            // 强制回流，锁定起始态
+
+  // 按钮先行收缩淡出，红色水滴恰好从原位「冒出」接棒
+  cardReopen.animate([{opacity:1,transform:'scale(1)'},{opacity:0,transform:'scale(.5)'}],
+    {duration:170,easing:'ease-in',fill:'forwards'}).onfinish=function(){
+      cardReopen.style.display='none';cardReopen.style.opacity='';cardReopen.style.transform='';cardReopen.style.animation='';
+    };
+
+  // 小水滴胀大冒出 → 边长大边滑向中央（红色渐渐褪回玻璃）→ 轻微过冲回弹定形，
+  // 生长全程贴着运动路径，真正像「从按钮里弹出来」。
+  var anim=heroCard.animate([
+    {transform:t(1)+'scale('+sx.toFixed(3)+','+sy.toFixed(3)+')', borderRadius:'50%', opacity:0, offset:0,   easing:'cubic-bezier(.3,.6,.4,1)'},
+    {transform:t(1)+'scale('+(sx*1.5).toFixed(3)+','+(sy*1.5).toFixed(3)+')', borderRadius:'50%', opacity:1, offset:.12, easing:'cubic-bezier(.5,.05,.45,1)'},
+    {transform:t(.5)+'scale(.44,.52)',   borderRadius:'46%', opacity:1, offset:.48, easing:'cubic-bezier(.22,.6,.3,1)'},
+    {transform:t(.04)+'scale(1.045,1.02)',borderRadius:'26px',opacity:1, offset:.8,  easing:'cubic-bezier(.35,0,.5,1)'},
+    {transform:t(0)+'scale(.992,.998)',  borderRadius:'28px',opacity:1, offset:.91, easing:'cubic-bezier(.4,0,.5,1)'},
+    {transform:t(0)+'scale(1,1)',        borderRadius:'28px',opacity:1, offset:1}
+  ],{duration:DUR,fill:'forwards'});
+
+  // 红色在前半程褪去，露出玻璃本体（纯 opacity 合成动画）
+  var veil=cardVeil.animate(
+    [{opacity:1},{opacity:1,offset:.15},{opacity:0,offset:.5},{opacity:0}],
+    {duration:DUR,fill:'forwards'});
+
+  setTimeout(function(){fadeKids(false);},DUR*0.52);
+
+  anim.onfinish=function(){
+    anim.cancel();veil.cancel();
+    fadeKids(false);
+    resetCard();                       // 恢复实时玻璃模糊、阴影与装饰光层
+  };
+}
+document.getElementById('cardClose').onclick=morphCardToButton;
+
+cardReopen.onclick=function(){
+  if(morphing) return;
+  if(pendingCheck){clearInterval(pendingCheck);pendingCheck=0;}
+  if(pendingFallback){clearTimeout(pendingFallback);pendingFallback=0;}
+  var heroEl=document.getElementById('home');
+  if(Math.abs(heroEl.getBoundingClientRect().top)>window.innerHeight*.4){
+    heroEl.scrollIntoView({behavior:'smooth'});
+    pendingCheck=setInterval(function(){
+      if(Math.abs(heroEl.getBoundingClientRect().top)<8){
+        clearInterval(pendingCheck);pendingCheck=0;
+        clearTimeout(pendingFallback);pendingFallback=0;
+        morphButtonToCard();
+      }
+    },80);
+    pendingFallback=setTimeout(function(){
+      clearInterval(pendingCheck);pendingCheck=0;
+      pendingFallback=0;
+      if(!morphing) morphButtonToCard();
+    },3000);
+  }else{
+    morphButtonToCard();
+  }
+};
+
+/* ====== V3：液态玻璃名片 指针微倾斜 + 流动镜面高光 ======
+   仅桌面精确指针设备启用；倾斜 ≤ 2.1°，lerp 平滑跟随；
+   全程只写 transform（合成器通道），变形动画期间自动避让。 */
+(function(){
+  if(reduceMotion||!matchMedia('(hover:hover) and (pointer:fine)').matches) return;
+  var glare=document.getElementById('cardGlare');
+  var rect=null,gx=0,gy=0,cgx=0,cgy=0,rxT=0,ryT=0,rx=0,ry=0,active=false,raf=0;
+  function loop(){
+    raf=0;
+    rx+=(rxT-rx)*.12; ry+=(ryT-ry)*.12;       // 倾斜角缓动跟随
+    cgx+=(gx-cgx)*.2; cgy+=(gy-cgy)*.2;       // 高光位置缓动跟随
+    if(!morphing&&!heroCard.classList.contains('closed')){
+      heroCard.style.transform='perspective(1100px) rotateX('+rx.toFixed(2)+'deg) rotateY('+ry.toFixed(2)+'deg)';
+      glare.style.transform='translate('+(cgx-170).toFixed(1)+'px,'+(cgy-170).toFixed(1)+'px)';
+    }
+    if(active||Math.abs(rx)>.03||Math.abs(ry)>.03){raf=requestAnimationFrame(loop)}
+    else if(!morphing){heroCard.style.transform='';rx=ry=0;}   // 归位后释放内联 transform
+  }
+  heroCard.addEventListener('mouseenter',function(){
+    if(morphing) return;
+    rect=heroCard.getBoundingClientRect();    // 进入时量一次，避免逐帧布局读取
+    active=true;
+    if(!raf)raf=requestAnimationFrame(loop);
+  });
+  heroCard.addEventListener('mousemove',function(e){
+    if(!rect) return;
+    gx=e.clientX-rect.left; gy=e.clientY-rect.top;
+    ryT=((gx/rect.width)-.5)*4.2;
+    rxT=(.5-(gy/rect.height))*3.2;
+  });
+  heroCard.addEventListener('mouseleave',function(){
+    active=false;rxT=0;ryT=0;
+    if(!raf)raf=requestAnimationFrame(loop);
+  });
+})();
+
+/* ====== 开场加载动画：logo 品牌动效 → 溶解揭幕与首屏无缝衔接 ======
+   logo 模糊聚焦浮起、高光扫过笔画；资源就绪后黑幕原地交叉溶解（无方向性扫过），
+   logo 同时沿单一缓动曲线飞入导航位（全程无速度突变），导航 logo 接住回弹 ——
+   开场的终点就是页面的起点。 */
+(function(){
+  var loader=document.getElementById('loader'),box=document.getElementById('ldBox');
+  if(!loader) return;
+  document.body.style.overflow='hidden';
+  heroCard.style.animation='none';                   // 名片入场推迟到揭幕那一刻
+  var t0=performance.now(),MIN=1200,fired=false;    // 最短展示：液滴变形 + 绽放 + 扫光演完即放行
+
+  if(reduceMotion){loader.remove();document.body.style.overflow='';heroCard.style.animation='';return;}
+
+  function exit(){
+    if(fired) return;
+    fired=true;
+    var navLogo=document.querySelector('.logo img');
+    var b=box.getBoundingClientRect();
+    var t=navLogo?navLogo.getBoundingClientRect():{left:40,top:18,width:46,height:46};
+    var dx=(t.left+t.width/2)-(b.left+b.width/2);
+    var dy=(t.top+t.height/2)-(b.top+b.height/2);
+    var s=Math.max(t.height/b.height,.16);
+
+    // 白 logo 飞向导航位：整段动画共用一条缓动曲线（先加速后柔和减速），
+    // 不再分段拼接缓动，消除中途速度突变带来的卡顿感；透明度仅在末段 30% 渐隐
+    box.animate([
+      {transform:'translate(0,0) scale(1)',opacity:1},
+      {opacity:1,offset:.7},
+      {transform:'translate('+dx.toFixed(1)+'px,'+dy.toFixed(1)+'px) scale('+s.toFixed(3)+')',opacity:0}
+    ],{duration:720,easing:'cubic-bezier(.6,.04,.3,1)',fill:'forwards'});
+
+    loader.classList.add('done');                    // 黑幕原地溶解（CSS 过渡接管）
+    heroCard.style.animation='cardIn .9s .15s ease both'; // 溶解过程中名片同步浮现
+
+    // 导航 logo「接住」，回弹定形（与飞行减速段衔接）
+    setTimeout(function(){
+      if(navLogo) navLogo.animate(
+        [{transform:'scale(.55)',opacity:.2},{transform:'scale(1.18)',opacity:1,offset:.65},{transform:'scale(1)',opacity:1}],
+        {duration:440,easing:'cubic-bezier(.34,1.56,.64,1)'});
+    },500);
+    setTimeout(function(){loader.remove();document.body.style.overflow=''},1000);
+  }
+  function fire(){setTimeout(exit,Math.max(0,MIN-(performance.now()-t0)))}
+  if(document.readyState==='complete') fire(); else addEventListener('load',fire);
+  setTimeout(fire,2200);                             // 兜底：极端网络最多 2.2s 放行
+})();
+
+/* ====== 案例数据注入 ====== */
+const cases=['海慧手持消费设备','众宇动力','中电天线小车','雅迪E3151','海宝考拉','易达巡检机器人','悉水科技次氯酸钠水处理柜','嫦娥抗衰','巡检机器人','海宝·电轿','产品名称','产品名称'];
+const grid=document.getElementById('casesGrid');
+cases.forEach((c,i)=>{
+  const el=document.createElement('article');
+  el.className='case-card reveal-sc d'+((i%3)+1);
+  el.innerHTML='<div class="case-img"><div class="ph">'+c+'<br>（替换 case'+(i+1)+'.jpg）</div></div>'+
+    '<div class="case-title">'+c+'<span class="arrow">→</span></div>';
+  el.onclick=function(){openModal(c,'这是大方设计为客户打造的「'+c+'」项目。涵盖外观设计、结构设计、样机制作到量产落地的完整设计开发服务。')};
+  grid.appendChild(el);
+});
+
+/* ====== 环形节点定位 ====== */
+/* 左右分簇布局，贴合原图：左列 产品/工业/结构设计，右列 设计验证/品牌推广/供应链管理 */
+const nodes=[
+  {t:'产品设计',a:130},{t:'工业设计',a:180},{t:'结构设计',a:230},
+  {t:'设计验证',a:50},{t:'品牌推广',a:0},{t:'供应链管理',a:310}
+];
+const spin=document.getElementById('orbitSpin'),RX=46,RY=42;
+nodes.forEach(function(n,i){
+  const ang=n.a*Math.PI/180;
+  const d=document.createElement('div');d.className='orbit-node';
+  d.style.left=(50+RX*Math.cos(ang))+'%';
+  d.style.top=(50-RY*Math.sin(ang))+'%';
+  d.style.animationDelay=(i*0.4)+'s';
+  d.textContent=n.t;spin.appendChild(d);
+});
+
+/* ====== 合作伙伴 logo 横向滚动（自动 + 悬停可拖拽） ====== */
+(function(){
+  const TOTAL=40;
+  function fill(box,from,to){
+    let h='';
+    for(var i=from;i<=to;i++){h+='<div class="logo-item"><img src="assets/partners/'+i+'.png" alt="合作伙伴 '+i+'" loading="lazy"></div>';}
+    box.innerHTML=h+h; // 复制一份实现无缝循环
+  }
+  fill(document.getElementById('mq1'),1,20);
+  fill(document.getElementById('mq2'),21,40);
+  document.querySelectorAll('.marquee').forEach(function(m){
+    const dir=+m.dataset.dir||1;
+    let paused=false,dragging=false,startX=0,startLeft=0,moved=false;
+    const half=function(){return m.scrollWidth/2};
+    if(dir<0) m.scrollLeft=half();
+    function wrap(){const h=half();if(m.scrollLeft<=0)m.scrollLeft+=h;else if(m.scrollLeft>=h)m.scrollLeft-=h;}
+    let vis=false;   // 离屏时停写 scrollLeft，省掉不可见区域的滚动重绘
+    new IntersectionObserver(function(es){vis=es[0].isIntersecting}).observe(m);
+    (function tick(){
+      if(vis&&!dragging&&!paused){m.scrollLeft+=0.55*dir;wrap();}
+      requestAnimationFrame(tick);
+    })();
+    m.addEventListener('mouseenter',function(){paused=true});
+    m.addEventListener('mouseleave',function(){paused=false;dragging=false;m.classList.remove('grabbing')});
+    m.addEventListener('pointerdown',function(e){dragging=true;moved=false;startX=e.clientX;startLeft=m.scrollLeft;m.classList.add('grabbing');m.setPointerCapture(e.pointerId)});
+    m.addEventListener('pointermove',function(e){if(!dragging)return;const dx=e.clientX-startX;if(Math.abs(dx)>4)moved=true;m.scrollLeft=startLeft-dx;wrap()});
+    function end(){dragging=false;m.classList.remove('grabbing')}
+    m.addEventListener('pointerup',end);m.addEventListener('pointercancel',end);
+    // 拖拽时禁止误触发卡片点击
+    m.addEventListener('click',function(e){if(moved){e.preventDefault();e.stopPropagation();}},true);
+  });
+})();
+
+/* ====== 弹窗 ====== */
+const modal=document.getElementById('modal');
+function openModal(t,txt,img){document.getElementById('modalTitle').textContent=t;document.getElementById('modalText').textContent=txt;document.getElementById('modalImg').textContent=img||t;modal.classList.add('open');document.body.style.overflow='hidden'}
+function closeModal(){modal.classList.remove('open');document.body.style.overflow=''}
+modal.onclick=function(e){if(e.target===modal)closeModal()};
+addEventListener('keydown',function(e){if(e.key==='Escape')closeModal()});
+
+/* ====== 滚动揭示动画（变速 IntersectionObserver） ====== */
+const io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.15});
+document.querySelectorAll('.reveal,.reveal-l,.reveal-r,.reveal-sc').forEach(function(el){io.observe(el)});
+
+/* ====== 离屏暂停无限 CSS 动画（电流 / 地球 / 光晕呼吸等），整页更省帧 ====== */
+const animIO=new IntersectionObserver(function(es){es.forEach(function(e){
+  e.target.classList.toggle('anim-paused',!e.isIntersecting);
+})},{rootMargin:'120px 0px'});
+document.querySelectorAll('.section,.hero').forEach(function(el){animIO.observe(el)});
+
+/* ====== 数字滚动计数 ====== */
+const countIO=new IntersectionObserver(function(es){es.forEach(function(e){
+  if(!e.isIntersecting)return;
+  const el=e.target,target=+el.dataset.count;const t0=performance.now(),dur=1600;
+  function step(now){const p=Math.min((now-t0)/dur,1);const ease=1-Math.pow(1-p,3);
+    el.innerHTML=Math.round(target*ease)+'<small>+</small>';
+    if(p<1)requestAnimationFrame(step)}
+  requestAnimationFrame(step);countIO.unobserve(el);
+})},{threshold:.6});
+document.querySelectorAll('.num[data-count]').forEach(function(el){countIO.observe(el)});
+
+/* ====== 业务布局开场：城市先“钉”在地球节点上亮相，再丝滑归位列表（只演一次） ======
+   ① 落点亮相 —— 节点闪亮 + 涟漪，城市名带回弹感浮现（600ms 错峰，从容不抢）；
+      相邻城市之间有「光信号」沿线段传输：光点拖着亮线从上一城飞向下一城，
+      恰好在抵达瞬间点亮它 —— 一城传一城，叙事链清晰；传输线事后保留淡淡余韵，成为关联网。
+   ② 全景停留 —— 五城挂在球面上，完整展示业务布局的城市分布；
+   ③ 快速归位 —— 80ms 错峰、520ms 干脆利落地飞回右侧列表原位。 */
+const citiesEl=document.getElementById('cities'),
+      globeStageEl=document.querySelector('#globeSec .globe-stage'),
+      netNodes=[].slice.call(document.querySelectorAll('#globeSec .globe-net .node'));
+const CITY_NODE=[5,1,2,3,4];   // 城市(上→下) → 星座节点索引：空间自上而下对应，互不重复
+function nodeRipple(node){     // 节点闪亮一拍 + 涟漪散开即逝
+  node.classList.add('hit');
+  setTimeout(function(){node.classList.remove('hit')},900);
+  var ring=document.createElementNS('http://www.w3.org/2000/svg','circle');
+  ring.setAttribute('cx',node.cx.baseVal.value);ring.setAttribute('cy',node.cy.baseVal.value);
+  ring.setAttribute('r','5');ring.setAttribute('fill','none');
+  ring.setAttribute('stroke','rgba(255,95,105,.9)');ring.setAttribute('stroke-width','1.5');
+  node.parentNode.appendChild(ring);
+  ring.animate([{r:'5px',opacity:.9},{r:'26px',opacity:0}],{duration:650,easing:'cubic-bezier(.2,.6,.3,1)'})
+    .onfinish=function(){ring.remove()};
+}
+function transmit(a,b,dur){    // 光信号沿线段传输：亮线生长 + 光点飞行（viewBox 坐标系）
+  var ns='http://www.w3.org/2000/svg';
+  var ax=a.cx.baseVal.value,ay=a.cy.baseVal.value,bx=b.cx.baseVal.value,by=b.cy.baseVal.value;
+  var vx=bx-ax,vy=by-ay,len=Math.hypot(vx,vy)||1;
+  var d='M'+ax+' '+ay+' Q'+((ax+bx)/2-vy/len*18)+' '+((ay+by)/2+vx/len*18)+' '+bx+' '+by;
+  var svg=a.ownerSVGElement;
+  var trail=document.createElementNS(ns,'path');
+  trail.setAttribute('d',d);trail.setAttribute('fill','none');
+  trail.setAttribute('stroke','rgba(255,90,100,.6)');trail.setAttribute('stroke-width','1.2');
+  trail.setAttribute('stroke-linecap','round');trail.setAttribute('pathLength','1');
+  trail.style.strokeDasharray='1';trail.style.strokeDashoffset='1';
+  svg.appendChild(trail);
+  var comet=document.createElementNS(ns,'circle');
+  comet.setAttribute('r','3.2');comet.setAttribute('fill','#ff7a84');
+  comet.style.filter='drop-shadow(0 0 5px rgba(255,80,90,1))';
+  comet.style.offsetPath='path("'+d+'")';
+  svg.appendChild(comet);
+  requestAnimationFrame(function(){
+    trail.style.transition='stroke-dashoffset '+dur+'ms cubic-bezier(.45,.05,.4,1)';
+    trail.style.strokeDashoffset='0';
+    comet.animate([{offsetDistance:'0%',opacity:1},{offsetDistance:'100%',opacity:1}],
+      {duration:dur,easing:'cubic-bezier(.45,.05,.4,1)'}).onfinish=function(){
+        comet.remove();
+        trail.style.transition='opacity .8s ease';trail.style.opacity='.22'; // 余韵：淡淡的城市关联网
+      };
+  });
+}
+function runLayoutIntro(){
+  var cities=[].slice.call(citiesEl.children);
+  if(innerWidth<760||!globeStageEl){  // 小屏地球是半透明背景：退回简单列表浮现
+    cities.forEach(function(c,i){setTimeout(function(){c.classList.add('show')},i*180)});return;
+  }
+  var STEP=600,LIGHT=650,BACK_AT=4*600+650+900;   // 亮相节拍 / 浮现时长 / 归位起点
+  // 以列表落位（去掉默认入场位移）为基准，量出每城到对应节点的位移
+  cities.forEach(function(c){c.style.transition='none';c.style.transform='none'});
+  void citiesEl.offsetWidth;
+  var gr=globeStageEl.getBoundingClientRect();
+  var plan=cities.map(function(c,i){
+    var node=netNodes[CITY_NODE[i]];
+    var nx=gr.left+node.cx.baseVal.value/400*gr.width,
+        ny=gr.top+node.cy.baseVal.value/400*gr.height;
+    var pr=c.querySelector('.pin').getBoundingClientRect();
+    return {node:node,dx:nx-(pr.left+pr.width/2),dy:ny-(pr.top+pr.height/2)-4};
+  });
+  cities.forEach(function(c,i){
+    var d=plan[i],at='translate('+d.dx.toFixed(1)+'px,'+d.dy.toFixed(1)+'px)',a1;
+    // ① 钉在节点上浮现（涟漪与浮现同拍，节奏放缓）
+    setTimeout(function(){
+      nodeRipple(d.node);
+      a1=c.animate([
+        {opacity:0,transform:at+' scale(.6)'},
+        {opacity:1,transform:at+' scale(1)'}
+      ],{duration:LIGHT,easing:'cubic-bezier(.3,1.25,.5,1)',fill:'forwards'});
+    },i*STEP);
+    // ①.5 光信号传向下一城：恰在下一城亮相瞬间抵达
+    if(i<cities.length-1){
+      setTimeout(function(){transmit(d.node,plan[i+1].node,STEP-160)},i*STEP+160);
+    }
+    // ③ 停留展示后快速归位
+    setTimeout(function(){
+      var a2=c.animate([
+        {opacity:1,transform:at+' scale(1)'},
+        {opacity:1,transform:'translate(0,0) scale(1)'}
+      ],{duration:520,easing:'cubic-bezier(.5,0,.2,1)'});
+      a2.onfinish=function(){
+        if(a1)a1.cancel();
+        c.classList.add('show');c.style.transition='';c.style.transform='';
+      };
+    },BACK_AT+i*80);
+  });
+}
+const cityIO=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){
+  runLayoutIntro();
+  cityIO.unobserve(e.target);
+}})},{threshold:.3});
+cityIO.observe(citiesEl);
+
+/* ====== 表单提交 ====== */
+function submitForm(e){e.preventDefault();const f=e.target;openModal('提交成功 ✓','感谢您的咨询，'+f.name.value+'！我们已收到您的需求，将尽快通过 '+f.phone.value+' 与您联系。');f.reset();return false}
+</script>
+</body>
+</html>
