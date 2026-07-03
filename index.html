@@ -1664,7 +1664,55 @@ const cityIO=new IntersectionObserver(function(es){es.forEach(function(e){if(e.i
 }})},{threshold:.3});
 cityIO.observe(citiesEl);
 
-/* ====== 表单提交 → 飞书商务群通知 ====== */
+/* ====== 访客轨迹记录（存在访客浏览器本地，提交表单时随通知一起发送） ====== */
+var VISIT={};
+(function(){
+  function fmt(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')+' '
+    +String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')}
+  var now=new Date();
+  /* 访问次数与首次来访（localStorage 跨会话保留） */
+  var cnt=1,first=fmt(now);
+  try{
+    cnt=(parseInt(localStorage.getItem('df_visits')||'0',10)||0)+1;
+    localStorage.setItem('df_visits',String(cnt));
+    first=localStorage.getItem('df_first')||first;
+    localStorage.setItem('df_first',first);
+  }catch(e){}
+  /* 来源渠道 */
+  var ref=document.referrer,src='直接访问（输入网址/书签）';
+  if(ref){
+    try{var h=new URL(ref).hostname;
+      if(h.indexOf('baidu')>-1)src='百度搜索';
+      else if(h.indexOf('google')>-1)src='Google 搜索';
+      else if(h.indexOf('bing')>-1)src='必应搜索';
+      else if(h.indexOf('sogou')>-1)src='搜狗搜索';
+      else if(location.hostname&&h===location.hostname)src='站内跳转';
+      else src='外部链接：'+h;
+    }catch(e){src='外部链接'}
+  }
+  var ua=navigator.userAgent;
+  if(ua.indexOf('MicroMessenger')>-1)src+='（微信内打开）';
+  /* 设备与浏览器 */
+  var dev=/iPhone/.test(ua)?'iPhone':/iPad/.test(ua)?'iPad':/Android/.test(ua)?'安卓手机':/Windows/.test(ua)?'Windows 电脑':/Mac/.test(ua)?'Mac 电脑':'其他设备';
+  var brw=ua.indexOf('MicroMessenger')>-1?'微信内置浏览器':ua.indexOf('Edg')>-1?'Edge':ua.indexOf('Chrome')>-1?'Chrome':ua.indexOf('Safari')>-1?'Safari':'其他浏览器';
+  /* 浏览过的板块（按出现顺序记录） */
+  var SEC_NAMES={services:'服务范围',about:'企业实力',cases:'服务案例',globeSec:'业务布局',news:'动态新闻',contact:'商务合作'};
+  var viewed=[];
+  var secIO=new IntersectionObserver(function(es){es.forEach(function(en){
+    if(en.isIntersecting){
+      var n=SEC_NAMES[en.target.id];
+      if(n&&viewed.indexOf(n)<0)viewed.push(n);
+    }
+  })},{threshold:.35});
+  Object.keys(SEC_NAMES).forEach(function(id){var el=document.getElementById(id);if(el)secIO.observe(el)});
+  VISIT={
+    enter:now,fmt:fmt,count:cnt,first:first,src:src,dev:dev,brw:brw,viewed:viewed,
+    stay:function(){var s=Math.round((new Date()-this.enter)/1000);
+      return s<60?s+' 秒':Math.floor(s/60)+' 分 '+(s%60)+' 秒'}
+  };
+})();
+
+/* ====== 表单提交 → 飞书商务群通知（含该客户的访问记录） ====== */
 /* 在飞书商务群中：设置 → 群机器人 → 添加机器人 → 自定义机器人，
    把生成的 Webhook 地址粘贴到下面。
    安全设置请勾选「自定义关键词」，关键词填：官网咨询 */
@@ -1675,9 +1723,7 @@ async function submitForm(e){
   const f=e.target,btn=f.querySelector('.submit');
   const name=f.name.value.trim(),phone=f.phone.value.trim(),msg=f.msg.value.trim();
   btn.disabled=true;const btnText=btn.textContent;btn.textContent='提交中…';
-  const now=new Date();
-  const time=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0')+' '
-            +String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
+  const time=VISIT.fmt(new Date());
   try{
     const res=await fetch(FEISHU_WEBHOOK,{
       method:'POST',
@@ -1690,7 +1736,13 @@ async function submitForm(e){
             [{tag:'text',text:'👤 姓名：'+name}],
             [{tag:'text',text:'📞 电话：'+phone}],
             [{tag:'text',text:'📝 需求：'+msg}],
-            [{tag:'text',text:'🕐 时间：'+time+'（来自官网表单）'}]
+            [{tag:'text',text:'🕐 提交时间：'+time}],
+            [{tag:'text',text:'──── 该客户的访问记录 ────'}],
+            [{tag:'text',text:'🚪 本次进入官网：'+VISIT.fmt(VISIT.enter)+'，提交前已浏览 '+VISIT.stay()}],
+            [{tag:'text',text:'🔁 第 '+VISIT.count+' 次来访（首次来访 '+VISIT.first+'）'}],
+            [{tag:'text',text:'🔗 来源：'+VISIT.src}],
+            [{tag:'text',text:'📱 设备：'+VISIT.dev+' · '+VISIT.brw}],
+            [{tag:'text',text:'👁 浏览过的板块：'+(VISIT.viewed.length?VISIT.viewed.join(' → '):'（直达表单）')}]
           ]
         }}}
       })
