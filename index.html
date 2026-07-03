@@ -1664,8 +1664,48 @@ const cityIO=new IntersectionObserver(function(es){es.forEach(function(e){if(e.i
 }})},{threshold:.3});
 cityIO.observe(citiesEl);
 
-/* ====== 表单提交 ====== */
-function submitForm(e){e.preventDefault();const f=e.target;openModal('提交成功 ✓','感谢您的咨询，'+f.name.value+'！我们已收到您的需求，将尽快通过 '+f.phone.value+' 与您联系。');f.reset();return false}
+/* ====== 表单提交 → 飞书商务群通知 ====== */
+/* 在飞书商务群中：设置 → 群机器人 → 添加机器人 → 自定义机器人，
+   把生成的 Webhook 地址粘贴到下面。
+   安全设置请勾选「自定义关键词」，关键词填：官网咨询 */
+const FEISHU_WEBHOOK='https://open.feishu.cn/open-apis/bot/v2/hook/9de97622-80a6-4dc8-9de2-49c4d5387d02';
+
+async function submitForm(e){
+  e.preventDefault();
+  const f=e.target,btn=f.querySelector('.submit');
+  const name=f.name.value.trim(),phone=f.phone.value.trim(),msg=f.msg.value.trim();
+  btn.disabled=true;const btnText=btn.textContent;btn.textContent='提交中…';
+  const now=new Date();
+  const time=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0')+' '
+            +String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
+  try{
+    const res=await fetch(FEISHU_WEBHOOK,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        msg_type:'post',
+        content:{post:{zh_cn:{
+          title:'🔔 官网咨询 — 新的商务合作意向',
+          content:[
+            [{tag:'text',text:'👤 姓名：'+name}],
+            [{tag:'text',text:'📞 电话：'+phone}],
+            [{tag:'text',text:'📝 需求：'+msg}],
+            [{tag:'text',text:'🕐 时间：'+time+'（来自官网表单）'}]
+          ]
+        }}}
+      })
+    });
+    const data=await res.json().catch(function(){return {}});
+    if(!res.ok||data.code!==0)throw new Error(data.msg||('HTTP '+res.status));
+    openModal('提交成功 ✓','感谢您的咨询，'+name+'！我们已收到您的需求，将尽快通过 '+phone+' 与您联系。');
+    f.reset();
+  }catch(err){
+    openModal('提交失败','抱歉，网络异常导致提交失败，请稍后重试，或直接致电与我们联系。');
+  }finally{
+    btn.disabled=false;btn.textContent=btnText;
+  }
+  return false;
+}
 </script>
 </body>
 </html>
