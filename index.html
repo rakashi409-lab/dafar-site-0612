@@ -1710,14 +1710,14 @@ var VISIT={};
     stay:function(){var s=Math.round((new Date()-this.enter)/1000);
       return s<60?s+' 秒':Math.floor(s/60)+' 分 '+(s%60)+' 秒'}
   };
-  /* 上报本次访问到统计服务（用于每天 8:30 的访问日报），失败不影响页面 */
+  /* 上报本次访问到统计服务（用于每天 8:30 的访问日报），失败自动重试一次，不影响页面 */
   try{
     var vid=localStorage.getItem('df_vid');
     if(!vid){vid='v'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);localStorage.setItem('df_vid',vid)}
-    fetch('https://dafar-visit-tracker.dafar-design.workers.dev/track',{
-      method:'POST',headers:{'Content-Type':'application/json'},keepalive:true,
-      body:JSON.stringify({src:src,dev:dev,brw:brw,n:cnt,vid:vid})
-    }).catch(function(){});
+    var payload=JSON.stringify({src:src,dev:dev,brw:brw,n:cnt,vid:vid});
+    var sendTrack=function(){return fetch('https://dafar-visit-tracker.dafar-design.workers.dev/track',{
+      method:'POST',headers:{'Content-Type':'application/json'},keepalive:true,body:payload})};
+    sendTrack().catch(function(){setTimeout(function(){sendTrack().catch(function(){})},4000)});
   }catch(e){}
 })();
 
@@ -1733,6 +1733,10 @@ async function submitForm(e){
   const name=f.name.value.trim(),phone=f.phone.value.trim(),msg=f.msg.value.trim();
   btn.disabled=true;const btnText=btn.textContent;btn.textContent='提交中…';
   const time=VISIT.fmt(new Date());
+  const visitBrief='进入 '+VISIT.fmt(VISIT.enter)+'，浏览 '+VISIT.stay()+'，第'+VISIT.count+'次来访，来源 '+VISIT.src
+    +'，'+VISIT.dev+'·'+VISIT.brw+'，看过：'+(VISIT.viewed.length?VISIT.viewed.join('→'):'直达表单');
+  /* 通道一：直发飞书商务群 */
+  let notified=false;
   try{
     const res=await fetch(FEISHU_WEBHOOK,{
       method:'POST',
@@ -1757,14 +1761,26 @@ async function submitForm(e){
       })
     });
     const data=await res.json().catch(function(){return {}});
-    if(!res.ok||data.code!==0)throw new Error(data.msg||('HTTP '+res.status));
+    notified=res.ok&&data.code===0;
+  }catch(err){}
+  /* 通道二：云端存档；若通道一失败则由云端代发通知 */
+  let archived=false;
+  try{
+    const r2=await fetch('https://dafar-visit-tracker.dafar-design.workers.dev/consult',{
+      method:'POST',headers:{'Content-Type':'application/json'},keepalive:true,
+      body:JSON.stringify({name:name,phone:phone,msg:msg,visit:visitBrief,notified:notified})
+    });
+    const d2=await r2.json().catch(function(){return {}});
+    archived=r2.ok&&d2.ok;
+    if(!notified&&d2.forwarded)notified=true;
+  }catch(err){}
+  if(notified||archived){
     openModal('提交成功 ✓','感谢您的咨询，'+name+'！我们已收到您的需求，将尽快通过 '+phone+' 与您联系。');
     f.reset();
-  }catch(err){
+  }else{
     openModal('提交失败','抱歉，网络异常导致提交失败，请稍后重试，或直接致电与我们联系。');
-  }finally{
-    btn.disabled=false;btn.textContent=btnText;
   }
+  btn.disabled=false;btn.textContent=btnText;
   return false;
 }
 </script>
