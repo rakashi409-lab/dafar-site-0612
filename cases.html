@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="大方设计案例 — 交通工具、医疗设备、消费电子、军工装备、平面设计五大领域工业设计服务案例。">
+<meta name="keywords" content="大方设计,工业设计案例,交通工具设计,医疗设备设计,消费电子设计,军工装备设计,平面设计,武汉工业设计,DAFAR DESIGN">
+<title>案例 — 大方设计 DAFAR DESIGN</title>
+<style>
+/* ============ 全局变量 & 复位（与主页一致） ============ */
+:root{
+  --red:#e60012;
+  --red-bright:#ff1f2d;
+  --red-deep:#b3000e;
+  --red-glow:rgba(230,0,18,.55);
+  --bg:#000000;
+  --bg-soft:#0c0608;
+  --bg-card:#141414;
+  --bg-card-2:#1c1c1c;
+  --text:#f5f5f5;
+  --text-dim:#9a9a9a;
+  --text-faint:#666;
+  --line:rgba(255,255,255,.08);
+  --radius:16px;
+  --shadow:0 20px 50px rgba(0,0,0,.5);
+  --ease-spring:cubic-bezier(.16,1,.3,1);
+  --ease-out:cubic-bezier(.22,.61,.36,1);
+  --maxw:1280px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{
+  font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB","Noto Sans SC",-apple-system,sans-serif;
+  background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+ul{list-style:none}
+.container{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+
+/* ============ 通用标题（与主页一致） ============ */
+.section{padding:110px 0;position:relative}
+.sec-head{text-align:center;margin-bottom:64px}
+.sec-head h2{
+  font-size:clamp(28px,4vw,44px);font-weight:800;line-height:1.2;
+  opacity:0;filter:blur(12px);letter-spacing:18px;transform:translateY(14px);
+  transition:opacity 1s var(--ease-out),filter 1s var(--ease-out),
+             letter-spacing 1.2s var(--ease-spring),transform 1s var(--ease-spring);
+}
+.sec-head.in h2{opacity:1;filter:blur(0);letter-spacing:2px;transform:none}
+.sec-head h2 em{
+  font-style:normal;color:transparent;
+  background:linear-gradient(110deg,#b3000e 0%,#ff1f2d 30%,#ffd6d9 48%,#ff5560 52%,#ff1f2d 70%,#b3000e 100%);
+  background-size:240% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  animation:shine 4.5s linear infinite;
+}
+@keyframes shine{to{background-position:-240% center}}
+.sec-head p{color:var(--text-dim);font-size:clamp(15px,1.6vw,19px);margin-top:14px;letter-spacing:3px;
+  opacity:0;transform:translateY(10px);transition:opacity .9s .28s var(--ease-out),transform .9s .28s var(--ease-out)}
+.sec-head.in p{opacity:1;transform:none}
+
+/* 红色按钮（与主页一致） */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  background:linear-gradient(135deg,var(--red-bright),var(--red-deep));
+  color:#fff;padding:13px 38px;border-radius:40px;font-size:15px;font-weight:600;
+  box-shadow:0 4px 14px rgba(230,0,18,.16),inset 0 1px 0 rgba(255,255,255,.28),inset 0 -8px 14px rgba(0,0,0,.16);
+  transition:transform .35s var(--ease-spring),box-shadow .35s var(--ease-spring),filter .3s;
+  position:relative;overflow:hidden;
+}
+.btn::after{
+  content:"";position:absolute;top:0;left:-120%;width:60%;height:100%;
+  background:linear-gradient(120deg,transparent,rgba(255,255,255,.45),transparent);
+  transform:skewX(-20deg);transition:left .6s var(--ease-out);
+}
+.btn:hover{transform:translateY(-3px) scale(1.03);box-shadow:0 8px 22px rgba(230,0,18,.28),inset 0 1px 0 rgba(255,255,255,.3),inset 0 -8px 14px rgba(0,0,0,.16);filter:brightness(1.06)}
+.btn:hover::after{left:130%}
+
+/* ============ 导航（与服务页一致 + 下拉子菜单） ============ */
+/* 跨文档 View Transitions：切页时导航栏独立成组保持稳定，正文交叉淡入 */
+@view-transition{navigation:auto}
+.nav{
+  view-transition-name:site-nav;
+  position:fixed;top:0;left:0;width:100%;z-index:1000;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px 40px;transition:background .4s,backdrop-filter .4s,padding .4s,box-shadow .4s;
+}
+.nav.scrolled{
+  background:rgba(8,4,5,.85);backdrop-filter:blur(14px) saturate(1.5);-webkit-backdrop-filter:blur(14px) saturate(1.5);
+  padding:12px 40px;
+  box-shadow:0 4px 30px rgba(0,0,0,.6);border-bottom:1px solid var(--line);
+}
+.logo{display:flex;align-items:center;gap:10px}
+.logo img{height:46px;width:auto;display:block;transition:height .4s,filter .4s;filter:drop-shadow(0 2px 8px rgba(0,0,0,.5))}
+.nav.scrolled .logo img{height:40px}
+.nav-menu{display:flex;gap:36px}
+.nav-menu li{position:relative}
+.nav-menu>li>a{font-size:16px;font-weight:500;position:relative;padding:6px 0;color:#e8e8e8;transition:color .3s;display:inline-block}
+.nav-menu>li>a::after{
+  content:"";position:absolute;left:0;bottom:0;width:0;height:2px;
+  background:var(--red-bright);transition:width .35s var(--ease-out);
+}
+.nav-menu>li>a:hover,.nav-menu>li>a.active{color:var(--red-bright)}
+.nav-menu>li>a:hover::after,.nav-menu>li>a.active::after{width:100%}
+/* 下拉子菜单 */
+.dropdown{
+  position:absolute;top:100%;left:50%;transform:translateX(-50%) translateY(10px);
+  min-width:148px;padding:10px 0;border-radius:12px;
+  background:rgba(12,6,7,.94);backdrop-filter:blur(16px) saturate(1.4);-webkit-backdrop-filter:blur(16px) saturate(1.4);
+  border:1px solid rgba(230,0,18,.28);box-shadow:0 18px 44px rgba(0,0,0,.6);
+  opacity:0;visibility:hidden;transition:opacity .3s var(--ease-out),transform .3s var(--ease-spring),visibility .3s;
+}
+.nav-menu li:hover .dropdown{opacity:1;visibility:visible;transform:translateX(-50%) translateY(4px)}
+.dropdown::before{ /* 悬停缓冲区，防止鼠标滑过缝隙时闪没 */
+  content:"";position:absolute;left:0;right:0;top:-12px;height:12px}
+.dropdown a{
+  display:block;padding:9px 24px;font-size:14px;color:#ddd;text-align:center;white-space:nowrap;
+  letter-spacing:1px;transition:color .25s,background .25s;
+}
+.dropdown a:hover{color:var(--red-bright);background:rgba(230,0,18,.1)}
+.nav-cta{padding:10px 30px;font-size:14px}
+.nav-toggle{display:none;flex-direction:column;gap:5px;padding:8px}
+.nav-toggle span{width:26px;height:2px;background:#fff;transition:.3s}
+
+/* ============ 案例页 Banner（首页开屏 slogan 同款字体 + 滚动指示器） ============ */
+.sub-hero{
+  position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;
+  overflow:hidden;background:linear-gradient(160deg,#1a0508 0%,#0c0203 55%,#000 100%);
+}
+.sub-hero-bg{position:absolute;inset:0;overflow:hidden}
+.sub-hero-bg img{width:100%;height:100%;object-fit:cover;object-position:50% 50%;
+  filter:brightness(.9) saturate(1.1);
+  transform:scale(1.06);animation:subDrift 30s ease-in-out infinite alternate}
+@keyframes subDrift{from{transform:scale(1.06) translate(0,0)}to{transform:scale(1.12) translate(-1.2%,1%)}}
+.sub-hero-tint{position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse at 50% 42%,transparent 40%,rgba(0,0,0,.45) 100%),
+    linear-gradient(180deg,rgba(0,0,0,.5) 0%,transparent 26%,transparent 62%,rgba(0,0,0,.9) 100%)}
+.sub-hero-inner{position:relative;z-index:2;text-align:center;padding:120px 24px 80px}
+/* 中文主张：与首页开屏 slogan 完全同款 —— 细体 200 + 红白流光渐变整行填充 */
+.sub-hero-inner h1{
+  font-size:clamp(36px,5.8vw,74px);font-weight:200;letter-spacing:4px;line-height:1.25;
+  background:linear-gradient(92deg,#f23945 0%,#ff949c 16%,#ffd9db 34%,#ffffff 50%,#ffd9db 66%,#ff8d95 84%,#e82935 100%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;
+  opacity:0;filter:blur(14px);transform:translateY(24px);
+  animation:heroTitleIn 1.1s .15s var(--ease-out) forwards;
+}
+@keyframes heroTitleIn{from{letter-spacing:16px}to{opacity:1;filter:blur(0);transform:none;letter-spacing:4px}}
+/* 英文副题：与首页 .sl-en 同款 */
+.sub-hero-inner .en{
+  margin-top:22px;font-size:clamp(13px,1.7vw,22px);font-weight:200;color:rgba(255,255,255,.92);
+  letter-spacing:clamp(4px,.8vw,11px);text-transform:uppercase;
+  opacity:0;transform:translateY(18px);filter:blur(10px);animation:subIn .9s .5s var(--ease-out) forwards;
+}
+.sub-hero-inner .act{margin-top:44px;opacity:0;transform:translateY(18px);animation:subIn .9s .75s var(--ease-out) forwards}
+@keyframes subIn{to{opacity:1;filter:blur(0);transform:none}}
+/* 滚动指示器：发光环 + 中间胶囊 + 旋转炫光（与首页同款） */
+.scroll-ind{
+  position:absolute;bottom:42px;left:50%;transform:translateX(-50%);z-index:5;
+  width:76px;height:76px;display:flex;align-items:center;justify-content:center;
+}
+.scroll-ind::before{content:"";position:absolute;inset:-6px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,40,55,.14),transparent 65%);filter:blur(6px);
+  animation:siGlow 2.8s ease-in-out infinite}
+.si-ring{position:absolute;inset:8px;border-radius:50%;
+  border:2px solid rgba(255,80,90,.55);
+  box-shadow:0 0 10px 1px rgba(255,40,55,.28),inset 0 0 8px rgba(255,70,80,.25);
+  animation:siGlow 2.8s ease-in-out infinite}
+.si-ring::after{content:"";position:absolute;inset:-2px;border-radius:50%;
+  background:conic-gradient(from 0deg,transparent 0 62%,rgba(255,150,160,.5) 80%,rgba(255,255,255,.7) 88%,transparent 96%);
+  -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 4px),#000 calc(100% - 3px));
+          mask:radial-gradient(farthest-side,transparent calc(100% - 4px),#000 calc(100% - 3px));
+  animation:siSpin 2.6s linear infinite}
+.si-pill{width:14px;height:30px;border-radius:9px;position:relative;z-index:2;
+  background:linear-gradient(180deg,#ff6068,#e0121f 60%,#b3000e);
+  box-shadow:0 0 10px 2px rgba(255,40,55,.4),inset 0 1px 3px rgba(255,190,195,.5),inset 0 -2px 4px rgba(120,0,8,.3);
+  animation:siBob 2s ease-in-out infinite}
+@keyframes siGlow{0%,100%{opacity:.6;box-shadow:0 0 8px 1px rgba(255,40,55,.2),inset 0 0 6px rgba(255,70,80,.2)}
+  50%{opacity:1;box-shadow:0 0 18px 3px rgba(255,40,55,.45),inset 0 0 10px rgba(255,70,80,.4)}}
+@keyframes siSpin{to{transform:rotate(360deg)}}
+@keyframes siBob{0%,100%{transform:translateY(-4px)}50%{transform:translateY(4px)}}
+/* 面包屑 */
+.breadcrumb{
+  position:absolute;left:0;right:0;bottom:26px;z-index:3;
+  max-width:var(--maxw);margin:0 auto;padding:0 24px;
+  font-size:14px;color:var(--text-dim);letter-spacing:2px;
+  opacity:0;animation:subIn .8s 1s var(--ease-out) forwards;
+}
+.breadcrumb a{transition:color .3s}
+.breadcrumb a:hover{color:var(--red-bright)}
+.breadcrumb span{margin:0 10px;color:var(--red-bright)}
+
+/* ============ 「工业设计案例」页面大标题 ============ */
+.cases-intro{padding:96px 0 0;text-align:center}
+.cases-intro h2{
+  font-size:clamp(34px,5vw,56px);font-weight:900;color:var(--red-bright);letter-spacing:8px;
+  animation:titleGlow 3.2s ease-in-out infinite;
+}
+@keyframes titleGlow{0%,100%{text-shadow:0 0 28px rgba(230,0,18,.35)}50%{text-shadow:0 0 60px rgba(230,0,18,.85),0 0 110px rgba(230,0,18,.45)}}
+
+/* ============ 案例卡片（与主页服务案例同款） ============ */
+.strength{background:linear-gradient(180deg,#000,#0a0405,#000)}
+.cases-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.case-card{
+  border-radius:14px;overflow:hidden;cursor:pointer;background:#111;
+  transition:transform .45s var(--ease-spring),box-shadow .45s;position:relative;
+}
+.case-card:hover{transform:translateY(-8px);box-shadow:0 26px 54px rgba(0,0,0,.6)}
+.case-img{aspect-ratio:16/10;overflow:hidden;background:#e9e9e9}
+.case-img .ph{
+  width:100%;height:100%;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#e8e8e8,#cfcfcf);color:#888;font-size:13px;text-align:center;
+  transition:transform .6s var(--ease-out);
+}
+.case-card:hover .case-img .ph{transform:scale(1.08)}
+.case-title{
+  background:linear-gradient(135deg,var(--red-bright),var(--red-deep));
+  color:#fff;font-size:18px;font-weight:700;padding:18px 22px;letter-spacing:1px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.case-title .arrow{opacity:0;transform:translateX(-8px);transition:.4s}
+.case-card:hover .case-title .arrow{opacity:1;transform:none}
+.sec-more{text-align:center;margin-top:50px}
+
+/* ============ 结尾标语（首页开屏 slogan 同款：细体 200 + 红白流光渐变整行填充） ============ */
+.cases-outro{padding:130px 0 110px;text-align:center}
+.cases-outro .l1,.cases-outro .l2{
+  font-size:clamp(30px,4.6vw,58px);font-weight:200;line-height:1.35;letter-spacing:6px;
+  background:linear-gradient(92deg,#f23945 0%,#ff949c 16%,#ffd9db 34%,#ffffff 50%,#ffd9db 66%,#ff8d95 84%,#e82935 100%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;
+}
+.cases-outro .l2{margin-top:14px}
+
+/* ============ 商务合作表单（与主页一致） ============ */
+.contact{background:linear-gradient(180deg,#000,#0a0405)}
+.contact h2{text-align:center;font-size:clamp(36px,6vw,64px);font-weight:900;color:var(--red-bright);
+  letter-spacing:6px;margin-bottom:54px;animation:titleGlow 3.2s ease-in-out infinite}
+.form{max-width:980px;margin:0 auto}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-bottom:26px}
+.field label{display:block;font-size:16px;margin-bottom:12px;color:#ddd}
+.field input,.field textarea{
+  width:100%;background:#fff;border:none;border-radius:8px;padding:16px 18px;
+  font-size:15px;color:#222;font-family:inherit;transition:box-shadow .3s,transform .3s;
+}
+.field textarea{min-height:120px;resize:vertical}
+.field input:focus,.field textarea:focus{outline:none;box-shadow:0 0 0 3px rgba(230,0,18,.4)}
+.form .submit{display:block;margin:40px auto 0;min-width:200px;padding:15px}
+
+/* ============ 页脚（与主页一致） ============ */
+.footer{border-top:1px solid rgba(230,0,18,.5);background:#000;padding:64px 0 0}
+.footer-top{display:grid;grid-template-columns:1fr auto auto auto auto;gap:48px 64px;align-items:start;padding-bottom:46px}
+.f-brand{display:flex;align-items:center;gap:44px}
+.f-brand .f-logo{height:110px;width:auto;flex-shrink:0;filter:drop-shadow(0 4px 12px rgba(0,0,0,.5))}
+.f-info{display:flex;flex-direction:column;gap:14px;min-width:0}
+.f-brand .phone{display:flex;align-items:center;gap:16px;font-size:clamp(34px,3.4vw,48px);font-weight:800;letter-spacing:2px;white-space:nowrap;line-height:1.1;font-variant-numeric:tabular-nums lining-nums}
+.f-brand .phone svg{width:clamp(28px,2.4vw,36px);height:auto;color:#fff;flex-shrink:0}
+.f-brand .line{font-size:15px;color:#d6d6d6;margin-top:0}
+.f-brand .line.mail{font-size:clamp(18px,1.6vw,23px);font-weight:300;color:#e8e8e8}
+.f-brand .line b{color:var(--text-faint);font-weight:400;font-size:15px;margin-right:8px}
+.f-col{text-align:center}
+.f-col h5{color:var(--red-bright);font-size:20px;font-weight:700;letter-spacing:3px;margin-bottom:26px}
+.f-col a{display:block;color:#e6e6e6;font-size:16px;margin-bottom:20px;white-space:nowrap;letter-spacing:1px;
+  transition:color .3s,transform .3s,opacity .3s}
+.f-col a:last-child{margin-bottom:0}
+.f-col:hover a:not(:hover){opacity:.45}
+.f-col a:hover{color:var(--red-bright);transform:translateY(-2px)}
+.f-qr{text-align:center}
+.f-qr .qr{width:118px;height:118px;margin:0 auto 14px;border-radius:12px;background:#fff;padding:8px}
+.f-qr .qr img{display:block;width:100%;height:100%;object-fit:contain}
+.f-qr p{font-size:14px;color:#d6d6d6;letter-spacing:1px}
+.copyright{
+  border-top:1px solid var(--line);padding:22px 0;text-align:center;
+  font-size:13px;color:var(--text-faint);line-height:2;
+}
+.copyright a{color:var(--text-faint);transition:color .3s}
+.copyright a:hover{color:var(--red-bright)}
+
+/* ============ 弹窗 Modal（与主页一致） ============ */
+.modal{
+  position:fixed;inset:0;z-index:2000;display:flex;align-items:center;justify-content:center;
+  background:rgba(0,0,0,.8);backdrop-filter:blur(10px) saturate(1.2);-webkit-backdrop-filter:blur(10px) saturate(1.2);
+  opacity:0;visibility:hidden;transition:opacity .4s,visibility .4s;padding:20px;
+}
+.modal.open{opacity:1;visibility:visible}
+.modal-card{
+  background:linear-gradient(160deg,#1c1416,#0c0708);border:1px solid rgba(230,0,18,.4);
+  border-radius:18px;max-width:640px;width:100%;padding:0;overflow:hidden;position:relative;
+  transform:translateY(40px) scale(.92);transition:transform .5s var(--ease-spring);
+  box-shadow:0 40px 90px rgba(0,0,0,.7);
+}
+.modal.open .modal-card{transform:none}
+.modal-img{aspect-ratio:16/9;overflow:hidden}
+.modal-img .ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#2a2a2a,#141414);color:#777;font-size:13px}
+.modal-body{padding:32px 36px 36px}
+.modal-body h3{font-size:26px;font-weight:800;color:var(--red-bright);margin-bottom:14px}
+.modal-body p{color:#bdbdbd;font-size:15px;line-height:1.9}
+.modal-close{position:absolute;top:18px;right:18px;width:38px;height:38px;border-radius:50%;
+  background:var(--red);color:#fff;font-size:20px;display:flex;align-items:center;justify-content:center;
+  transition:transform .3s;z-index:3}
+.modal-close:hover{transform:rotate(90deg)}
+
+/* ============ 滚动揭示动画（与主页一致） ============ */
+.reveal{opacity:0;transform:translateY(48px);transition:opacity .9s var(--ease-out),transform .9s var(--ease-spring)}
+.reveal.in{opacity:1;transform:none}
+.reveal-sc{opacity:0;transform:scale(.86);transition:opacity .8s var(--ease-out),transform .8s var(--ease-spring)}
+.reveal-sc.in{opacity:1;transform:none}
+.reveal-l{opacity:0;transform:translateX(-50px);transition:opacity .9s var(--ease-out),transform .9s var(--ease-spring)}
+.reveal-l.in{opacity:1;transform:none}
+.reveal-r{opacity:0;transform:translateX(50px);transition:opacity .9s var(--ease-out),transform .9s var(--ease-spring)}
+.reveal-r.in{opacity:1;transform:none}
+.reveal.d1,.reveal-sc.d1{transition-delay:.08s}
+.reveal.d2,.reveal-sc.d2{transition-delay:.16s}
+.reveal.d3,.reveal-sc.d3{transition-delay:.24s}
+.anim-paused *,.anim-paused *::before,.anim-paused *::after{animation-play-state:paused!important}
+
+/* ============ V3 质感层（与主页一致） ============ */
+::selection{background:rgba(230,0,18,.85);color:#fff}
+:where(a,button,input,textarea):focus-visible{outline:2px solid rgba(255,80,90,.75);outline-offset:3px}
+html{scrollbar-width:thin;scrollbar-color:#8a000b #070707}
+::-webkit-scrollbar{width:10px}
+::-webkit-scrollbar-track{background:#070707}
+::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#7a0009,#b3000e);border-radius:8px;border:2px solid #070707}
+::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,#b3000e,#ff1f2d)}
+.grain{position:fixed;inset:0;z-index:3000;pointer-events:none;opacity:.045;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:280px 280px}
+
+/* ============ 响应式 ============ */
+@media(max-width:1100px){
+  .cases-grid{grid-template-columns:repeat(2,1fr)}
+  .footer-top{grid-template-columns:1fr 1fr 1fr}
+  .f-qr{grid-column:span 3}
+}
+@media(max-width:820px){
+  .nav{padding:14px 20px}
+  .nav.scrolled{padding:10px 20px}
+  .nav-toggle{display:flex}
+  .nav-menu{
+    position:fixed;top:0;right:-100%;width:74%;max-width:320px;height:100vh;
+    flex-direction:column;gap:0;background:rgba(10,5,6,.97);backdrop-filter:blur(16px);
+    padding:90px 30px;transition:right .45s var(--ease-out);box-shadow:-10px 0 40px rgba(0,0,0,.5);
+  }
+  .nav-menu.open{right:0}
+  .nav-menu>li>a{font-size:18px;padding:16px 0;border-bottom:1px solid var(--line);display:block}
+  .dropdown{display:none}   /* 小屏收起下拉，点主项直达页面 */
+  .nav-cta{display:none}
+  .nav-toggle.active span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+  .nav-toggle.active span:nth-child(2){opacity:0}
+  .nav-toggle.active span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+  .sub-hero{min-height:100svh}
+  .section{padding:70px 0}
+  .cases-intro{padding:70px 0 0}
+}
+@media(max-width:560px){
+  .cases-grid{grid-template-columns:1fr}
+  .form-row{grid-template-columns:1fr}
+  .footer-top{grid-template-columns:1fr 1fr}
+  .f-brand{flex-direction:column;align-items:center;text-align:center;gap:18px;grid-column:span 2}
+  .f-info{align-items:center}
+  .f-qr{grid-column:span 2}
+  .f-brand .phone{font-size:24px}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;transition-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+
+<!-- 全站胶片颗粒 -->
+<div class="grain" aria-hidden="true"></div>
+
+<!-- ============ 导航 ============ -->
+<nav class="nav" id="nav">
+  <a class="logo" href="index.html">
+    <img src="assets/logo-h.png" alt="大方设计 DAFAR DESIGN">
+  </a>
+  <ul class="nav-menu" id="navMenu">
+    <li><a href="index.html">首页</a></li>
+    <li>
+      <a href="services.html">服务</a>
+      <div class="dropdown">
+        <a href="services.html#scope">服务范围</a>
+        <a href="services.html#flow">业务流程</a>
+        <a href="services.html#trends">核心趋势</a>
+        <a href="services.html#aftersale">售后服务</a>
+      </div>
+    </li>
+    <li>
+      <a href="#top" class="active">案例</a>
+      <div class="dropdown">
+        <a href="#transport">交通工具</a>
+        <a href="#medical">医疗设备</a>
+        <a href="#consumer">消费电子</a>
+        <a href="#military">军工装备</a>
+        <a href="#graphic">平面设计</a>
+      </div>
+    </li>
+    <li><a href="index.html#news">动态</a></li>
+    <li><a href="index.html#about">关于</a></li>
+    <li><a href="#contact">联系</a></li>
+  </ul>
+  <button class="btn nav-cta" onclick="document.getElementById('contact').scrollIntoView()">立即咨询</button>
+  <button class="nav-toggle" id="navToggle" aria-label="菜单"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- ============ Banner（首页 slogan 同款） ============ -->
+<header class="sub-hero" id="top">
+  <div class="sub-hero-bg" aria-hidden="true"><img src="assets/services-hero.jpg" alt=""></div>
+  <div class="sub-hero-tint" aria-hidden="true"></div>
+  <div class="sub-hero-inner">
+    <h1>专注设计是我们不变的追求</h1>
+    <div class="en">Focusing Design Is Our Constant Pursuit</div>
+    <div class="act"><button class="btn" onclick="document.getElementById('transport').scrollIntoView()">探索更多</button></div>
+  </div>
+  <div class="scroll-ind" aria-hidden="true"><span class="si-ring"></span><span class="si-pill"></span></div>
+  <div class="breadcrumb"><a href="services.html">服务</a><span>&gt;</span>案例</div>
+</header>
+
+<!-- ============ 工业设计案例 大标题 ============ -->
+<section class="cases-intro reveal" id="casesTop">
+  <h2>工业设计案例</h2>
+</section>
+
+<!-- ============ 交通工具 ============ -->
+<section class="section" id="transport">
+  <div class="container">
+    <div class="sec-head reveal"><h2>交通工具 <em>服务案例</em></h2><p>蜕变就是不停地革新</p></div>
+    <div class="cases-grid" data-cat="transport"></div>
+    <div class="sec-more reveal"><button class="btn" onclick="moreCases('交通工具')">探索更多</button></div>
+  </div>
+</section>
+
+<!-- ============ 医疗设备 ============ -->
+<section class="section strength" id="medical">
+  <div class="container">
+    <div class="sec-head reveal"><h2>医疗设备 <em>服务案例</em></h2><p>蜕变就是不停地革新</p></div>
+    <div class="cases-grid" data-cat="medical"></div>
+    <div class="sec-more reveal"><button class="btn" onclick="moreCases('医疗设备')">探索更多</button></div>
+  </div>
+</section>
+
+<!-- ============ 消费电子 ============ -->
+<section class="section" id="consumer">
+  <div class="container">
+    <div class="sec-head reveal"><h2>消费电子 <em>服务案例</em></h2><p>蜕变就是不停地革新</p></div>
+    <div class="cases-grid" data-cat="consumer"></div>
+    <div class="sec-more reveal"><button class="btn" onclick="moreCases('消费电子')">探索更多</button></div>
+  </div>
+</section>
+
+<!-- ============ 军工装备 ============ -->
+<section class="section strength" id="military">
+  <div class="container">
+    <div class="sec-head reveal"><h2>军工装备 <em>服务案例</em></h2><p>蜕变就是不停地革新</p></div>
+    <div class="cases-grid" data-cat="military"></div>
+    <div class="sec-more reveal"><button class="btn" onclick="moreCases('军工装备')">探索更多</button></div>
+  </div>
+</section>
+
+<!-- ============ 平面设计 ============ -->
+<section class="section" id="graphic">
+  <div class="container">
+    <div class="sec-head reveal"><h2>平面设计 <em>服务案例</em></h2><p>蜕变就是不停地革新</p></div>
+    <div class="cases-grid" data-cat="graphic"></div>
+    <div class="sec-more reveal"><button class="btn" onclick="moreCases('平面设计')">探索更多</button></div>
+  </div>
+</section>
+
+<!-- ============ 结尾标语 ============ -->
+<section class="cases-outro reveal">
+  <div class="container">
+    <div class="l1">专注于设计；革新领先。</div>
+    <div class="l2">大方设计，与您共创未来业内新标杆。</div>
+  </div>
+</section>
+
+<!-- ============ 商务合作 表单 ============ -->
+<section class="section contact" id="contact">
+  <div class="container">
+    <h2 class="reveal">商务合作</h2>
+    <form class="form" id="bizForm" onsubmit="return submitForm(event)">
+      <div class="form-row">
+        <div class="field reveal-l"><label>您的姓名 *</label><input type="text" name="name" required placeholder="请输入您的姓名"></div>
+        <div class="field reveal-r"><label>您的电话 *</label><input type="tel" name="phone" required pattern="[0-9\-\+\s]{7,}" placeholder="请输入您的联系电话"></div>
+      </div>
+      <div class="field reveal"><label>咨询内容 *</label><textarea name="msg" required placeholder="请简要描述您的需求"></textarea></div>
+      <button type="submit" class="btn submit reveal">提交</button>
+    </form>
+  </div>
+</section>
+
+<!-- ============ 页脚 ============ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-top">
+      <div class="f-brand">
+        <img class="f-logo" src="assets/logo-v.png" alt="大方设计 DAFAR DESIGN">
+        <div class="f-info">
+          <div class="phone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.4-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>027-87666138</div>
+          <div class="line mail"><b>邮箱</b>info@dafar-design.com</div>
+          <div class="line"><b>地址</b>湖北省武汉市洪山区创意天地06艺术家工作室</div>
+        </div>
+      </div>
+      <div class="f-col"><h5>服务</h5><a href="services.html#scope">服务范围</a><a href="services.html#flow">业务流程</a><a href="services.html#trends">核心趋势</a><a href="services.html#aftersale">售后保障</a></div>
+      <div class="f-col"><h5>案例</h5><a href="#transport">交通工具</a><a href="#medical">医疗设备</a><a href="#consumer">消费电子</a><a href="#military">军工装备</a></div>
+      <div class="f-col"><h5>关于</h5><a href="index.html#about">公司介绍</a><a href="index.html#about">企业荣誉</a><a href="#contact">联系方式</a></div>
+      <div class="f-qr">
+        <div class="qr"><img src="assets/qrcode.png" alt="大方设计微信公众号二维码"></div>
+        <p>关注我们的公众号</p>
+      </div>
+    </div>
+    <div class="copyright">
+      Copyright © 2025 武汉大方工业设计有限公司 版权所有　|　DAFAR DESIGN<br>
+      <a href="https://beian.miit.gov.cn" target="_blank" rel="noopener">鄂ICP备XXXXXXXX号-1</a>
+      　|
+      <a href="http://www.beian.gov.cn/portal/registerSystemInfo" target="_blank" rel="noopener">🛡 鄂公网安备 42011102XXXXXX号</a>
+      　|　技术支持：大方设计
+    </div>
+  </div>
+</footer>
+
+<!-- ============ 通用弹窗 ============ -->
+<div class="modal" id="modal">
+  <div class="modal-card">
+    <button class="modal-close" onclick="closeModal()" aria-label="关闭">&times;</button>
+    <div class="modal-img"><div class="ph" id="modalImg">案例配图</div></div>
+    <div class="modal-body"><h3 id="modalTitle"></h3><p id="modalText"></p></div>
+  </div>
+</div>
+
+<script>
+/* 进站标记：从本页跳回首页时跳过首页开屏动画 */
+try{sessionStorage.setItem('dfEntered','1')}catch(e){}
+
+/* ====== 导航：滚动变色 + 移动菜单（与主页一致） ====== */
+const nav=document.getElementById('nav'),navToggle=document.getElementById('navToggle'),navMenu=document.getElementById('navMenu');
+navToggle.onclick=()=>{navToggle.classList.toggle('active');navMenu.classList.toggle('open')};
+navMenu.querySelectorAll('a').forEach(a=>a.onclick=()=>{navToggle.classList.remove('active');navMenu.classList.remove('open')});
+let scrollTick=false;
+addEventListener('scroll',function(){
+  if(scrollTick) return;
+  scrollTick=true;
+  requestAnimationFrame(function(){
+    scrollTick=false;
+    nav.classList.toggle('scrolled',scrollY>40);
+  });
+},{passive:true});
+
+/* ====== 案例数据注入（名称待定的先用「产品名称」占位，配图替换 cases/<分类>-<序号>.jpg） ====== */
+const CASE_DATA={
+  transport:['二轮车','二轮车','二轮车','三轮车','海宝·玉兔','海宝·灵狐','产品名称','产品名称','产品名称','顺丰快递三轮车','车灯造型','产品名称','海宝·电轿','海宝·玉葫','海宝·灵鲛','爱玛 A07','产品名称','产品名称'],
+  medical:['皮肤检测仪','医美皮肤检测仪','医美塑形检测仪','多普勒超声检测仪','光子嫩肤仪','肺功能检测仪'],
+  consumer:['书法体验设备','探地雷达小车','飞行模拟设备','穿戴人体空调','易达巡检机器人','电力巡检机器人','交流滤波器保护装置','3D打印设备','消防检测仪','次氯酸钠水处理柜','众宇动力','咖啡机'],
+  military:['石墨电池','船用氢燃料电池','3D打印氢燃料发动机','氢燃料测试平台部件','瞄准镜','望远镜','语音通信融合终端','工业激光设备','便携激光清洗设备'],
+  graphic:['导视设计','品牌设计','展会设计','画册设计','文化墙设计','PPT设计']
+};
+document.querySelectorAll('.cases-grid[data-cat]').forEach(function(grid){
+  const cat=grid.dataset.cat;
+  (CASE_DATA[cat]||[]).forEach(function(c,i){
+    const el=document.createElement('article');
+    el.className='case-card reveal-sc d'+((i%3)+1);
+    el.innerHTML='<div class="case-img"><div class="ph">'+c+'<br>（替换 cases/'+cat+'-'+(i+1)+'.jpg）</div></div>'+
+      '<div class="case-title">'+c+'<span class="arrow">→</span></div>';
+    el.onclick=function(){openModal(c,'这是大方设计为客户打造的「'+c+'」项目。涵盖外观设计、结构设计、样机制作到量产落地的完整设计开发服务。')};
+    grid.appendChild(el);
+  });
+});
+function moreCases(cat){openModal('更多'+cat+'案例','更多精彩'+cat+'设计案例正在整理中，欢迎来电 027-87666138 或填写下方表单获取完整作品集。')}
+
+/* ====== 弹窗 ====== */
+const modal=document.getElementById('modal');
+function openModal(t,txt,img){document.getElementById('modalTitle').textContent=t;document.getElementById('modalText').textContent=txt;document.getElementById('modalImg').textContent=img||t;modal.classList.add('open');document.body.style.overflow='hidden'}
+function closeModal(){modal.classList.remove('open');document.body.style.overflow=''}
+modal.onclick=function(e){if(e.target===modal)closeModal()};
+addEventListener('keydown',function(e){if(e.key==='Escape')closeModal()});
+
+/* ====== 滚动揭示动画 ====== */
+const io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.15});
+document.querySelectorAll('.reveal,.reveal-l,.reveal-r,.reveal-sc').forEach(function(el){io.observe(el)});
+
+/* ====== 离屏暂停无限 CSS 动画 ====== */
+const animIO=new IntersectionObserver(function(es){es.forEach(function(e){
+  e.target.classList.toggle('anim-paused',!e.isIntersecting);
+})},{rootMargin:'120px 0px'});
+document.querySelectorAll('.section,.sub-hero,.cases-intro,.cases-outro').forEach(function(el){animIO.observe(el)});
+
+/* ====== 访客轨迹记录（与主页同款，板块名换成案例页的） ====== */
+var VISIT={};
+(function(){
+  function fmt(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')+' '
+    +String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')}
+  var now=new Date();
+  var cnt=1,first=fmt(now);
+  try{
+    cnt=(parseInt(localStorage.getItem('df_visits')||'0',10)||0)+1;
+    localStorage.setItem('df_visits',String(cnt));
+    first=localStorage.getItem('df_first')||first;
+    localStorage.setItem('df_first',first);
+  }catch(e){}
+  var ref=document.referrer,src='直接访问（输入网址/书签）';
+  if(ref){
+    try{var h=new URL(ref).hostname;
+      if(h.indexOf('baidu')>-1)src='百度搜索';
+      else if(h.indexOf('google')>-1)src='Google 搜索';
+      else if(h.indexOf('bing')>-1)src='必应搜索';
+      else if(h.indexOf('sogou')>-1)src='搜狗搜索';
+      else if(location.hostname&&h===location.hostname)src='站内跳转';
+      else src='外部链接：'+h;
+    }catch(e){src='外部链接'}
+  }
+  var ua=navigator.userAgent;
+  if(ua.indexOf('MicroMessenger')>-1)src+='（微信内打开）';
+  var dev=/iPhone/.test(ua)?'iPhone':/iPad/.test(ua)?'iPad':/Android/.test(ua)?'安卓手机':/Windows/.test(ua)?'Windows 电脑':/Mac/.test(ua)?'Mac 电脑':'其他设备';
+  var brw=ua.indexOf('MicroMessenger')>-1?'微信内置浏览器':ua.indexOf('Edg')>-1?'Edge':ua.indexOf('Chrome')>-1?'Chrome':ua.indexOf('Safari')>-1?'Safari':'其他浏览器';
+  var SEC_NAMES={transport:'案例页·交通工具',medical:'案例页·医疗设备',consumer:'案例页·消费电子',military:'案例页·军工装备',graphic:'案例页·平面设计',contact:'案例页·商务合作'};
+  var viewed=[];
+  var secIO=new IntersectionObserver(function(es){es.forEach(function(en){
+    if(en.isIntersecting){
+      var n=SEC_NAMES[en.target.id];
+      if(n&&viewed.indexOf(n)<0)viewed.push(n);
+    }
+  })},{threshold:.35});
+  Object.keys(SEC_NAMES).forEach(function(id){var el=document.getElementById(id);if(el)secIO.observe(el)});
+  VISIT={
+    enter:now,fmt:fmt,count:cnt,first:first,src:src,dev:dev,brw:brw,viewed:viewed,
+    stay:function(){var s=Math.round((new Date()-this.enter)/1000);
+      return s<60?s+' 秒':Math.floor(s/60)+' 分 '+(s%60)+' 秒'}
+  };
+  try{
+    var vid=localStorage.getItem('df_vid');
+    if(!vid){vid='v'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);localStorage.setItem('df_vid',vid)}
+    var payload=JSON.stringify({src:src,dev:dev,brw:brw,n:cnt,vid:vid});
+    var sendTrack=function(){return fetch('https://dafar-visit-tracker.dafar-design.workers.dev/track',{
+      method:'POST',headers:{'Content-Type':'application/json'},keepalive:true,body:payload})};
+    sendTrack().catch(function(){setTimeout(function(){sendTrack().catch(function(){})},4000)});
+  }catch(e){}
+})();
+
+/* ====== 表单提交 → 飞书商务群通知（与主页同一 Webhook） ====== */
+const FEISHU_WEBHOOK='https://open.feishu.cn/open-apis/bot/v2/hook/9de97622-80a6-4dc8-9de2-49c4d5387d02';
+
+async function submitForm(e){
+  e.preventDefault();
+  const f=e.target,btn=f.querySelector('.submit');
+  const name=f.name.value.trim(),phone=f.phone.value.trim(),msg=f.msg.value.trim();
+  btn.disabled=true;const btnText=btn.textContent;btn.textContent='提交中…';
+  const time=VISIT.fmt(new Date());
+  const visitBrief='进入 '+VISIT.fmt(VISIT.enter)+'，浏览 '+VISIT.stay()+'，第'+VISIT.count+'次来访，来源 '+VISIT.src
+    +'，'+VISIT.dev+'·'+VISIT.brw+'，看过：'+(VISIT.viewed.length?VISIT.viewed.join('→'):'直达表单');
+  let notified=false;
+  try{
+    const res=await fetch(FEISHU_WEBHOOK,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        msg_type:'post',
+        content:{post:{zh_cn:{
+          title:'🔔 官网咨询 — 新的商务合作意向（案例页）',
+          content:[
+            [{tag:'text',text:'👤 姓名：'+name}],
+            [{tag:'text',text:'📞 电话：'+phone}],
+            [{tag:'text',text:'📝 需求：'+msg}],
+            [{tag:'text',text:'🕐 提交时间：'+time}],
+            [{tag:'text',text:'──── 该客户的访问记录 ────'}],
+            [{tag:'text',text:'🚪 本次进入官网：'+VISIT.fmt(VISIT.enter)+'，提交前已浏览 '+VISIT.stay()}],
+            [{tag:'text',text:'🔁 第 '+VISIT.count+' 次来访（首次来访 '+VISIT.first+'）'}],
+            [{tag:'text',text:'🔗 来源：'+VISIT.src}],
+            [{tag:'text',text:'📱 设备：'+VISIT.dev+' · '+VISIT.brw}],
+            [{tag:'text',text:'👁 浏览过的板块：'+(VISIT.viewed.length?VISIT.viewed.join(' → '):'（直达表单）')}]
+          ]
+        }}}
+      })
+    });
+    const data=await res.json().catch(function(){return {}});
+    notified=res.ok&&data.code===0;
+  }catch(err){}
+  let archived=false;
+  try{
+    const r2=await fetch('https://dafar-visit-tracker.dafar-design.workers.dev/consult',{
+      method:'POST',headers:{'Content-Type':'application/json'},keepalive:true,
+      body:JSON.stringify({name:name,phone:phone,msg:msg,visit:visitBrief,notified:notified})
+    });
+    const d2=await r2.json().catch(function(){return {}});
+    archived=r2.ok&&d2.ok;
+    if(!notified&&d2.forwarded)notified=true;
+  }catch(err){}
+  if(notified||archived){
+    openModal('提交成功 ✓','感谢您的咨询，'+name+'！我们已收到您的需求，将尽快通过 '+phone+' 与您联系。');
+    f.reset();
+  }else{
+    openModal('提交失败','抱歉，网络异常导致提交失败，请稍后重试，或直接致电与我们联系。');
+  }
+  btn.disabled=false;btn.textContent=btnText;
+  return false;
+}
+</script>
+</body>
+</html>

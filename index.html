@@ -539,10 +539,17 @@ ul{list-style:none}
 .globe-sec{position:relative;overflow:hidden}
 .layout-wrap{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center;min-height:560px;z-index:2}
 /* 星球从左下角升起（抬升版）：底部裁约 22%，球面上部抬进视野中带，
-   与右侧城市列表同一视线高度；左侧仍裁约 30%，右上球面留足节点/钉城空间 */
+   与右侧城市列表同一视线高度；左侧仍裁约 30%，右上球面留足节点/钉城空间。
+   锚点/尺寸不变 */
 .globe-stage{position:absolute;left:0;bottom:0;
   width:min(980px,68vw);height:min(980px,68vw);
   transform:translate(-30%,22%);z-index:0;pointer-events:none}
+/* 底部渐变羽化：只罩球体本身（52% 起渐隐、76% 全透明，柔和溶入黑底）。
+   注意不能罩在 .globe-stage 上——大气弧光/辉光探出容器边界，
+   遮罩会在容器上/右边缘把它们生硬切断 */
+.globe-sphere,.globe-atmo,.globe-glow{
+  -webkit-mask-image:linear-gradient(to bottom,#000 52%,transparent 76%);
+          mask-image:linear-gradient(to bottom,#000 52%,transparent 76%)}
 .globe-sphere{position:absolute;inset:0;border-radius:50%;overflow:hidden;
   background:
     radial-gradient(circle at 64% 30%,rgba(255,60,72,.26),transparent 52%),
@@ -890,7 +897,16 @@ html{scrollbar-width:thin;scrollbar-color:#8a000b #070707}
         <a href="services.html#aftersale">售后服务</a>
       </div>
     </li>
-    <li><a href="#cases">案例</a></li>
+    <li>
+      <a href="cases.html">案例</a>
+      <div class="dropdown">
+        <a href="cases.html#transport">交通工具</a>
+        <a href="cases.html#medical">医疗设备</a>
+        <a href="cases.html#consumer">消费电子</a>
+        <a href="cases.html#military">军工装备</a>
+        <a href="cases.html#graphic">平面设计</a>
+      </div>
+    </li>
     <li><a href="#news">动态</a></li>
     <li><a href="#about">关于</a></li>
     <li><a href="#contact">联系</a></li>
@@ -1198,7 +1214,7 @@ html{scrollbar-width:thin;scrollbar-color:#8a000b #070707}
         </div>
       </div>
       <div class="f-col"><h5>服务</h5><a href="services.html#scope">服务范围</a><a href="services.html#flow">业务流程</a><a href="services.html#trends">核心趋势</a><a href="services.html#aftersale">售后保障</a></div>
-      <div class="f-col"><h5>案例</h5><a href="#cases">工业设计</a><a href="#cases">品牌设计</a><a href="#cases">交互设计</a><a href="#cases">动画制作</a></div>
+      <div class="f-col"><h5>案例</h5><a href="cases.html#transport">交通工具</a><a href="cases.html#medical">医疗设备</a><a href="cases.html#consumer">消费电子</a><a href="cases.html#military">军工装备</a></div>
       <div class="f-col"><h5>关于</h5><a href="#about">公司介绍</a><a href="#about">企业荣誉</a><a href="#contact">联系方式</a></div>
       <div class="f-qr">
         <div class="qr"><img src="assets/qrcode.png" alt="大方设计微信公众号二维码"></div>
