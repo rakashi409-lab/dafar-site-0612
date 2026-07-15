@@ -80,7 +80,11 @@ ul{list-style:none}
 .btn-ghost{background:transparent;border:1px solid var(--red);box-shadow:none}
 
 /* ============ 导航 ============ */
+/* 跨文档 View Transitions：首页↔服务页切换时导航栏独立成组保持稳定，
+   正文平滑交叉淡入，消除整页重载的闪跳（不支持的浏览器自动回退为普通跳转） */
+@view-transition{navigation:auto}
 .nav{
+  view-transition-name:site-nav;
   position:fixed;top:0;left:0;width:100%;z-index:1000;
   display:flex;align-items:center;justify-content:space-between;
   padding:18px 40px;transition:background .4s,backdrop-filter .4s,padding .4s,box-shadow .4s;
@@ -534,11 +538,11 @@ ul{list-style:none}
 /* ============ 业务布局 地球（数字粒子地球：左侧出血 + 右上弧光大气层） ============ */
 .globe-sec{position:relative;overflow:hidden}
 .layout-wrap{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center;min-height:560px;z-index:2}
-/* 星球从左下角升起（收敛版）：球心约在 (14vw, 底边下 12%)，
-   左侧裁约 30%、底部裁约 38%，球体轮廓完整可读，右上球面留足节点/钉城空间 */
+/* 星球从左下角升起（抬升版）：底部裁约 22%，球面上部抬进视野中带，
+   与右侧城市列表同一视线高度；左侧仍裁约 30%，右上球面留足节点/钉城空间 */
 .globe-stage{position:absolute;left:0;bottom:0;
   width:min(980px,68vw);height:min(980px,68vw);
-  transform:translate(-30%,38%);z-index:0;pointer-events:none}
+  transform:translate(-30%,22%);z-index:0;pointer-events:none}
 .globe-sphere{position:absolute;inset:0;border-radius:50%;overflow:hidden;
   background:
     radial-gradient(circle at 64% 30%,rgba(255,60,72,.26),transparent 52%),
