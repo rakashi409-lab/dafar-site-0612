@@ -233,20 +233,23 @@ ul{list-style:none}
 .scope-card:nth-child(2) .ph{background:linear-gradient(135deg,#3a1218,#150608 55%,#2a0e28)}
 .scope-card:nth-child(3) .ph{background:linear-gradient(135deg,#102a3a,#081018 55%,#251530)}
 .scope-card:nth-child(4) .ph{background:linear-gradient(135deg,#141d3d,#0a0c1c 55%,#101f38)}
-/* 红色信息区：编号 + 标题 + 描述全部坐在红底上（对照设计稿） */
+/* 红色信息区（对照设计稿）：超大编号+竖线+标题一行，小字标签横排在条带底部 */
 .scope-bar{
   background:linear-gradient(135deg,var(--red-bright),var(--red-deep));
-  display:flex;align-items:flex-start;gap:22px;padding:20px 30px 26px;
+  padding:0 30px 18px;
 }
+.scope-head{display:flex;align-items:center;gap:26px}
 .scope-bar .no{
-  font-size:clamp(56px,6.4vw,92px);font-weight:900;line-height:.9;color:#fff;
+  font-size:clamp(72px,8vw,116px);font-weight:900;line-height:.82;color:#fff;
   text-shadow:0 4px 14px rgba(120,0,8,.5);font-variant-numeric:tabular-nums;
-  margin-top:-38px; /* 大数字向上探出红区、压在图片上，呼应设计稿 */
+  margin-top:-44px; /* 大数字向上探出红区、压在图片上，呼应设计稿 */
   flex:0 0 auto;
 }
-.scope-txt{flex:1;min-width:0}
-.scope-txt h3{font-size:clamp(20px,2.2vw,28px);font-weight:800;letter-spacing:3px;color:#fff;margin-bottom:8px}
-.scope-txt p{color:#ffe0e2;font-size:14px;letter-spacing:.5px;line-height:1.9}
+.scope-head h3{
+  font-size:clamp(22px,2.4vw,30px);font-weight:800;letter-spacing:4px;color:#fff;
+  padding-left:26px;border-left:2px solid rgba(255,255,255,.55);line-height:1.3;
+}
+.scope-tags{color:#ffe3e5;font-size:13px;letter-spacing:1px;line-height:1.8;margin-top:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
 /* ============ 业务流程（波浪连线 6 节点） ============ */
 .flow-wrap{position:relative;padding:30px 0 10px}
@@ -589,19 +592,19 @@ html{scrollbar-width:thin;scrollbar-color:#8a000b #070707}
     <div class="scope-grid">
       <article class="scope-card reveal-sc d1" onclick="openModal('工业设计','产品外观设计、结构配合设计、手板跟进、量产落地优化、文创产品设计。以制造可行性为根基，打造兼顾美学与工艺的产品。')">
         <div class="scope-img"><div class="ph">工业设计配图<br>（替换 svc-industrial.jpg）</div></div>
-        <div class="scope-bar"><span class="no">1</span><div class="scope-txt"><h3>工业设计</h3><p>产品外观设计、结构配合设计、手板跟进、量产落地优化、文创产品设计</p></div></div>
+        <div class="scope-bar"><div class="scope-head"><span class="no">1</span><h3>工业设计</h3></div><p class="scope-tags">产品外观设计 / 结构配合设计 / 手板跟进 / 量产落地优化 / 文创产品设计</p></div>
       </article>
       <article class="scope-card reveal-sc d2" onclick="openModal('品牌设计','LOGO设计、VI视觉系统、包装设计、宣传画册、品牌视觉升级。构建系统化品牌识别，提升品牌资产价值。')">
         <div class="scope-img"><div class="ph">品牌设计配图<br>（替换 svc-brand.jpg）</div></div>
-        <div class="scope-bar"><span class="no">2</span><div class="scope-txt"><h3>品牌设计</h3><p>LOGO设计、VI视觉系统、包装设计、宣传画册、品牌视觉升级</p></div></div>
+        <div class="scope-bar"><div class="scope-head"><span class="no">2</span><h3>品牌设计</h3></div><p class="scope-tags">LOGO设计 / VI视觉系统 / 包装设计 / 宣传画册 / 品牌视觉升级</p></div>
       </article>
       <article class="scope-card reveal-sc d3" onclick="openModal('交互设计','APP / 小程序界面设计、网页 UI、车载界面、操作逻辑优化、原型设计。以用户体验为核心，打磨流畅自然的人机交互。')">
         <div class="scope-img"><div class="ph">交互设计配图<br>（替换 svc-ux.jpg）</div></div>
-        <div class="scope-bar"><span class="no">3</span><div class="scope-txt"><h3>交互设计</h3><p>APP / 小程序界面设计、网页 UI、车载界面、操作逻辑优化、原型设计</p></div></div>
+        <div class="scope-bar"><div class="scope-head"><span class="no">3</span><h3>交互设计</h3></div><p class="scope-tags">APP / 小程序界面设计 / 网页UI / 车载界面 / 操作逻辑优化 / 原型设计</p></div>
       </article>
       <article class="scope-card reveal-sc d4" onclick="openModal('动画制作','产品演示动画、品牌宣传片、三维建模动画、MG 动态视觉、短视频内容。用动态影像讲好产品与品牌故事。')">
         <div class="scope-img"><div class="ph">动画制作配图<br>（替换 svc-motion.jpg）</div></div>
-        <div class="scope-bar"><span class="no">4</span><div class="scope-txt"><h3>动画制作</h3><p>产品演示动画、品牌宣传片、三维建模动画、MG动态视觉、短视频制作</p></div></div>
+        <div class="scope-bar"><div class="scope-head"><span class="no">4</span><h3>动画制作</h3></div><p class="scope-tags">产品演示动画 / 品牌宣传片 / 三维建模动画 / MG动态视觉 / 短视频制作</p></div>
       </article>
     </div>
   </div>
@@ -760,6 +763,8 @@ html{scrollbar-width:thin;scrollbar-color:#8a000b #070707}
 </div>
 
 <script>
+/* 进站标记：从本页跳回首页时跳过首页开屏动画（file:// 下无 referrer 也生效） */
+try{sessionStorage.setItem('dfEntered','1')}catch(e){}
 /* ====== 导航：滚动变色 + 移动菜单（与主页一致，去掉锚点高亮：本页“服务”常亮） ====== */
 const nav=document.getElementById('nav'),navToggle=document.getElementById('navToggle'),navMenu=document.getElementById('navMenu');
 navToggle.onclick=()=>{navToggle.classList.toggle('active');navMenu.classList.toggle('open')};
