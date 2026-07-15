@@ -534,10 +534,11 @@ ul{list-style:none}
 /* ============ 业务布局 地球（数字粒子地球：左侧出血 + 右上弧光大气层） ============ */
 .globe-sec{position:relative;overflow:hidden}
 .layout-wrap{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center;min-height:560px;z-index:2}
-/* 大球锚定区块左下角出血（参考稿）：球心约在 (7vw, 底边)，只露右上弧面 */
+/* 星球从左下角升起（收敛版）：球心约在 (14vw, 底边下 12%)，
+   左侧裁约 30%、底部裁约 38%，球体轮廓完整可读，右上球面留足节点/钉城空间 */
 .globe-stage{position:absolute;left:0;bottom:0;
-  width:min(1350px,94vw);height:min(1350px,94vw);
-  transform:translate(-42.5%,50%);z-index:0;pointer-events:none}
+  width:min(980px,68vw);height:min(980px,68vw);
+  transform:translate(-30%,38%);z-index:0;pointer-events:none}
 .globe-sphere{position:absolute;inset:0;border-radius:50%;overflow:hidden;
   background:
     radial-gradient(circle at 64% 30%,rgba(255,60,72,.26),transparent 52%),
@@ -1114,21 +1115,21 @@ html{scrollbar-width:thin;scrollbar-color:#8a000b #070707}
           <ellipse cx="200" cy="200" rx="66" ry="196"/>
           <ellipse cx="200" cy="200" rx="132" ry="196"/>
         </g>
-        <!-- 连线网络移到右上可见弧面（球出血后仅露右上区域） -->
+        <!-- 连线网络布在可见球面中上部（左下升起后，右上面留白最充裕） -->
         <g stroke="rgba(255,70,82,.55)" stroke-width="1.3">
-          <path d="M222 55 Q258 62 285 85"/>
-          <path d="M285 85 Q312 103 330 130"/>
-          <path d="M330 130 Q348 152 356 180"/>
-          <path d="M356 180 Q345 198 325 205"/>
-          <path d="M255 150 L285 85 M255 150 L325 205"/>
+          <path d="M185 60 Q225 65 258 88"/>
+          <path d="M258 88 Q292 108 315 140"/>
+          <path d="M315 140 Q328 170 330 205"/>
+          <path d="M330 205 Q298 222 255 225"/>
+          <path d="M215 145 L258 88 M215 145 L330 205"/>
         </g>
         <g fill="#ff4a55">
-          <circle class="node" cx="255" cy="150" r="3"/>
-          <circle class="node" cx="285" cy="85" r="3"/>
-          <circle class="node" cx="330" cy="130" r="3"/>
-          <circle class="node" cx="356" cy="180" r="3"/>
-          <circle class="node" cx="325" cy="205" r="3"/>
-          <circle class="node" cx="222" cy="55" r="3"/>
+          <circle class="node" cx="215" cy="145" r="3"/>
+          <circle class="node" cx="258" cy="88" r="3"/>
+          <circle class="node" cx="315" cy="140" r="3"/>
+          <circle class="node" cx="330" cy="205" r="3"/>
+          <circle class="node" cx="255" cy="225" r="3"/>
+          <circle class="node" cx="185" cy="60" r="3"/>
         </g>
       </svg>
     </div>

@@ -237,6 +237,7 @@ ul{list-style:none}
 .scope-bar{
   background:linear-gradient(135deg,var(--red-bright),var(--red-deep));
   padding:0 30px 18px;
+  position:relative;z-index:2; /* 压过上方图片块，保证大数字探出的上半截可见 */
 }
 .scope-head{display:flex;align-items:center;gap:26px}
 .scope-bar .no{
