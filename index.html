@@ -80,7 +80,11 @@ ul{list-style:none}
 .btn-ghost{background:transparent;border:1px solid var(--red);box-shadow:none}
 
 /* ============ 导航 ============ */
+/* 跨文档 View Transitions：首页↔服务页切换时导航栏独立成组保持稳定，
+   正文平滑交叉淡入，消除整页重载的闪跳（不支持的浏览器自动回退为普通跳转） */
+@view-transition{navigation:auto}
 .nav{
+  view-transition-name:site-nav;
   position:fixed;top:0;left:0;width:100%;z-index:1000;
   display:flex;align-items:center;justify-content:space-between;
   padding:18px 40px;transition:background .4s,backdrop-filter .4s,padding .4s,box-shadow .4s;
@@ -93,6 +97,7 @@ ul{list-style:none}
 .logo img{height:46px;width:auto;display:block;transition:height .4s,filter .4s;filter:drop-shadow(0 2px 8px rgba(0,0,0,.5))}
 .nav.scrolled .logo img{height:40px}
 .nav-menu{display:flex;gap:36px}
+.nav-menu li{position:relative}
 .nav-menu a{font-size:16px;font-weight:500;position:relative;padding:6px 0;color:#e8e8e8;transition:color .3s}
 .nav-menu a::after{
   content:"";position:absolute;left:0;bottom:0;width:0;height:2px;
@@ -100,6 +105,23 @@ ul{list-style:none}
 }
 .nav-menu a:hover,.nav-menu a.active{color:var(--red-bright)}
 .nav-menu a:hover::after,.nav-menu a.active::after{width:100%}
+/* “服务”下拉子菜单（与服务页一致） */
+.dropdown{
+  position:absolute;top:100%;left:50%;transform:translateX(-50%) translateY(10px);
+  min-width:148px;padding:10px 0;border-radius:12px;
+  background:rgba(12,6,7,.94);backdrop-filter:blur(16px) saturate(1.4);-webkit-backdrop-filter:blur(16px) saturate(1.4);
+  border:1px solid rgba(230,0,18,.28);box-shadow:0 18px 44px rgba(0,0,0,.6);
+  opacity:0;visibility:hidden;transition:opacity .3s var(--ease-out),transform .3s var(--ease-spring),visibility .3s;
+}
+.nav-menu li:hover .dropdown{opacity:1;visibility:visible;transform:translateX(-50%) translateY(4px)}
+.dropdown::before{ /* 悬停缓冲区，防止鼠标滑过缝隙时闪没 */
+  content:"";position:absolute;left:0;right:0;top:-12px;height:12px}
+.dropdown a{
+  display:block;padding:9px 24px;font-size:14px;color:#ddd;text-align:center;white-space:nowrap;
+  letter-spacing:1px;transition:color .25s,background .25s;
+}
+.dropdown a::after{content:none}
+.dropdown a:hover{color:var(--red-bright);background:rgba(230,0,18,.1)}
 .nav-cta{padding:10px 30px;font-size:14px}
 .nav-toggle{display:none;flex-direction:column;gap:5px;padding:8px}
 .nav-toggle span{width:26px;height:2px;background:#fff;transition:.3s}
@@ -349,6 +371,9 @@ ul{list-style:none}
 
 /* ============ 企业实力 ============ */
 .strength{background:linear-gradient(180deg,#000,#0a0405,#000)}
+/* 本区标题按参考稿放大加重，副题提亮 */
+#about .sec-head h2{font-size:clamp(32px,4.5vw,58px);font-weight:900}
+#about .sec-head p{color:#e8e8e8;font-size:clamp(16px,1.8vw,21px);letter-spacing:6px}
 .circuit{position:relative;width:min(260px,62vw);margin:0 auto 30px}
 .circuit svg{width:100%;height:auto;display:block;overflow:visible}
 .ckt-base{opacity:.35}
@@ -369,8 +394,9 @@ ul{list-style:none}
 .ckt-node circle:nth-child(odd){animation-delay:.6s}
 @keyframes cktNode{0%,100%{opacity:.45}50%{opacity:1;filter:drop-shadow(0 0 6px rgba(255,80,90,.9))}}
 .intro{
-  display:grid;grid-template-columns:1fr 1.05fr;gap:40px;align-items:center;
-  border:1px solid rgba(230,0,18,.35);border-radius:18px;padding:44px;margin-bottom:70px;
+  display:grid;grid-template-columns:1fr 1.2fr;gap:40px;align-items:center;
+  border:1px solid rgba(230,0,18,.5);border-radius:14px;padding:38px 44px;
+  max-width:1100px;margin:0 auto 70px;
   background:rgba(20,8,10,.4);
 }
 .intro h3{font-size:24px;font-weight:800;margin-bottom:16px;position:relative;padding-bottom:14px}
@@ -511,9 +537,12 @@ ul{list-style:none}
 
 /* ============ 业务布局 地球（数字粒子地球：左侧出血 + 右上弧光大气层） ============ */
 .globe-sec{position:relative;overflow:hidden}
-.layout-wrap{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center;min-height:520px;z-index:2}
-.globe-stage{position:absolute;left:-9%;top:47%;transform:translateY(-50%);
-  width:min(600px,42vw);height:min(600px,42vw);z-index:0;pointer-events:none}
+.layout-wrap{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center;min-height:560px;z-index:2}
+/* 星球从左下角升起（抬升版）：底部裁约 22%，球面上部抬进视野中带，
+   与右侧城市列表同一视线高度；左侧仍裁约 30%，右上球面留足节点/钉城空间 */
+.globe-stage{position:absolute;left:0;bottom:0;
+  width:min(980px,68vw);height:min(980px,68vw);
+  transform:translate(-30%,22%);z-index:0;pointer-events:none}
 .globe-sphere{position:absolute;inset:0;border-radius:50%;overflow:hidden;
   background:
     radial-gradient(circle at 64% 30%,rgba(255,60,72,.26),transparent 52%),
@@ -565,21 +594,21 @@ ul{list-style:none}
 /* 标注瞬间：既有节点短促闪亮（替代常驻脉冲一拍） */
 .globe-net .node.hit{animation:nodeHit .85s cubic-bezier(.3,.7,.3,1)}
 @keyframes nodeHit{0%{transform:scale(1)}28%{transform:scale(2.4);opacity:1;filter:drop-shadow(0 0 10px rgba(255,85,95,1))}100%{transform:scale(1);opacity:.7}}
-.globe-glow{position:absolute;right:-2%;top:38%;transform:translateY(-50%);
-  width:45%;height:62%;border-radius:50%;
-  background:radial-gradient(circle,rgba(255,45,55,.35),transparent 70%);filter:blur(22px)}
-/* 城市块靠右排布 */
-.cities{display:flex;flex-direction:column;gap:6px;position:relative;z-index:2;width:max-content;margin-left:auto;margin-right:3%}
+.globe-glow{position:absolute;right:6%;top:9%;
+  width:28%;height:32%;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,45,55,.3),transparent 70%);filter:blur(26px)}
+/* 城市块在右半区偏左起排，两列交错（参考稿） */
+.cities{display:flex;flex-direction:column;gap:12px;position:relative;z-index:2;width:max-content;margin-left:22%;margin-right:auto}
 .city{display:flex;align-items:center;gap:14px;font-size:clamp(22px,2.6vw,32px);font-weight:600;padding:7px 0;
   text-shadow:0 2px 12px rgba(0,0,0,.6);
   opacity:0;transform:translateX(36px);transition:.7s var(--ease-spring);
 }
 .city.show{opacity:1;transform:none}
-.city:nth-child(1){margin-left:36px}
-.city:nth-child(2){margin-left:108px}
+.city:nth-child(1){margin-left:0}
+.city:nth-child(2){margin-left:200px}
 .city:nth-child(3){margin-left:0}
-.city:nth-child(4){margin-left:120px}
-.city:nth-child(5){margin-left:48px}
+.city:nth-child(4){margin-left:200px}
+.city:nth-child(5){margin-left:0}
 .city .pin{width:30px;height:30px;color:var(--red-bright);flex:0 0 30px;filter:drop-shadow(0 0 6px rgba(255,40,55,.6))}
 
 /* ============ 新闻 ============ */
@@ -790,6 +819,7 @@ html{scrollbar-width:thin;scrollbar-color:#8a000b #070707}
   }
   .nav-menu.open{right:0}
   .nav-menu a{font-size:18px;padding:16px 0;border-bottom:1px solid var(--line)}
+  .dropdown{display:none}   /* 小屏收起下拉，点“服务”直达服务页 */
   .nav-cta{display:none}
   .nav-toggle.active span:nth-child(1){transform:translateY(7px) rotate(45deg)}
   .nav-toggle.active span:nth-child(2){opacity:0}
@@ -851,7 +881,15 @@ html{scrollbar-width:thin;scrollbar-color:#8a000b #070707}
   </a>
   <ul class="nav-menu" id="navMenu">
     <li><a href="#home" class="active">首页</a></li>
-    <li><a href="#services">服务</a></li>
+    <li>
+      <a href="services.html">服务</a>
+      <div class="dropdown">
+        <a href="services.html#scope">服务范围</a>
+        <a href="services.html#flow">业务流程</a>
+        <a href="services.html#trends">核心趋势</a>
+        <a href="services.html#aftersale">售后服务</a>
+      </div>
+    </li>
     <li><a href="#cases">案例</a></li>
     <li><a href="#news">动态</a></li>
     <li><a href="#about">关于</a></li>
@@ -989,7 +1027,7 @@ html{scrollbar-width:thin;scrollbar-color:#8a000b #070707}
         </g>
       </svg>
     </div>
-    <div class="sec-head reveal"><h2>企业实力 + <em>高端服务商</em></h2><p>未来业内新标杆</p></div>
+    <div class="sec-head reveal"><h2>企业实力+<em>高端服务商</em></h2><p>未来业内新标杆</p></div>
 
     <div class="intro">
       <div class="reveal-l">
@@ -1081,19 +1119,21 @@ html{scrollbar-width:thin;scrollbar-color:#8a000b #070707}
           <ellipse cx="200" cy="200" rx="66" ry="196"/>
           <ellipse cx="200" cy="200" rx="132" ry="196"/>
         </g>
+        <!-- 连线网络布在可见球面中上部（左下升起后，右上面留白最充裕） -->
         <g stroke="rgba(255,70,82,.55)" stroke-width="1.3">
-          <path d="M120 150 Q210 92 300 138"/>
-          <path d="M150 252 Q230 304 322 250"/>
-          <path d="M150 118 Q262 184 286 300"/>
-          <path d="M120 150 L150 118 M300 138 L286 300"/>
+          <path d="M185 60 Q225 65 258 88"/>
+          <path d="M258 88 Q292 108 315 140"/>
+          <path d="M315 140 Q328 170 330 205"/>
+          <path d="M330 205 Q298 222 255 225"/>
+          <path d="M215 145 L258 88 M215 145 L330 205"/>
         </g>
         <g fill="#ff4a55">
-          <circle class="node" cx="120" cy="150" r="3"/>
-          <circle class="node" cx="300" cy="138" r="3"/>
-          <circle class="node" cx="150" cy="252" r="3"/>
-          <circle class="node" cx="322" cy="250" r="3"/>
-          <circle class="node" cx="286" cy="300" r="3"/>
-          <circle class="node" cx="150" cy="118" r="3"/>
+          <circle class="node" cx="215" cy="145" r="3"/>
+          <circle class="node" cx="258" cy="88" r="3"/>
+          <circle class="node" cx="315" cy="140" r="3"/>
+          <circle class="node" cx="330" cy="205" r="3"/>
+          <circle class="node" cx="255" cy="225" r="3"/>
+          <circle class="node" cx="185" cy="60" r="3"/>
         </g>
       </svg>
     </div>
@@ -1157,7 +1197,7 @@ html{scrollbar-width:thin;scrollbar-color:#8a000b #070707}
           <div class="line"><b>地址</b>湖北省武汉市洪山区创意天地06艺术家工作室</div>
         </div>
       </div>
-      <div class="f-col"><h5>服务</h5><a href="#services">业务范围</a><a href="#services">服务流程</a><a href="#services">业务趋势</a><a href="#services">售后保障</a></div>
+      <div class="f-col"><h5>服务</h5><a href="services.html#scope">服务范围</a><a href="services.html#flow">业务流程</a><a href="services.html#trends">核心趋势</a><a href="services.html#aftersale">售后保障</a></div>
       <div class="f-col"><h5>案例</h5><a href="#cases">工业设计</a><a href="#cases">品牌设计</a><a href="#cases">交互设计</a><a href="#cases">动画制作</a></div>
       <div class="f-col"><h5>关于</h5><a href="#about">公司介绍</a><a href="#about">企业荣誉</a><a href="#contact">联系方式</a></div>
       <div class="f-qr">
@@ -1437,6 +1477,17 @@ cardReopen.onclick=function(){
 (function(){
   var loader=document.getElementById('loader'),box=document.getElementById('ldBox');
   if(!loader) return;
+  /* 开屏动画只在「刷新 / 直接进站」时播放；站内跳转（含前进后退）直接揭幕。
+     判定：刷新一律播；否则 referrer 同源 或 本会话已进过站 → 跳过。 */
+  var navEntry=performance.getEntriesByType&&performance.getEntriesByType('navigation')[0];
+  var isReload=navEntry&&navEntry.type==='reload';
+  var inSite=false;
+  try{
+    inSite=sessionStorage.getItem('dfEntered')==='1';
+    sessionStorage.setItem('dfEntered','1');
+    if(document.referrer&&new URL(document.referrer).origin===location.origin)inSite=true;
+  }catch(e){}
+  if(inSite&&!isReload){loader.remove();return;}
   document.body.style.overflow='hidden';
   heroCard.style.animation='none';                   // 名片入场推迟到揭幕那一刻
   var t0=performance.now(),MIN=1200,fired=false;    // 最短展示：液滴变形 + 绽放 + 扫光演完即放行
