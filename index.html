@@ -93,6 +93,7 @@ ul{list-style:none}
 .logo img{height:46px;width:auto;display:block;transition:height .4s,filter .4s;filter:drop-shadow(0 2px 8px rgba(0,0,0,.5))}
 .nav.scrolled .logo img{height:40px}
 .nav-menu{display:flex;gap:36px}
+.nav-menu li{position:relative}
 .nav-menu a{font-size:16px;font-weight:500;position:relative;padding:6px 0;color:#e8e8e8;transition:color .3s}
 .nav-menu a::after{
   content:"";position:absolute;left:0;bottom:0;width:0;height:2px;
@@ -100,6 +101,23 @@ ul{list-style:none}
 }
 .nav-menu a:hover,.nav-menu a.active{color:var(--red-bright)}
 .nav-menu a:hover::after,.nav-menu a.active::after{width:100%}
+/* “服务”下拉子菜单（与服务页一致） */
+.dropdown{
+  position:absolute;top:100%;left:50%;transform:translateX(-50%) translateY(10px);
+  min-width:148px;padding:10px 0;border-radius:12px;
+  background:rgba(12,6,7,.94);backdrop-filter:blur(16px) saturate(1.4);-webkit-backdrop-filter:blur(16px) saturate(1.4);
+  border:1px solid rgba(230,0,18,.28);box-shadow:0 18px 44px rgba(0,0,0,.6);
+  opacity:0;visibility:hidden;transition:opacity .3s var(--ease-out),transform .3s var(--ease-spring),visibility .3s;
+}
+.nav-menu li:hover .dropdown{opacity:1;visibility:visible;transform:translateX(-50%) translateY(4px)}
+.dropdown::before{ /* 悬停缓冲区，防止鼠标滑过缝隙时闪没 */
+  content:"";position:absolute;left:0;right:0;top:-12px;height:12px}
+.dropdown a{
+  display:block;padding:9px 24px;font-size:14px;color:#ddd;text-align:center;white-space:nowrap;
+  letter-spacing:1px;transition:color .25s,background .25s;
+}
+.dropdown a::after{content:none}
+.dropdown a:hover{color:var(--red-bright);background:rgba(230,0,18,.1)}
 .nav-cta{padding:10px 30px;font-size:14px}
 .nav-toggle{display:none;flex-direction:column;gap:5px;padding:8px}
 .nav-toggle span{width:26px;height:2px;background:#fff;transition:.3s}
@@ -511,9 +529,10 @@ ul{list-style:none}
 
 /* ============ 业务布局 地球（数字粒子地球：左侧出血 + 右上弧光大气层） ============ */
 .globe-sec{position:relative;overflow:hidden}
-.layout-wrap{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center;min-height:520px;z-index:2}
-.globe-stage{position:absolute;left:-9%;top:47%;transform:translateY(-50%);
-  width:min(600px,42vw);height:min(600px,42vw);z-index:0;pointer-events:none}
+.layout-wrap{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center;min-height:560px;z-index:2}
+/* 地球加大并右移居中，与右侧城市列表左右对称，中央不留空 */
+.globe-stage{position:absolute;left:7%;top:47%;transform:translateY(-50%);
+  width:min(700px,47vw);height:min(700px,47vw);z-index:0;pointer-events:none}
 .globe-sphere{position:absolute;inset:0;border-radius:50%;overflow:hidden;
   background:
     radial-gradient(circle at 64% 30%,rgba(255,60,72,.26),transparent 52%),
@@ -568,8 +587,8 @@ ul{list-style:none}
 .globe-glow{position:absolute;right:-2%;top:38%;transform:translateY(-50%);
   width:45%;height:62%;border-radius:50%;
   background:radial-gradient(circle,rgba(255,45,55,.35),transparent 70%);filter:blur(22px)}
-/* 城市块靠右排布 */
-.cities{display:flex;flex-direction:column;gap:6px;position:relative;z-index:2;width:max-content;margin-left:auto;margin-right:3%}
+/* 城市块在右半区居中排布，与左半区地球对称 */
+.cities{display:flex;flex-direction:column;gap:6px;position:relative;z-index:2;width:max-content;margin-left:auto;margin-right:12%}
 .city{display:flex;align-items:center;gap:14px;font-size:clamp(22px,2.6vw,32px);font-weight:600;padding:7px 0;
   text-shadow:0 2px 12px rgba(0,0,0,.6);
   opacity:0;transform:translateX(36px);transition:.7s var(--ease-spring);
@@ -790,6 +809,7 @@ html{scrollbar-width:thin;scrollbar-color:#8a000b #070707}
   }
   .nav-menu.open{right:0}
   .nav-menu a{font-size:18px;padding:16px 0;border-bottom:1px solid var(--line)}
+  .dropdown{display:none}   /* 小屏收起下拉，点“服务”直达服务页 */
   .nav-cta{display:none}
   .nav-toggle.active span:nth-child(1){transform:translateY(7px) rotate(45deg)}
   .nav-toggle.active span:nth-child(2){opacity:0}
@@ -851,7 +871,15 @@ html{scrollbar-width:thin;scrollbar-color:#8a000b #070707}
   </a>
   <ul class="nav-menu" id="navMenu">
     <li><a href="#home" class="active">首页</a></li>
-    <li><a href="#services">服务</a></li>
+    <li>
+      <a href="services.html">服务</a>
+      <div class="dropdown">
+        <a href="services.html#scope">服务范围</a>
+        <a href="services.html#flow">业务流程</a>
+        <a href="services.html#trends">核心趋势</a>
+        <a href="services.html#aftersale">售后服务</a>
+      </div>
+    </li>
     <li><a href="#cases">案例</a></li>
     <li><a href="#news">动态</a></li>
     <li><a href="#about">关于</a></li>
@@ -1157,7 +1185,7 @@ html{scrollbar-width:thin;scrollbar-color:#8a000b #070707}
           <div class="line"><b>地址</b>湖北省武汉市洪山区创意天地06艺术家工作室</div>
         </div>
       </div>
-      <div class="f-col"><h5>服务</h5><a href="#services">业务范围</a><a href="#services">服务流程</a><a href="#services">业务趋势</a><a href="#services">售后保障</a></div>
+      <div class="f-col"><h5>服务</h5><a href="services.html#scope">服务范围</a><a href="services.html#flow">业务流程</a><a href="services.html#trends">核心趋势</a><a href="services.html#aftersale">售后保障</a></div>
       <div class="f-col"><h5>案例</h5><a href="#cases">工业设计</a><a href="#cases">品牌设计</a><a href="#cases">交互设计</a><a href="#cases">动画制作</a></div>
       <div class="f-col"><h5>关于</h5><a href="#about">公司介绍</a><a href="#about">企业荣誉</a><a href="#contact">联系方式</a></div>
       <div class="f-qr">
