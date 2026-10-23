@@ -4,3 +4,5 @@ cap*.js
 drawer.js
 measure.js
 probe.js
+perf*.js
+fps*.js

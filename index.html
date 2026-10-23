@@ -140,20 +140,22 @@ ul{list-style:none}
   filter:brightness(.72) contrast(1.12) sepia(.5) saturate(2.6) hue-rotate(-18deg);
 }
 /* ===== 等距工厂场景层（视觉位于 3D 流线下层）=====
-   lighten 混合：场景亮部从黑底中透出，Spline 亮色流线永远压在其上，形成"线条悬浮于厂景之上"的层次。
+   半透明叠加：场景以约 75% 不透明度覆在 3D 之上，流线从场景中透出，形成"线条悬浮于厂景之上"的层次。
+   （早先用 lighten 混合实现同样效果，但混合模式要求每帧读取下层 WebGL 画面做混合运算，
+     而 3D 画面逐帧刷新 —— 等于每帧全屏重算一次，是首屏卡顿的主因；改为普通 alpha 合成后几乎零成本。）
    动效设计（克制、缓慢、不抢主体）：
-   ① 入场「显影」—— 大模糊 + 透明度缓慢褪去，似暗房照片显影浮现；
+   ① 入场「显影」—— 轻微缩放 + 透明度缓慢浮起，似暗房照片显影浮现（纯 transform/opacity）；
    ② 常驻「呼吸漂移」—— 40s 超慢 Ken Burns 缩放游移，赋予静态图生命感；
    ③ 周期「掠光」—— 每 12s 一道极淡红色斜光扫过厂房，呼应金属质感。
-   全程只动 transform/opacity（合成器动画），模糊仅入场一次性。 */
-.hero-factory{position:absolute;inset:0;pointer-events:none;mix-blend-mode:lighten;overflow:hidden;
-  opacity:0;filter:blur(16px);
-  animation:factoryIn 2.8s 1s cubic-bezier(.22,1,.36,1) forwards;
+   全程只动 transform/opacity（合成器动画），无模糊、无混合模式。 */
+.hero-factory{position:absolute;inset:0;pointer-events:none;overflow:hidden;
+  opacity:0;
+  animation:factoryIn 2.6s 1s cubic-bezier(.22,1,.36,1) forwards;
   /* 四周羽化收边，使场景融入黑底而非生硬贴图 */
   -webkit-mask:radial-gradient(120% 95% at 50% 46%,#000 55%,transparent 96%);
           mask:radial-gradient(120% 95% at 50% 46%,#000 55%,transparent 96%);}
 .hero-factory img{width:100%;height:100%;object-fit:cover;object-position:50% 42%;
-  filter:brightness(1.18) saturate(1.12);
+  filter:brightness(1.38) saturate(1.2);   /* 半透明叠加会略压暗场景，用滤镜补回原有亮度质感 */
   transform:scale(1.12);transform-origin:50% 45%;will-change:transform;
   animation:factoryDrift 40s ease-in-out 1s infinite alternate;}
 .hero-factory::after{ /* 掠光：极淡红色斜向高光带，长间歇缓慢扫过 */
@@ -161,7 +163,7 @@ ul{list-style:none}
   background:linear-gradient(112deg,transparent 40%,rgba(255,90,100,.12) 50%,rgba(255,180,186,.05) 54%,transparent 62%);
   transform:translateX(-65%);
   animation:factorySheen 12s ease-in-out 5s infinite;}
-@keyframes factoryIn{to{opacity:.88;filter:blur(0)}}
+@keyframes factoryIn{from{opacity:0;transform:scale(1.05)}to{opacity:.75;transform:none}}
 @keyframes factoryDrift{
   0%{transform:scale(1.12) translate(0,0)}
   50%{transform:scale(1.18) translate(-1.4%,1.1%)}
@@ -190,8 +192,10 @@ ul{list-style:none}
 .hero-card{
   position:relative;z-index:5;width:min(880px,92vw);overflow:hidden;
   background:linear-gradient(135deg,rgba(255,255,255,.94),rgba(255,255,255,.80) 50%,rgba(255,248,248,.88) 100%);
-  -webkit-backdrop-filter:blur(30px) saturate(1.3);
-  backdrop-filter:blur(30px) saturate(1.3); /* 30px 与 40px 肉眼几乎无差，但在 3D 背景上 GPU 开销低不少 */
+  /* 卡片底色本身已接近不透明白玻璃，模糊值从 30px 降到 14px、去掉 saturate：
+     视觉几乎无差，但每帧要采样的背景区域小得多（背景还是逐帧变化的 3D 画面） */
+  -webkit-backdrop-filter:blur(14px);
+  backdrop-filter:blur(14px);
   border-radius:28px;padding:54px 60px;display:flex;gap:60px;align-items:stretch;
   border:1px solid rgba(255,255,255,.75);
   box-shadow:0 30px 80px rgba(0,0,0,.5),0 2px 8px rgba(0,0,0,.2),
@@ -216,7 +220,7 @@ ul{list-style:none}
    每团是独立合成层、内容静态、只动 transform/opacity —— 模糊结果被 GPU 缓存，逐帧零重绘。
    translate 百分比相对光斑自身尺寸：±50%~140% ≈ 横穿小半张到大半张卡片，肉眼明显。 */
 .card-fluid{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden;border-radius:28px}
-.card-fluid i{position:absolute;border-radius:50%;will-change:transform,opacity;filter:blur(20px)}
+.card-fluid i{position:absolute;border-radius:50%;will-change:transform,opacity;filter:blur(12px)}
 .card-fluid .f1{width:58%;aspect-ratio:1;left:38%;top:-22%;
   background:radial-gradient(circle at 44% 44%,rgba(225,0,18,.58),rgba(255,80,92,.3) 48%,transparent 68%);
   animation:fluidA 6s ease-in-out infinite alternate}
@@ -324,7 +328,7 @@ ul{list-style:none}
 }
 /* 柔光底晕 */
 .scroll-ind::before{content:"";position:absolute;inset:-6px;border-radius:50%;
-  background:radial-gradient(circle,rgba(255,40,55,.14),transparent 65%);filter:blur(6px);
+  background:radial-gradient(circle,rgba(255,40,55,.14),transparent 65%);
   animation:siGlow 2.8s ease-in-out infinite}
 /* 发光圆环 */
 .si-ring{position:absolute;inset:8px;border-radius:50%;
@@ -342,8 +346,8 @@ ul{list-style:none}
   background:linear-gradient(180deg,#ff6068,#e0121f 60%,#b3000e);
   box-shadow:0 0 10px 2px rgba(255,40,55,.4),inset 0 1px 3px rgba(255,190,195,.5),inset 0 -2px 4px rgba(120,0,8,.3);
   animation:siBob 2s ease-in-out infinite}
-@keyframes siGlow{0%,100%{opacity:.6;box-shadow:0 0 8px 1px rgba(255,40,55,.2),inset 0 0 6px rgba(255,70,80,.2)}
-  50%{opacity:1;box-shadow:0 0 18px 3px rgba(255,40,55,.45),inset 0 0 10px rgba(255,70,80,.4)}}
+/* 只呼吸透明度：动画化 box-shadow 会逐帧触发重绘，光晕观感几乎相同 */
+@keyframes siGlow{0%,100%{opacity:.55}50%{opacity:1}}
 @keyframes siSpin{to{transform:rotate(360deg)}}
 @keyframes siBob{0%,100%{transform:translateY(-4px)}50%{transform:translateY(4px)}}
 
@@ -728,6 +732,8 @@ ul{list-style:none}
 
 /* 离屏区域暂停无限 CSS 动画（电流 / 地球 / 光晕呼吸等），整页更省帧 */
 .anim-paused *,.anim-paused *::before,.anim-paused *::after{animation-play-state:paused!important}
+/* 首屏滚出视口后直接隐藏 3D iframe：WebGL 渲染循环随之停止，不再与页面滚动争抢 GPU/CPU */
+.hero.anim-paused .spline{visibility:hidden}
 
 /* ============ 开场加载动画：logo 品牌动效 → 溶解揭幕与首屏无缝衔接 ============ */
 .loader{position:fixed;inset:0;z-index:4000;overflow:hidden}
@@ -790,8 +796,10 @@ html{scrollbar-width:thin;scrollbar-color:#8a000b #070707}
 ::-webkit-scrollbar-track{background:#070707}
 ::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#7a0009,#b3000e);border-radius:8px;border:2px solid #070707}
 ::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,#b3000e,#ff1f2d)}
-/* 全站细腻胶片颗粒：打散大面积纯黑渐变的“数码感”，质感立刻上一档（静态贴图，零逐帧开销） */
-.grain{position:fixed;inset:0;z-index:3000;pointer-events:none;opacity:.045;mix-blend-mode:overlay;
+/* 全站细腻胶片颗粒：打散大面积纯黑渐变的“数码感”，质感立刻上一档（静态贴图，零逐帧开销）
+   注意不要用 mix-blend-mode：固定层叠加混合会强制整屏每帧重新合成，代价极高；
+   普通 alpha 叠加在 .03 不透明度下观感几乎一致 */
+.grain{position:fixed;inset:0;z-index:3000;pointer-events:none;opacity:.03;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   background-size:280px 280px}
 /* 数字等宽：热线 / 统计数滚动时不左右抖动，更精密 */
@@ -943,7 +951,7 @@ html{scrollbar-width:thin;scrollbar-color:#8a000b #070707}
 <header class="hero" id="home">
   <div class="hero-bg">
     <iframe class="spline" src="https://my.spline.design/aigreymarketingbanner-MRNiUMUfBAjP5U8O6ZBhapdP/" frameborder="0" loading="lazy" title="3D 背景" allow="autoplay"></iframe>
-    <!-- 等距工厂场景：lighten 混合，亮部自黑底浮现，视觉上位于 3D 流线下层 -->
+    <!-- 等距工厂场景：半透明覆于 3D 之上，流线自场景中透出，视觉上位于 3D 流线下层 -->
     <div class="hero-factory" aria-hidden="true"><img src="assets/hero-factory.jpg" alt=""></div>
     <div class="spline-color"></div>
     <div class="hero-tint"></div>
