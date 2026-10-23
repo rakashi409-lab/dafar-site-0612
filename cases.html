@@ -28,7 +28,7 @@
   --maxw:1280px;
 }
 *{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth;scroll-padding-top:80px}
+html{scroll-behavior:smooth;scroll-padding-top:80px;overflow-x:clip}
 body{
   font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB","Noto Sans SC",-apple-system,sans-serif;
   background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden;
@@ -353,11 +353,11 @@ html{scrollbar-width:thin;scrollbar-color:#8a000b #070707}
   .nav.scrolled{padding:10px 20px}
   .nav-toggle{display:flex}
   .nav-menu{
-    position:fixed;top:0;right:-100%;width:74%;max-width:320px;height:100vh;
+    position:fixed;top:0;right:0;width:74%;max-width:320px;height:100vh;transform:translateX(105%);visibility:hidden;
     flex-direction:column;gap:0;background:rgba(10,5,6,.97);backdrop-filter:blur(16px);
-    padding:90px 30px;transition:right .45s var(--ease-out);box-shadow:-10px 0 40px rgba(0,0,0,.5);
+    padding:90px 30px;transition:transform .45s var(--ease-out);box-shadow:-10px 0 40px rgba(0,0,0,.5);
   }
-  .nav-menu.open{right:0}
+  .nav-menu.open{transform:none;visibility:visible}
   .nav-menu>li>a{font-size:18px;padding:16px 0;border-bottom:1px solid var(--line);display:block}
   .dropdown{display:none}   /* 小屏收起下拉，点主项直达页面 */
   .nav-cta{display:none}
@@ -413,9 +413,22 @@ html{scrollbar-width:thin;scrollbar-color:#8a000b #070707}
         <a href="#graphic">平面设计</a>
       </div>
     </li>
-    <li><a href="index.html#news">动态</a></li>
-    <li><a href="index.html#about">关于</a></li>
-    <li><a href="#contact">联系</a></li>
+    <li><a href="news.html">动态</a></li>
+    <li>
+      <a href="about.html">关于</a>
+      <div class="dropdown">
+        <a href="about.html#strength">企业实力</a>
+        <a href="about.html#honor">资质荣誉</a>
+        <a href="about.html#vision">人文愿景</a>
+      </div>
+    </li>
+    <li>
+      <a href="contact.html">联系</a>
+      <div class="dropdown">
+        <a href="contact.html#reach">联系我们</a>
+        <a href="contact.html#jobs">招聘信息</a>
+      </div>
+    </li>
   </ul>
   <button class="btn nav-cta" onclick="document.getElementById('contact').scrollIntoView()">立即咨询</button>
   <button class="nav-toggle" id="navToggle" aria-label="菜单"><span></span><span></span><span></span></button>
@@ -521,7 +534,7 @@ html{scrollbar-width:thin;scrollbar-color:#8a000b #070707}
       </div>
       <div class="f-col"><h5>服务</h5><a href="services.html#scope">服务范围</a><a href="services.html#flow">业务流程</a><a href="services.html#trends">核心趋势</a><a href="services.html#aftersale">售后保障</a></div>
       <div class="f-col"><h5>案例</h5><a href="#transport">交通工具</a><a href="#medical">医疗设备</a><a href="#consumer">消费电子</a><a href="#military">军工装备</a></div>
-      <div class="f-col"><h5>关于</h5><a href="index.html#about">公司介绍</a><a href="index.html#about">企业荣誉</a><a href="#contact">联系方式</a></div>
+      <div class="f-col"><h5>关于</h5><a href="about.html#intro">公司介绍</a><a href="about.html#honor">企业荣誉</a><a href="news.html">新闻动态</a><a href="contact.html">联系方式</a></div>
       <div class="f-qr">
         <div class="qr"><img src="assets/qrcode.png" alt="大方设计微信公众号二维码"></div>
         <p>关注我们的公众号</p>
@@ -567,6 +580,8 @@ addEventListener('scroll',function(){
 /* ====== 案例数据注入 ======
    每项 [项目名, 实拍图编号]；编号对应 assets/cases/caseN.png，0 表示暂无实拍图，
    走品牌化占位块 —— 宁可留白，不拿别的产品照片冒充本项目配图。 */
+<script src="assets/data.js"></script>
+<script>
 const CASE_DATA={
   transport:[['二轮车',0],['二轮车',0],['二轮车',0],['三轮车',12],['海宝·玉兔',0],['海宝·灵狐',0],
     ['产品名称',11],['产品名称',0],['产品名称',0],['顺丰快递三轮车',0],['车灯造型',0],['产品名称',0],
@@ -589,7 +604,14 @@ document.querySelectorAll('.cases-grid[data-cat]').forEach(function(grid){
             :'<div class="ph"><span class="ph-name">'+c+'</span><span class="ph-note">实拍图整理中</span></div>')+
       '</div>'+
       '<div class="case-title">'+c+'<span class="arrow">→</span></div>';
-    el.onclick=function(){openModal(c,'这是大方设计为客户打造的「'+c+'」项目。涵盖外观设计、结构设计、样机制作到量产落地的完整设计开发服务。',img)};
+    var hit=window.DF&&DF.CASES.filter(function(x){
+      var t=x.title.split(' ').join('').split('·').join(''),k=c.split(' ').join('').split('·').join('');
+      return t.indexOf(k)>-1||k.indexOf(t)>-1;
+    })[0];
+    el.onclick=function(){
+      if(hit){location.href='case-detail.html?id='+hit.id;return}
+      openModal(c,'这是大方设计为客户打造的「'+c+'」项目。涵盖外观设计、结构设计、样机制作到量产落地的完整设计开发服务。',img)
+    };
     grid.appendChild(el);
   });
 });

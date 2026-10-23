@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="大方设计动态 — 洞察工业设计前沿，记录项目服务新进程。企业荣誉、媒体报道、校企合作与设计分享。">
+<meta name="keywords" content="大方设计动态,工业设计新闻,湖北工业设计中心,AI 工业设计,DAFAR DESIGN">
+<title>动态 — 大方设计 DAFAR DESIGN</title>
+<link rel="stylesheet" href="assets/site.css">
+<style>
+  .news-feature{margin-top:0}
+  .news-feature a{min-height:0}
+  .nr-body h3 a{transition:color .3s}
+  .nr-body h3 a:hover{color:var(--red-bright)}
+  .news-empty{text-align:center;color:#777;padding:40px 0;letter-spacing:2px}
+</style>
+</head>
+<body data-page="动态列表">
+
+<div class="grain" aria-hidden="true"></div>
+
+<nav class="nav" id="nav">
+  <a class="logo" href="index.html"><img src="assets/logo-h.png" alt="大方设计 DAFAR DESIGN"></a>
+  <ul class="nav-menu" id="navMenu">
+    <li><a href="index.html">首页</a></li>
+    <li>
+      <a href="services.html">服务</a>
+      <div class="dropdown">
+        <a href="services.html#scope">服务范围</a>
+        <a href="services.html#flow">业务流程</a>
+        <a href="services.html#trends">核心趋势</a>
+        <a href="services.html#aftersale">售后服务</a>
+      </div>
+    </li>
+    <li>
+      <a href="cases.html">案例</a>
+      <div class="dropdown">
+        <a href="cases.html#transport">交通工具</a>
+        <a href="cases.html#medical">医疗设备</a>
+        <a href="cases.html#consumer">消费电子</a>
+        <a href="cases.html#military">军工装备</a>
+        <a href="cases.html#graphic">平面设计</a>
+      </div>
+    </li>
+    <li><a href="news.html" class="active">动态</a></li>
+    <li>
+      <a href="about.html">关于</a>
+      <div class="dropdown">
+        <a href="about.html#strength">企业实力</a>
+        <a href="about.html#honor">资质荣誉</a>
+        <a href="about.html#vision">人文愿景</a>
+      </div>
+    </li>
+    <li>
+      <a href="contact.html">联系</a>
+      <div class="dropdown">
+        <a href="contact.html#reach">联系我们</a>
+        <a href="contact.html#jobs">招聘信息</a>
+      </div>
+    </li>
+  </ul>
+  <a class="btn nav-cta" href="contact.html">立即咨询</a>
+  <button class="nav-toggle" id="navToggle" aria-label="菜单"><span></span><span></span><span></span></button>
+</nav>
+
+<header class="sub-hero branded" id="top" data-sec="动态 Banner">
+  <div class="sub-hero-bg" aria-hidden="true"><img src="assets/pages/hero-news.jpg" alt=""></div>
+  <div class="sub-hero-tint" aria-hidden="true"></div>
+  <div class="sub-hero-inner">
+    <h1>大方设计 · 行业动态</h1>
+    <div class="sub">洞察工业设计前沿，记录项目服务新进程</div>
+    <div class="act"><button class="btn" onclick="document.getElementById('newsRows').scrollIntoView({behavior:'smooth'})">探索更多</button></div>
+  </div>
+  <div class="breadcrumb"><a href="index.html">首页</a><span>&gt;</span>动态</div>
+</header>
+
+<div class="brand-orb" aria-hidden="true"><img src="assets/logo-v.png" alt=""></div>
+
+<main class="news-wrap">
+  <div class="container">
+    <div class="news-feature" id="newsFeature"></div>
+
+    <div class="news-orbit"><span class="en-mark">DAFAR DESIGN</span></div>
+    <div class="news-title reveal">
+      <h2>实时更新 <em>动态新闻</em></h2>
+      <p>值得信赖的合作伙伴</p>
+    </div>
+
+    <div class="news-rows" id="newsRows" data-sec="动态新闻"></div>
+    <div class="news-pager" id="newsPager"></div>
+  </div>
+</main>
+
+<section class="form-sec" id="contact" data-sec="咨询表单">
+  <div class="container">
+    <h2>商务合作</h2>
+    <form class="form" id="bizForm" onsubmit="return submitForm(event)">
+      <div class="form-row">
+        <div class="field reveal-l"><label>您的姓名 *</label><input type="text" name="name" required placeholder="请输入您的姓名"></div>
+        <div class="field reveal-r"><label>您的电话 *</label><input type="tel" name="phone" required pattern="[0-9\-\+\s]{7,}" placeholder="请输入您的联系电话"></div>
+      </div>
+      <div class="field reveal"><label>咨询内容 *</label><textarea name="msg" required placeholder="请简要描述您的需求"></textarea></div>
+      <button type="submit" class="btn submit reveal">提交</button>
+    </form>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-top">
+      <div class="f-brand">
+        <img class="f-logo" src="assets/logo-v.png" alt="大方设计 DAFAR DESIGN">
+        <div class="f-info">
+          <div class="phone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.4-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>027-87666138</div>
+          <div class="line mail"><b>邮箱</b>info@dafar-design.com</div>
+          <div class="line"><b>地址</b>湖北省武汉市洪山区创意天地06艺术家工作室</div>
+        </div>
+      </div>
+      <div class="f-col"><h5>服务</h5><a href="services.html#scope">服务范围</a><a href="services.html#flow">业务流程</a><a href="services.html#trends">核心趋势</a><a href="services.html#aftersale">售后保障</a></div>
+      <div class="f-col"><h5>案例</h5><a href="cases.html#transport">交通工具</a><a href="cases.html#medical">医疗设备</a><a href="cases.html#consumer">消费电子</a><a href="cases.html#military">军工装备</a><a href="cases.html#graphic">平面设计</a></div>
+      <div class="f-col"><h5>关于</h5><a href="about.html#intro">公司介绍</a><a href="about.html#honor">企业荣誉</a><a href="news.html">新闻动态</a><a href="contact.html">联系方式</a></div>
+      <div class="f-qr">
+        <div class="qr"><img src="assets/qrcode.png" alt="大方设计微信公众号二维码"></div>
+        <p>关注我们的公众号</p>
+      </div>
+    </div>
+    <div class="copyright">
+      Copyright © 2025 武汉大方工业设计有限公司 版权所有　|　DAFAR DESIGN<br>
+      <a href="https://beian.miit.gov.cn" target="_blank" rel="noopener">鄂ICP备XXXXXXXX号-1</a>
+      　|
+      <a href="http://www.beian.gov.cn/portal/registerSystemInfo" target="_blank" rel="noopener">🛡 鄂公网安备 42011102XXXXXX号</a>
+      　|　技术支持：大方设计
+    </div>
+  </div>
+</footer>
+
+<div class="modal" id="modal">
+  <div class="modal-card">
+    <button class="modal-close" onclick="closeModal()" aria-label="关闭">&times;</button>
+    <div class="modal-img"><div class="ph" id="modalImg">大方设计</div></div>
+    <div class="modal-body"><h3 id="modalTitle"></h3><p id="modalText"></p></div>
+  </div>
+</div>
+
+<script src="assets/data.js"></script>
+<script src="assets/site.js"></script>
+<script>
+(function(){
+  var PER=3;
+  var feature=DF.NEWS.slice(0,2);
+  var rows=DF.NEWS.slice(2);
+  var page=Math.max(1,parseInt(new URLSearchParams(location.search).get('p')||'1',10));
+
+  /* 头条两张 */
+  document.getElementById('newsFeature').innerHTML=feature.map(function(n){
+    return '<a href="news-detail.html?id='+n.id+'">'+
+      '<img src="'+n.img+'" alt="'+n.title+'" loading="lazy">'+
+      '<span class="cap"><em>'+n.cat+' · '+n.date+'</em>'+n.title+'</span></a>';
+  }).join('');
+
+  /* 列表分页 */
+  var pages=Math.ceil(rows.length/PER)||1;
+  if(page>pages)page=pages;
+  var list=rows.slice((page-1)*PER,page*PER);
+  document.getElementById('newsRows').innerHTML=list.map(function(n,i){
+    return '<article class="news-row reveal'+(i%2?' d1':'')+'">'+
+      '<a class="nr-img" href="news-detail.html?id='+n.id+'"><img src="'+n.img+'" alt="'+n.title+'" loading="lazy"></a>'+
+      '<div class="nr-body">'+
+        '<div class="meta"><b>'+n.cat+'</b><span>'+n.date+'</span></div>'+
+        '<h3><a href="news-detail.html?id='+n.id+'">'+n.title+'</a></h3>'+
+        '<p>'+n.lead+'</p>'+
+        '<a class="nr-more" href="news-detail.html?id='+n.id+'">查看更多 <i>→</i></a>'+
+      '</div></article>';
+  }).join('');
+
+  /* 分页器 */
+  var pg='';
+  if(page>1)pg+='<a href="news.html?p='+(page-1)+'">‹</a>';
+  for(var i=1;i<=pages;i++)pg+='<a class="'+(i===page?'on':'')+'" href="news.html?p='+i+'">'+i+'</a>';
+  if(page<pages)pg+='<a href="news.html?p='+(page+1)+'">›</a>';
+  document.getElementById('newsPager').innerHTML=pg;
+
+  /* 新插入节点补一次进场 */
+  setTimeout(function(){document.querySelectorAll('.reveal').forEach(function(el){
+    var r=el.getBoundingClientRect();
+    if(r.top<innerHeight)el.classList.add('in');
+  })},80);
+})();
+</script>
+</body>
+</html>
