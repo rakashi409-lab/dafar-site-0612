@@ -210,11 +210,25 @@ ul{list-style:none}
 .case-card:hover{transform:translateY(-8px);box-shadow:0 26px 54px rgba(0,0,0,.6)}
 .case-img{aspect-ratio:16/10;overflow:hidden;background:#e9e9e9}
 .case-img .ph{
-  width:100%;height:100%;display:flex;align-items:center;justify-content:center;
-  background:linear-gradient(135deg,#e8e8e8,#cfcfcf);color:#888;font-size:13px;text-align:center;
-  transition:transform .6s var(--ease-out);
+  width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+  background:
+    radial-gradient(circle at 26% 18%,rgba(230,0,18,.20),transparent 58%),
+    linear-gradient(150deg,#1c1c1e,#0d0d0f 62%,#180a0c);
+  color:#e8e8e8;font-size:16px;letter-spacing:1px;text-align:center;
+  transition:transform .6s var(--ease-out);position:relative;
 }
+.case-img .ph::before{
+  content:"";position:absolute;top:calc(50% - 62px);left:50%;transform:translateX(-50%);
+  width:64px;height:64px;border-radius:50%;
+  background:url(assets/logo-white.png) center/56% no-repeat,rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.10);opacity:.55;
+}
+.ph-name{margin-top:78px;font-weight:700}
+.ph-note{font-size:12px;color:#6d6d72;letter-spacing:2px}
 .case-card:hover .case-img .ph{transform:scale(1.08)}
+.case-img img{width:100%;height:100%;object-fit:cover;object-position:50% 30%;display:block;
+  transition:transform .6s var(--ease-out)}
+.case-card:hover .case-img img{transform:scale(1.08)}
 .case-title{
   background:linear-gradient(135deg,var(--red-bright),var(--red-deep));
   color:#fff;font-size:18px;font-weight:700;padding:18px 22px;letter-spacing:1px;
@@ -550,22 +564,32 @@ addEventListener('scroll',function(){
   });
 },{passive:true});
 
-/* ====== 案例数据注入（名称待定的先用「产品名称」占位，配图替换 cases/<分类>-<序号>.jpg） ====== */
+/* ====== 案例数据注入 ======
+   每项 [项目名, 实拍图编号]；编号对应 assets/cases/caseN.png，0 表示暂无实拍图，
+   走品牌化占位块 —— 宁可留白，不拿别的产品照片冒充本项目配图。 */
 const CASE_DATA={
-  transport:['二轮车','二轮车','二轮车','三轮车','海宝·玉兔','海宝·灵狐','产品名称','产品名称','产品名称','顺丰快递三轮车','车灯造型','产品名称','海宝·电轿','海宝·玉葫','海宝·灵鲛','爱玛 A07','产品名称','产品名称'],
-  medical:['皮肤检测仪','医美皮肤检测仪','医美塑形检测仪','多普勒超声检测仪','光子嫩肤仪','肺功能检测仪'],
-  consumer:['书法体验设备','探地雷达小车','飞行模拟设备','穿戴人体空调','易达巡检机器人','电力巡检机器人','交流滤波器保护装置','3D打印设备','消防检测仪','次氯酸钠水处理柜','众宇动力','咖啡机'],
-  military:['石墨电池','船用氢燃料电池','3D打印氢燃料发动机','氢燃料测试平台部件','瞄准镜','望远镜','语音通信融合终端','工业激光设备','便携激光清洗设备'],
-  graphic:['导视设计','品牌设计','展会设计','画册设计','文化墙设计','PPT设计']
+  transport:[['二轮车',0],['二轮车',0],['二轮车',0],['三轮车',12],['海宝·玉兔',0],['海宝·灵狐',0],
+    ['产品名称',11],['产品名称',0],['产品名称',0],['顺丰快递三轮车',0],['车灯造型',0],['产品名称',0],
+    ['海宝·电轿',10],['海宝·玉葫',0],['海宝·灵鲛',0],['爱玛 A07',0],['产品名称',0],['产品名称',0]],
+  medical:[['皮肤检测仪',0],['医美皮肤检测仪',0],['医美塑形检测仪',0],['多普勒超声检测仪',0],['光子嫩肤仪',0],['肺功能检测仪',0]],
+  consumer:[['书法体验设备',0],['探地雷达小车',0],['飞行模拟设备',0],['穿戴人体空调',0],['易达巡检机器人',6],['电力巡检机器人',9],
+    ['交流滤波器保护装置',0],['3D打印设备',0],['消防检测仪',0],['次氯酸钠水处理柜',7],['众宇动力',2],['咖啡机',0]],
+  military:[['石墨电池',0],['船用氢燃料电池',0],['3D打印氢燃料发动机',0],['氢燃料测试平台部件',0],['瞄准镜',0],['望远镜',0],
+    ['语音通信融合终端',0],['工业激光设备',0],['便携激光清洗设备',0]],
+  graphic:[['导视设计',0],['品牌设计',0],['展会设计',0],['画册设计',0],['文化墙设计',0],['PPT设计',0]]
 };
 document.querySelectorAll('.cases-grid[data-cat]').forEach(function(grid){
-  const cat=grid.dataset.cat;
-  (CASE_DATA[cat]||[]).forEach(function(c,i){
+  (CASE_DATA[grid.dataset.cat]||[]).forEach(function(item,i){
+    const c=item[0], n=item[1];
+    const img=n?'assets/cases/case'+n+'.png':'';
     const el=document.createElement('article');
     el.className='case-card reveal-sc d'+((i%3)+1);
-    el.innerHTML='<div class="case-img"><div class="ph">'+c+'<br>（替换 cases/'+cat+'-'+(i+1)+'.jpg）</div></div>'+
+    el.innerHTML='<div class="case-img">'+
+        (img?'<img src="'+img+'" alt="'+c+'" loading="lazy">'
+            :'<div class="ph"><span class="ph-name">'+c+'</span><span class="ph-note">实拍图整理中</span></div>')+
+      '</div>'+
       '<div class="case-title">'+c+'<span class="arrow">→</span></div>';
-    el.onclick=function(){openModal(c,'这是大方设计为客户打造的「'+c+'」项目。涵盖外观设计、结构设计、样机制作到量产落地的完整设计开发服务。')};
+    el.onclick=function(){openModal(c,'这是大方设计为客户打造的「'+c+'」项目。涵盖外观设计、结构设计、样机制作到量产落地的完整设计开发服务。',img)};
     grid.appendChild(el);
   });
 });
@@ -573,7 +597,16 @@ function moreCases(cat){openModal('更多'+cat+'案例','更多精彩'+cat+'设�
 
 /* ====== 弹窗 ====== */
 const modal=document.getElementById('modal');
-function openModal(t,txt,img){document.getElementById('modalTitle').textContent=t;document.getElementById('modalText').textContent=txt;document.getElementById('modalImg').textContent=img||t;modal.classList.add('open');document.body.style.overflow='hidden'}
+function openModal(t,txt,img){
+  document.getElementById('modalTitle').textContent=t;
+  document.getElementById('modalText').textContent=txt;
+  var m=document.getElementById('modalImg');
+  if(img&&/.(png|jpe?g|webp|gif)$/i.test(img)){
+    m.innerHTML='<img src="'+img+'" alt="'+t+'" style="width:100%;height:100%;object-fit:cover;display:block">';
+    m.classList.add('has-img');
+  }else{m.textContent=img||t;m.classList.remove('has-img')}
+  modal.classList.add('open');document.body.style.overflow='hidden';
+}
 function closeModal(){modal.classList.remove('open');document.body.style.overflow=''}
 modal.onclick=function(e){if(e.target===modal)closeModal()};
 addEventListener('keydown',function(e){if(e.key==='Escape')closeModal()});

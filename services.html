@@ -208,6 +208,11 @@ ul{list-style:none}
   color:#8a8a8a;font-size:13px;text-align:center;transition:transform .7s var(--ease-out);
 }
 .scope-card:hover .scope-img .ph{transform:scale(1.07)}
+.scope-img img{width:100%;height:100%;object-fit:cover;object-position:50% 32%;display:block;
+  transition:transform .7s var(--ease-out)}
+.scope-card:hover .scope-img img{transform:scale(1.07)}
+.scope-img::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(to top,rgba(0,0,0,.5),transparent 60%)}
 /* 四张卡各配一款主题渐变底（未替换实拍图前也有质感） */
 .scope-card:nth-child(1) .ph{background:linear-gradient(135deg,#1a2340,#0d1020 55%,#251015)}
 .scope-card:nth-child(2) .ph{background:linear-gradient(135deg,#3a1218,#150608 55%,#2a0e28)}
@@ -275,6 +280,7 @@ ul{list-style:none}
 .trend-card:nth-child(1):hover,.trend-card:nth-child(3):hover{margin-top:-10px}
 .trend-card .bg{position:absolute;inset:0;opacity:.5}
 .trend-card .bg .ph{width:100%;height:100%;background:linear-gradient(135deg,#333,#111)}
+.trend-card .bg img{width:100%;height:100%;object-fit:cover;display:block}
 .trend-card::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.92),rgba(0,0,0,.2))}
 .trend-card .ct{position:relative;z-index:2}
 .trend-card h4{font-size:20px;font-weight:800;margin-bottom:12px;position:relative;padding-top:14px}
@@ -284,6 +290,7 @@ ul{list-style:none}
 /* ============ 售后服务 ============ */
 .as-stage{position:relative;border-radius:18px;box-shadow:var(--shadow)}   /* 不裁切，徽标像印泥盖在整卡最上层 */
 .as-visual{position:relative;aspect-ratio:16/6.4;min-height:280px;overflow:hidden;border-radius:18px 18px 0 0}
+.as-visual img{width:100%;height:100%;object-fit:cover;object-position:50% 40%;display:block}
 .as-visual .ph{
   width:100%;height:100%;display:flex;align-items:center;justify-content:center;
   background:
@@ -573,19 +580,19 @@ html{scrollbar-width:thin;scrollbar-color:#8a000b #070707}
     <div class="sec-head reveal"><h2>大方设计 <em>服务范围</em></h2><p>深耕产品创新设计领域</p></div>
     <div class="scope-grid">
       <article class="scope-card reveal-sc d1" onclick="openModal('工业设计','产品外观设计、结构配合设计、手板跟进、量产落地优化、文创产品设计。以制造可行性为根基，打造兼顾美学与工艺的产品。')">
-        <div class="scope-img"><div class="ph">工业设计配图<br>（替换 svc-industrial.jpg）</div></div>
+        <div class="scope-img"><img src="assets/cases/case1.png" alt="" loading="lazy"></div>
         <div class="scope-bar"><div class="scope-head"><span class="no">1</span><h3>工业设计</h3></div><p class="scope-tags">产品外观设计 / 结构配合设计 / 手板跟进 / 量产落地优化 / 文创产品设计</p></div>
       </article>
       <article class="scope-card reveal-sc d2" onclick="openModal('品牌设计','LOGO设计、VI视觉系统、包装设计、宣传画册、品牌视觉升级。构建系统化品牌识别，提升品牌资产价值。')">
-        <div class="scope-img"><div class="ph">品牌设计配图<br>（替换 svc-brand.jpg）</div></div>
+        <div class="scope-img"><img src="assets/cases/case5.png" alt="" loading="lazy"></div>
         <div class="scope-bar"><div class="scope-head"><span class="no">2</span><h3>品牌设计</h3></div><p class="scope-tags">LOGO设计 / VI视觉系统 / 包装设计 / 宣传画册 / 品牌视觉升级</p></div>
       </article>
       <article class="scope-card reveal-sc d3" onclick="openModal('交互设计','APP / 小程序界面设计、网页 UI、车载界面、操作逻辑优化、原型设计。以用户体验为核心，打磨流畅自然的人机交互。')">
-        <div class="scope-img"><div class="ph">交互设计配图<br>（替换 svc-ux.jpg）</div></div>
+        <div class="scope-img"><img src="assets/cases/case7.png" alt="" loading="lazy"></div>
         <div class="scope-bar"><div class="scope-head"><span class="no">3</span><h3>交互设计</h3></div><p class="scope-tags">APP / 小程序界面设计 / 网页UI / 车载界面 / 操作逻辑优化 / 原型设计</p></div>
       </article>
       <article class="scope-card reveal-sc d4" onclick="openModal('动画制作','产品演示动画、品牌宣传片、三维建模动画、MG 动态视觉、短视频内容。用动态影像讲好产品与品牌故事。')">
-        <div class="scope-img"><div class="ph">动画制作配图<br>（替换 svc-motion.jpg）</div></div>
+        <div class="scope-img"><img src="assets/cases/case8.png" alt="" loading="lazy"></div>
         <div class="scope-bar"><div class="scope-head"><span class="no">4</span><h3>动画制作</h3></div><p class="scope-tags">产品演示动画 / 品牌宣传片 / 三维建模动画 / MG动态视觉 / 短视频制作</p></div>
       </article>
     </div>
@@ -652,10 +659,10 @@ html{scrollbar-width:thin;scrollbar-color:#8a000b #070707}
   <div class="container">
     <div class="sec-head reveal"><h2>聚焦数字 <em>核心趋势</em></h2><p>值得信赖的合作伙伴</p></div>
     <div class="trends-grid">
-      <div class="trend-card reveal-sc d1"><div class="bg"><div class="ph"></div></div><div class="ct"><h4>一体化服务</h4><p>多设计业务协同，一站式对接，降低跨团队沟通成本；</p></div></div>
-      <div class="trend-card reveal-sc d2"><div class="bg"><div class="ph"></div></div><div class="ct"><h4>量产落地经验</h4><p>工业设计深耕制造业，方案兼顾颜值与生产工艺；</p></div></div>
-      <div class="trend-card reveal-sc d3"><div class="bg"><div class="ph"></div></div><div class="ct"><h4>定制化服务</h4><p>拒绝模板化设计，按需匹配专属设计团队；</p></div></div>
-      <div class="trend-card reveal-sc d4"><div class="bg"><div class="ph"></div></div><div class="ct"><h4>迅捷响应</h4><p>标准化服务流程，保障项目进度。</p></div></div>
+      <div class="trend-card reveal-sc d1"><div class="bg"><img src="assets/trend1.png" alt="" loading="lazy"></div><div class="ct"><h4>一体化服务</h4><p>多设计业务协同，一站式对接，降低跨团队沟通成本；</p></div></div>
+      <div class="trend-card reveal-sc d2"><div class="bg"><img src="assets/trend2.png" alt="" loading="lazy"></div><div class="ct"><h4>量产落地经验</h4><p>工业设计深耕制造业，方案兼顾颜值与生产工艺；</p></div></div>
+      <div class="trend-card reveal-sc d3"><div class="bg"><img src="assets/trend3.png" alt="" loading="lazy"></div><div class="ct"><h4>定制化服务</h4><p>拒绝模板化设计，按需匹配专属设计团队；</p></div></div>
+      <div class="trend-card reveal-sc d4"><div class="bg"><img src="assets/trend4.png" alt="" loading="lazy"></div><div class="ct"><h4>迅捷响应</h4><p>标准化服务流程，保障项目进度。</p></div></div>
     </div>
     <div style="text-align:center;margin-top:50px" class="reveal"><button class="btn" onclick="document.getElementById('contact').scrollIntoView()">探索更多</button></div>
   </div>
@@ -667,7 +674,7 @@ html{scrollbar-width:thin;scrollbar-color:#8a000b #070707}
     <div class="sec-head reveal"><h2>专属客户 <em>售后服务</em></h2><p>长期迭代全周期售后</p></div>
     <div class="as-stage reveal-sc">
       <div class="as-visual">
-        <div class="ph">客服团队配图（替换 aftersale.jpg）</div>
+        <img src="assets/news/news1.png" alt="大方设计团队" loading="lazy">
         <div class="as-phone"><small>专属售后热线</small>027-87666138</div>
       </div>
       <div class="as-bar">

@@ -452,6 +452,13 @@ ul{list-style:none}
 .case-img .ph{background:linear-gradient(135deg,#e8e8e8,#cfcfcf);color:#888}
 .case-img .ph,.case-card:hover .case-img .ph{transition:transform .6s var(--ease-out)}
 .case-card:hover .case-img .ph{transform:scale(1.08)}
+.case-img img{width:100%;height:100%;object-fit:cover;object-position:50% 30%;display:block;
+  transition:transform .6s var(--ease-out)}
+.case-card:hover .case-img img{transform:scale(1.08)}
+.news-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s var(--ease-out)}
+.news-card:hover .news-img img{transform:scale(1.06)}
+.modal-img img{width:100%;height:100%;object-fit:cover;display:block}
+.modal-img.has-img{background:#0b0b0b}
 .case-title{
   background:linear-gradient(135deg,var(--red-bright),var(--red-deep));
   color:#fff;font-size:18px;font-weight:700;padding:18px 22px;letter-spacing:1px;
@@ -529,6 +536,7 @@ ul{list-style:none}
 .trend-card:nth-child(1):hover,.trend-card:nth-child(3):hover{margin-top:-10px}
 .trend-card .bg{position:absolute;inset:0;opacity:.5}
 .trend-card .bg .ph{background:linear-gradient(135deg,#333,#111)}
+.trend-card .bg img{width:100%;height:100%;object-fit:cover;display:block}
 .trend-card::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.92),rgba(0,0,0,.2))}
 .trend-card .ct{position:relative;z-index:2}
 .trend-card h4{font-size:20px;font-weight:800;margin-bottom:12px;position:relative;padding-top:14px}
@@ -1112,10 +1120,10 @@ html{scrollbar-width:thin;scrollbar-color:#8a000b #070707}
   <div class="container">
     <div class="sec-head reveal"><h2>聚焦数字 <em>业务趋势</em></h2><p>值得信赖的合作伙伴</p></div>
     <div class="trends-grid">
-      <div class="trend-card reveal-sc d1"><div class="bg"><div class="ph"></div></div><div class="ct"><h4>一体化服务</h4><p>多设计业务协同，一站式对接，降低跨团队沟通成本；</p></div></div>
-      <div class="trend-card reveal-sc d2"><div class="bg"><div class="ph"></div></div><div class="ct"><h4>量产落地经验</h4><p>工业设计深耕制造业，方案兼顾颜值与生产工艺；</p></div></div>
-      <div class="trend-card reveal-sc d3"><div class="bg"><div class="ph"></div></div><div class="ct"><h4>定制化服务</h4><p>拒绝模板化设计，按需匹配专属设计团队；</p></div></div>
-      <div class="trend-card reveal-sc d4"><div class="bg"><div class="ph"></div></div><div class="ct"><h4>迅捷响应</h4><p>标准化服务流程，保障项目进度。</p></div></div>
+      <div class="trend-card reveal-sc d1"><div class="bg"><img src="assets/trend1.png" alt="" loading="lazy"></div><div class="ct"><h4>一体化服务</h4><p>多设计业务协同，一站式对接，降低跨团队沟通成本；</p></div></div>
+      <div class="trend-card reveal-sc d2"><div class="bg"><img src="assets/trend2.png" alt="" loading="lazy"></div><div class="ct"><h4>量产落地经验</h4><p>工业设计深耕制造业，方案兼顾颜值与生产工艺；</p></div></div>
+      <div class="trend-card reveal-sc d3"><div class="bg"><img src="assets/trend3.png" alt="" loading="lazy"></div><div class="ct"><h4>定制化服务</h4><p>拒绝模板化设计，按需匹配专属设计团队；</p></div></div>
+      <div class="trend-card reveal-sc d4"><div class="bg"><img src="assets/trend4.png" alt="" loading="lazy"></div><div class="ct"><h4>迅捷响应</h4><p>标准化服务流程，保障项目进度。</p></div></div>
     </div>
     <div style="text-align:center;margin-top:50px" class="reveal"><button class="btn" onclick="document.getElementById('contact').scrollIntoView()">探索更多</button></div>
   </div>
@@ -1177,10 +1185,10 @@ html{scrollbar-width:thin;scrollbar-color:#8a000b #070707}
   <div class="container">
     <div class="sec-head reveal"><h2>实时更新 <em>动态新闻</em></h2><p>值得信赖的合作伙伴</p></div>
     <div class="news-grid">
-      <article class="news-card reveal-sc d1" onclick="openModal('大方工业走进汉武','【专题讲座】 2019-07-27 — 大方设计走进高校，分享工业设计前沿趋势与产业落地经验。')"><div class="news-img"><div class="ph">新闻图 1</div></div><div class="news-body"><h4>大方工业走进汉武</h4><span class="news-tag">专题讲座</span><div class="news-date">2019-07-27</div></div></article>
-      <article class="news-card reveal-sc d2" onclick="openModal('全国性创客盛会','【武汉大方】 2019-06-24 — 大方设计亮相全国性创客盛会，与行业伙伴共话创新设计未来。')"><div class="news-img"><div class="ph">新闻图 2</div></div><div class="news-body"><h4>全国性创客盛会</h4><span class="news-tag">武汉大方</span><div class="news-date">2019-06-24</div></div></article>
-      <article class="news-card reveal-sc d3" onclick="openModal('国内工业设计发展趋势','【工业设计】 2025-05-20 — 解析国内工业设计发展趋势，把握产业升级新机遇。')"><div class="news-img"><div class="ph">新闻图 3</div></div><div class="news-body"><h4>国内工业设计发展趋势</h4><span class="news-tag">工业设计</span><div class="news-date">2025-05-20</div></div></article>
-      <article class="news-card reveal-sc d4" onclick="openModal('科技转化是创新价值的体现','【值得信赖】 2025-05-20 — 科技成果转化是创新价值的真正体现，大方设计助力技术落地。')"><div class="news-img"><div class="ph">新闻图 4</div></div><div class="news-body"><h4>科技转化是创新价值的体现</h4><span class="news-tag">值得信赖</span><div class="news-date">2025-05-20</div></div></article>
+      <article class="news-card reveal-sc d1" onclick="openModal('大方工业走进汉武','【专题讲座】 2019-07-27 — 大方设计走进高校，分享工业设计前沿趋势与产业落地经验。')"><div class="news-img"><img src="assets/news/news1.png" alt="" loading="lazy"></div><div class="news-body"><h4>大方工业走进汉武</h4><span class="news-tag">专题讲座</span><div class="news-date">2019-07-27</div></div></article>
+      <article class="news-card reveal-sc d2" onclick="openModal('全国性创客盛会','【武汉大方】 2019-06-24 — 大方设计亮相全国性创客盛会，与行业伙伴共话创新设计未来。')"><div class="news-img"><img src="assets/news/news2.png" alt="" loading="lazy"></div><div class="news-body"><h4>全国性创客盛会</h4><span class="news-tag">武汉大方</span><div class="news-date">2019-06-24</div></div></article>
+      <article class="news-card reveal-sc d3" onclick="openModal('国内工业设计发展趋势','【工业设计】 2025-05-20 — 解析国内工业设计发展趋势，把握产业升级新机遇。')"><div class="news-img"><img src="assets/news/news3.png" alt="" loading="lazy"></div><div class="news-body"><h4>国内工业设计发展趋势</h4><span class="news-tag">工业设计</span><div class="news-date">2025-05-20</div></div></article>
+      <article class="news-card reveal-sc d4" onclick="openModal('科技转化是创新价值的体现','【值得信赖】 2025-05-20 — 科技成果转化是创新价值的真正体现，大方设计助力技术落地。')"><div class="news-img"><img src="assets/news/news4.png" alt="" loading="lazy"></div><div class="news-body"><h4>科技转化是创新价值的体现</h4><span class="news-tag">值得信赖</span><div class="news-date">2025-05-20</div></div></article>
     </div>
     <div style="text-align:center;margin-top:50px" class="reveal"><button class="btn" onclick="openModal('更多新闻','更多企业动态与行业资讯持续更新中，敬请关注我们的官方公众号。')">更多新闻</button></div>
   </div>
@@ -1550,9 +1558,10 @@ const grid=document.getElementById('casesGrid');
 cases.forEach((c,i)=>{
   const el=document.createElement('article');
   el.className='case-card reveal-sc d'+((i%3)+1);
-  el.innerHTML='<div class="case-img"><div class="ph">'+c+'<br>（替换 case'+(i+1)+'.jpg）</div></div>'+
+  const img='assets/cases/case'+(i+1)+'.png';
+  el.innerHTML='<div class="case-img"><img src="'+img+'" alt="'+c+'" loading="lazy"></div>'+
     '<div class="case-title">'+c+'<span class="arrow">→</span></div>';
-  el.onclick=function(){openModal(c,'这是大方设计为客户打造的「'+c+'」项目。涵盖外观设计、结构设计、样机制作到量产落地的完整设计开发服务。')};
+  el.onclick=function(){openModal(c,'这是大方设计为客户打造的「'+c+'」项目。涵盖外观设计、结构设计、样机制作到量产落地的完整设计开发服务。',img)};
   grid.appendChild(el);
 });
 
@@ -1607,7 +1616,16 @@ nodes.forEach(function(n,i){
 
 /* ====== 弹窗 ====== */
 const modal=document.getElementById('modal');
-function openModal(t,txt,img){document.getElementById('modalTitle').textContent=t;document.getElementById('modalText').textContent=txt;document.getElementById('modalImg').textContent=img||t;modal.classList.add('open');document.body.style.overflow='hidden'}
+function openModal(t,txt,img){
+  document.getElementById('modalTitle').textContent=t;
+  document.getElementById('modalText').textContent=txt;
+  var m=document.getElementById('modalImg');
+  if(img&&/.(png|jpe?g|webp|gif)$/i.test(img)){
+    m.innerHTML='<img src="'+img+'" alt="'+t+'" style="width:100%;height:100%;object-fit:cover;display:block">';
+    m.classList.add('has-img');
+  }else{m.textContent=img||t;m.classList.remove('has-img')}
+  modal.classList.add('open');document.body.style.overflow='hidden';
+}
 function closeModal(){modal.classList.remove('open');document.body.style.overflow=''}
 modal.onclick=function(e){if(e.target===modal)closeModal()};
 addEventListener('keydown',function(e){if(e.key==='Escape')closeModal()});
