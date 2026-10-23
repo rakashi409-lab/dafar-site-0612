@@ -546,12 +546,12 @@ ul{list-style:none}
 /* ============ 业务布局 地球（数字粒子地球：左侧出血 + 右上弧光大气层） ============ */
 .globe-sec{position:relative;overflow:hidden}
 .layout-wrap{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center;min-height:560px;z-index:2}
-/* 星球从左下角升起（抬升版）：底部裁约 22%，球面上部抬进视野中带，
-   与右侧城市列表同一视线高度；左侧仍裁约 30%，右上球面留足节点/钉城空间。
-   锚点/尺寸不变 */
-.globe-stage{position:absolute;left:0;bottom:0;
-  width:min(980px,68vw);height:min(980px,68vw);
-  transform:translate(-30%,22%);z-index:0;pointer-events:none}
+/* 星球从左侧升起：顶部紧贴标题下沿，球面上部与右侧城市列表同一视线高度；
+   左侧裁约 30%。尺寸随视口等比（51vw，1920 宽时恰为 980px 上限），
+   保证不同屏宽/浏览器缩放下球体右缘始终落在约 36% 处，不会挤向画面中央 */
+.globe-stage{position:absolute;left:0;top:263px;
+  width:min(980px,51vw);height:min(980px,51vw);
+  transform:translateX(-30%);z-index:0;pointer-events:none}
 /* 底部渐变羽化：只罩球体本身（52% 起渐隐、76% 全透明，柔和溶入黑底）。
    注意不能罩在 .globe-stage 上——大气弧光/辉光探出容器边界，
    遮罩会在容器上/右边缘把它们生硬切断 */
