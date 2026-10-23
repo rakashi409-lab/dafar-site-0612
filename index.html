@@ -613,7 +613,7 @@ ul{list-style:none}
   width:28%;height:32%;border-radius:50%;
   background:radial-gradient(circle,rgba(255,45,55,.3),transparent 70%);filter:blur(26px)}
 /* 城市块在右半区偏左起排，两列交错（参考稿） */
-.cities{display:flex;flex-direction:column;gap:12px;position:relative;z-index:2;width:max-content;margin-left:22%;margin-right:auto}
+.cities{display:flex;flex-direction:column;gap:12px;position:relative;z-index:2;width:max-content;margin-left:37%;margin-right:auto}
 .city{display:flex;align-items:center;gap:14px;font-size:clamp(22px,2.6vw,32px);font-weight:600;padding:7px 0;
   text-shadow:0 2px 12px rgba(0,0,0,.6);
   opacity:0;transform:translateX(36px);transition:.7s var(--ease-spring);
@@ -822,6 +822,9 @@ html{scrollbar-width:thin;scrollbar-color:#8a000b #070707}
   .trend-card:nth-child(2),.trend-card:nth-child(4){margin-top:0}
   .footer-top{grid-template-columns:1fr 1fr 1fr}
   .f-qr{grid-column:span 3}
+  /* 狭窄断点：右列变窄，同步收敛右移量与错位量，避免城市名压到容器右缘 */
+  .cities{margin-left:26%}
+  .city:nth-child(2),.city:nth-child(4){margin-left:160px}
 }
 @media(max-width:820px){
   .nav{padding:14px 20px}
