@@ -80,6 +80,8 @@
     document.getElementById('modalText').textContent = text || '';
     var box = document.getElementById('modalImg');
     box.innerHTML = '';
+    /* 没有图片时用 .ph 占位，有图片时摘掉，避免深色底铺满图片两侧 */
+    box.classList.toggle('ph', !img);
     if (img) {
       var im = document.createElement('img');
       im.src = img; im.alt = title || '';
@@ -101,21 +103,31 @@
     addEventListener('keydown', function (e) { if (e.key === 'Escape') closeModal(); });
   }
 
-  /* ---------- 职位手风琴 ---------- */
-  document.querySelectorAll('.job-head').forEach(function (head) {
-    head.addEventListener('click', function () {
-      var job = head.closest('.job');
-      var body = job.querySelector('.job-body');
-      var isOpen = job.classList.contains('open');
-      document.querySelectorAll('.job.open').forEach(function (o) {
-        if (o !== job) {
-          o.classList.remove('open');
-          o.querySelector('.job-body').style.maxHeight = '';
-        }
-      });
-      job.classList.toggle('open', !isOpen);
-      body.style.maxHeight = isOpen ? '' : body.scrollHeight + 'px';
+  /* ---------- 职位手风琴（事件委托：列表是异步渲染的，行内绑定会漏掉） ---------- */
+  function toggleJob(head) {
+    var job = head.closest('.job');
+    if (!job) return;
+    var isOpen = job.classList.contains('open');
+    document.querySelectorAll('.job.open').forEach(function (o) {
+      if (o !== job) {
+        o.classList.remove('open');
+        var h = o.querySelector('.job-head');
+        if (h) h.setAttribute('aria-expanded', 'false');
+      }
     });
+    job.classList.toggle('open', !isOpen);
+    head.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
+  }
+  document.addEventListener('click', function (e) {
+    var head = e.target.closest && e.target.closest('.job-head');
+    if (head) toggleJob(head);
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    var head = e.target.closest && e.target.closest('.job-head');
+    if (!head) return;
+    e.preventDefault();
+    toggleJob(head);
   });
 
   /* ---------- 访客轨迹 ---------- */

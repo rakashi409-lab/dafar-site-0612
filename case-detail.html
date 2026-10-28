@@ -36,7 +36,12 @@
         <a href="cases.html#graphic">平面设计</a>
       </div>
     </li>
-    <li><a href="news.html">动态</a></li>
+    <li>
+      <a href="news.html">动态</a>
+      <div class="dropdown">
+        <a href="news.html">动态新闻</a>
+      </div>
+    </li>
     <li>
       <a href="about.html">关于</a>
       <div class="dropdown">
@@ -57,24 +62,36 @@
   <button class="nav-toggle" id="navToggle" aria-label="菜单"><span></span><span></span><span></span></button>
 </nav>
 
-<header class="sub-hero" id="top">
+<header class="sub-hero case-hero" id="top">
   <div class="sub-hero-bg" aria-hidden="true"><img src="assets/pages/hero-case.jpg" alt=""></div>
   <div class="sub-hero-tint" aria-hidden="true"></div>
   <div class="sub-hero-inner">
     <h1>专注设计是我们不变的追求</h1>
     <div class="en">Focusing Design Is Our Constant Pursuit</div>
   </div>
-  <div class="scroll-ind" aria-hidden="true"><span class="si-ring"></span><span class="si-pill"></span></div>
-  <div class="breadcrumb"><a href="services.html">服务</a><span>&gt;</span><a href="cases.html">案例</a><span>&gt;</span><span id="crumbCat">交通工具</span></div>
 </header>
+
+<div class="pd-crumb" data-sec="面包屑">
+  <div class="container">
+    <a href="services.html">服务</a><span class="sp">&lt;</span>
+    <a href="cases.html">案例</a><span class="sp">&lt;</span>
+    <a href="cases.html" id="crumbCat">消费电子</a>
+  </div>
+</div>
 
 <main class="pd-hero">
   <div class="container">
     <div class="pd-wrap">
       <div class="pd-gallery reveal-l">
-        <div class="pd-main" id="pdMain"></div>
-        <div class="pd-name" id="pdName">案例名称</div>
-        <div class="pd-thumbs" id="pdThumbs"></div>
+        <div class="pd-card">
+          <div class="pd-main" id="pdMain"></div>
+          <div class="pd-name" id="pdName">案例名称</div>
+        </div>
+        <div class="pd-thumbs-row">
+          <span class="pd-arrow" id="pdPrev" role="button" tabindex="0" aria-label="上一组图">‹</span>
+          <div class="pd-thumbs" id="pdThumbs"></div>
+          <span class="pd-arrow" id="pdNext" role="button" tabindex="0" aria-label="下一组图">›</span>
+        </div>
       </div>
       <div class="pd-info reveal-r">
         <h1 id="pdTitle">案例标题</h1>
@@ -82,37 +99,20 @@
         <p id="pdOverview"></p>
         <div class="pd-label">核心亮点</div>
         <ul class="pd-points" id="pdPoints"></ul>
-        <div class="pd-tags" id="pdTags"></div>
       </div>
     </div>
 
     <section class="pd-block" data-sec="技术参数">
-      <div class="sec-head reveal"><h2>技术 <em>参数</em></h2></div>
-      <table class="pd-table reveal" id="pdSpec"></table>
+      <div class="pd-sec-label reveal">技术参数</div>
+      <table class="pd-table pd-spec reveal" id="pdSpec"></table>
     </section>
 
     <section class="pd-block" data-sec="应用场景">
-      <div class="sec-head reveal"><h2>应用 <em>场景</em></h2></div>
-      <table class="pd-table reveal" id="pdApps"></table>
+      <div class="pd-sec-label reveal">应用场景</div>
+      <table class="pd-table pd-apps reveal" id="pdApps"></table>
     </section>
-
-    <nav class="pd-nav reveal" id="pdNav" aria-label="上下篇案例"></nav>
   </div>
 </main>
-
-<section class="form-sec" id="contact" data-sec="咨询表单">
-  <div class="container">
-    <h2>商务合作</h2>
-    <form class="form" id="bizForm" onsubmit="return submitForm(event)">
-      <div class="form-row">
-        <div class="field reveal-l"><label>您的姓名 *</label><input type="text" name="name" required placeholder="请输入您的姓名"></div>
-        <div class="field reveal-r"><label>您的电话 *</label><input type="tel" name="phone" required pattern="[0-9\-\+\s]{7,}" placeholder="请输入您的联系电话"></div>
-      </div>
-      <div class="field reveal"><label>咨询内容 *</label><textarea name="msg" required placeholder="请简要描述您的需求"></textarea></div>
-      <button type="submit" class="btn submit reveal">提交</button>
-    </form>
-  </div>
-</section>
 
 <footer class="footer">
   <div class="container">
@@ -156,63 +156,133 @@
 <script>
 (function(){
   var q=new URLSearchParams(location.search);
-  var id=q.get('id')||DF.CASES[0].id;
-  var idx=DF.CASES.findIndex(function(c){return c.id===id});
-  if(idx<0){idx=0}
-  var c=DF.CASES[idx];
+  var id=q.get('id');
+  var c=id?DF.CASES.filter(function(x){return x.id===id})[0]:null;
+
+  /* 通用模板：案例页里没有独立数据的产品，用名称/分类/图片走同一套版式 */
+  if(!c){
+    var name=q.get('name')||'产品名称';
+    var catKey=q.get('cat')||'consumer';
+    var pic=q.get('img')||'';
+    c={
+      id:'', cat:DF.CATS[catKey]?catKey:'consumer', title:name,
+      imgs:pic?[pic]:[],
+      overview:'面向「'+name+'」的产品设计开发，大方设计以用户场景为起点，完成从概念草图、造型设计、结构设计到样机验证与量产落地的全流程工作。在形态语言、人机体验与工艺可行性之间取得平衡，让设计方案真正走到市场中。',
+      points:['以清晰的产品定位切入，重建符合品类语境的造型语言，让产品在第一眼就具备识别度。',
+        '在结构可制造性约束下推进造型，保证设计意图在开模、注塑、装配各环节完整落地。',
+        '同步输出 CMF 方案，通过材质、颜色与表面处理强化产品质感与品牌印象。',
+        '配合样机制作与可靠性验证，针对装配干涉、跌落与散热等问题持续收口。',
+        '全流程数字化作业，阶段性交付可评审文件，客户全程可控。'],
+      spec:[['服务内容','外观造型设计'],['结构形式','塑胶 + 金属复合结构'],
+        ['设计周期','按项目阶段排期'],['主要工艺','注塑 / 钣金 / 表面处理'],
+        ['交付物','效果图、CAS、结构图、样机'],['落地状态','已量产 / 在研']],
+      apps:[['目标用户','围绕核心使用场景定义产品形态与操作逻辑'],
+        ['使用环境','适配室内外多场景的防护与耐用性要求'],
+        ['量产落地','与供应链协同完成模具开发与首批量产验证']]
+    };
+  }
 
   document.title=c.title+' — 大方设计 DAFAR DESIGN';
-  document.getElementById('crumbCat').textContent=DF.CATS[c.cat].name;
-  document.getElementById('crumbCat').outerHTML='<a href="cases.html#'+DF.CATS[c.cat].slug+'">'+DF.CATS[c.cat].name+'</a>';
+  var cat=DF.CATS[c.cat]||DF.CATS.consumer;
+  var crumb=document.getElementById('crumbCat');
+  crumb.textContent=cat.name;
+  crumb.href='cases.html#'+cat.slug;
 
+  /* 主图与名称 */
   var pics=c.imgs.map(function(n){return DF.img(n)});
+  var list=[];          /* 校验通过、可正常显示的图片；缩略图与主图都读它 */
   var main=document.getElementById('pdMain');
-  main.innerHTML='<img src="'+pics[0]+'" alt="'+c.title+'">';
+  function placeholder(){
+    main.innerHTML='<div class="ph"><span class="ph-in">'+c.title+'</span><span class="ph-note">实拍图整理中</span></div>';
+  }
+  function showMain(src){
+    main.innerHTML='<img src="'+src+'" alt="'+c.title+'">';
+    var im=main.firstChild;
+    /* 图片缺失或尺寸异常（高度不足）时退回品牌化占位，避免出现空白卡片 */
+    im.onerror=function(){main.classList.remove('is-fade');placeholder()};
+    im.onload=function(){if(!im.naturalWidth||!im.naturalHeight||im.naturalHeight/im.naturalWidth<.06){placeholder()}};
+    requestAnimationFrame(function(){main.classList.remove('is-fade')});
+  }
+  /* 先校验图片可用性：缺失或裁切成一条线的图不参与展示 */
+  (function validate(srcs){
+    if(!srcs.length){placeholder();return}  /* 缩略图区在下方统一渲染，此处不能提前调用 */
+    var ok=new Array(srcs.length), n=srcs.length;
+    srcs.forEach(function(src,i){
+      var im=new Image();
+      function fin(){if(--n===0){
+        var good=srcs.filter(function(_,i){return ok[i]});
+        list=good;
+        if(good.length){showMain(good[0])}else{placeholder()}
+        renderThumbs();
+      }}
+      im.onload=function(){ok[i]=!!im.naturalWidth&&im.naturalHeight/im.naturalWidth>=.06;fin()};
+      im.onerror=function(){ok[i]=false;fin()};
+      im.src=src;
+    });
+  })(pics);
   document.getElementById('pdName').textContent=c.title;
   document.getElementById('pdTitle').textContent=c.title;
   document.getElementById('pdOverview').textContent=c.overview;
 
   var ul=document.getElementById('pdPoints');
-  c.points.forEach(function(t){
-    var li=document.createElement('li');li.textContent=t;ul.appendChild(li);
-  });
-  var tags=document.getElementById('pdTags');
-  c.tags.forEach(function(t){var s=document.createElement('span');s.textContent=t;tags.appendChild(s)});
+  c.points.forEach(function(t){var li=document.createElement('li');li.textContent=t;ul.appendChild(li)});
 
-  /* 缩略图切换 */
+  /* 缩略图：三张一屏，左右箭头翻页；不足三张时箭头置灰 */
   var thumbs=document.getElementById('pdThumbs');
-  pics.forEach(function(src,i){
-    var b=document.createElement('button');
-    b.className='pd-thumb'+(i===0?' on':'');
-    b.type='button';
-    b.innerHTML='<img src="'+src+'" alt="'+c.title+' 图 '+(i+1)+'" loading="lazy">';
-    b.onclick=function(){
-      if(b.classList.contains('on'))return;
-      thumbs.querySelectorAll('.pd-thumb').forEach(function(x){x.classList.remove('on')});
-      b.classList.add('on');
-      main.classList.add('is-fade');
-      setTimeout(function(){
-        main.innerHTML='<img src="'+src+'" alt="'+c.title+'">';
-        requestAnimationFrame(function(){main.classList.remove('is-fade')});
-      },220);
-    };
-    thumbs.appendChild(b);
-  });
-
-  /* 参数 / 场景 */
-  function fill(el,rows){
-    el.innerHTML=rows.map(function(r){return '<tr><th>'+r[0]+'</th><td>'+r[1]+'</td></tr>'}).join('');
+  var prevBtn=document.getElementById('pdPrev'), nextBtn=document.getElementById('pdNext');
+  var pageStart=0, PER=3;
+  function renderThumbs(){
+    var slice=list.slice(pageStart,pageStart+PER);
+    thumbs.innerHTML=slice.map(function(src,i){
+      return '<button class="pd-thumb'+(pageStart+i===0?' on':'')+'" type="button">'+
+        (src?'<img src="'+src+'" alt="'+c.title+' 图 '+(pageStart+i+1)+'" loading="lazy">':'<div class="ph"></div>')+
+        '</button>';
+    }).join('');
+    Array.prototype.forEach.call(thumbs.children,function(b,i){
+      b.onclick=function(){
+        if(b.classList.contains('on'))return;
+        Array.prototype.forEach.call(thumbs.children,function(x){x.classList.remove('on')});
+        b.classList.add('on');
+        if(!list.length)return;
+        main.classList.add('is-fade');
+        setTimeout(function(){showMain(list[pageStart+i])},200);
+      };
+    });
+    var multi=list.length>PER;
+    prevBtn.style.visibility=multi?'visible':'hidden';
+    nextBtn.style.visibility=multi?'visible':'hidden';
   }
-  fill(document.getElementById('pdSpec'),c.spec);
-  fill(document.getElementById('pdApps'),c.apps);
+  function shift(dir){
+    if(list.length<=PER)return;
+    var pages=Math.ceil(list.length/PER);
+    var cur=Math.round(pageStart/PER);
+    pageStart=((cur+dir+pages)%pages)*PER;
+    renderThumbs();
+  }
+  prevBtn.onclick=function(){shift(-PER)};
+  nextBtn.onclick=function(){shift(PER)};
+  [prevBtn,nextBtn].forEach(function(b){
+    b.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();b.click()}});
+  });
+  renderThumbs();
 
-  /* 上下篇（按分类内循环） */
-  var same=DF.CASES.filter(function(x){return x.cat===c.cat});
-  var k=same.findIndex(function(x){return x.id===c.id});
-  var prev=same[(k-1+same.length)%same.length], next=same[(k+1)%same.length];
-  document.getElementById('pdNav').innerHTML=
-    '<a href="case-detail.html?id='+prev.id+'"><span class="k">← 上一个案例</span><span class="v">'+prev.title+'</span></a>'+
-    '<a class="next" href="case-detail.html?id='+next.id+'"><span class="k">下一个案例 →</span><span class="v">'+next.title+'</span></a>';
+  /* 技术参数：四列并排（标签 / 值 / 标签 / 值），奇数条末行整行跨列 */
+  var spec=document.getElementById('pdSpec'), rows='';
+  for(var i=0;i<c.spec.length;i+=2){
+    var a=c.spec[i], b=c.spec[i+1];
+    if(b){
+      rows+='<tr><th class="k">'+a[0]+'</th><td class="v">'+a[1]+'</td>'+
+            '<th class="k2">'+b[0]+'</th><td class="v2">'+b[1]+'</td></tr>';
+    }else{
+      rows+='<tr><th class="k">'+a[0]+'</th><td class="v" colspan="3">'+a[1]+'</td></tr>';
+    }
+  }
+  spec.innerHTML=rows;
+
+  /* 应用场景：两列 */
+  document.getElementById('pdApps').innerHTML=c.apps.map(function(r){
+    return '<tr><th class="k">'+r[0]+'</th><td>'+r[1]+'</td></tr>';
+  }).join('');
 
   /* 页面进入后补一次 reveal 检测（数据渲染的节点） */
   setTimeout(function(){document.querySelectorAll('.reveal,.reveal-l,.reveal-r').forEach(function(el){

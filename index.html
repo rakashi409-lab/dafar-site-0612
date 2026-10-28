@@ -191,15 +191,20 @@ ul{list-style:none}
 /* iOS 液态玻璃名片：白玻璃 + 内部红色弥散极光（对照新版设计稿） */
 .hero-card{
   position:relative;z-index:5;width:min(880px,92vw);overflow:hidden;
-  background:linear-gradient(135deg,rgba(255,255,255,.94),rgba(255,255,255,.80) 50%,rgba(255,248,248,.88) 100%);
+  background:linear-gradient(135deg,rgba(255,255,255,.90),rgba(255,255,255,.72) 50%,rgba(255,244,245,.84) 100%);
   /* 卡片底色本身已接近不透明白玻璃，模糊值从 30px 降到 14px、去掉 saturate：
      视觉几乎无差，但每帧要采样的背景区域小得多（背景还是逐帧变化的 3D 画面） */
   -webkit-backdrop-filter:blur(14px);
   backdrop-filter:blur(14px);
   border-radius:28px;padding:54px 60px;display:flex;gap:60px;align-items:stretch;
-  border:1px solid rgba(255,255,255,.75);
-  box-shadow:0 30px 80px rgba(0,0,0,.5),0 2px 8px rgba(0,0,0,.2),
-    inset 0 1px 0 rgba(255,255,255,.95),inset 0 0 30px rgba(255,255,255,.4);
+  border:1px solid rgba(255,255,255,.35);
+  /* 厚玻璃：外层分三级投影 + 红色环境反光托底；内层上亮下暗，模拟玻璃板厚度与边缘折射 */
+  box-shadow:0 1px 2px rgba(0,0,0,.18),0 10px 24px rgba(0,0,0,.22),0 40px 90px rgba(0,0,0,.5),
+    0 34px 70px -28px rgba(230,0,18,.45),
+    inset 0 1.5px 0 rgba(255,255,255,1),inset 0 -1px 0 rgba(140,0,12,.18),
+    inset 14px 14px 30px -18px rgba(255,255,255,.95),
+    inset -16px -22px 36px -20px rgba(170,0,16,.22),
+    inset 0 0 0 1px rgba(255,255,255,.25);
   color:#1a1a1a;transform:translateZ(0);
   animation:cardIn .9s ease both;
 }
@@ -209,13 +214,25 @@ ul{list-style:none}
   background:
     radial-gradient(120% 85% at 86% 4%,rgba(255,130,140,.20),transparent 50%),
     radial-gradient(110% 90% at 4% 100%,rgba(255,150,158,.16),transparent 52%),
-    radial-gradient(80% 70% at 100% 90%,rgba(255,170,176,.12),transparent 55%);
+    radial-gradient(80% 70% at 100% 90%,rgba(255,170,176,.12),transparent 55%),
+    radial-gradient(60% 16% at 50% 100%,rgba(230,0,18,.16),transparent 70%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .5 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
+  opacity:.95;
 }
 /* iOS 对角镜面反光（左上玻璃高光） */
 .hero-card::after{
   content:"";position:absolute;inset:0;border-radius:28px;pointer-events:none;z-index:1;
-  background:linear-gradient(132deg,rgba(255,255,255,.55) 0%,rgba(255,255,255,.12) 20%,transparent 42%);
+  background:
+    radial-gradient(140% 38% at 28% -6%,rgba(255,255,255,.75),rgba(255,255,255,.18) 55%,transparent 72%),
+    linear-gradient(132deg,rgba(255,255,255,.5) 0%,rgba(255,255,255,.1) 20%,transparent 42%),
+    linear-gradient(312deg,rgba(255,255,255,.35) 0%,transparent 14%);
 }
+/* 玻璃斜切边：渐变描边（左上亮、右下带红反光），mask 只保留 1.5px 边框 */
+.card-rim{position:absolute;inset:0;border-radius:28px;padding:1.5px;z-index:3;pointer-events:none;
+  background:linear-gradient(140deg,rgba(255,255,255,1),rgba(255,255,255,.35) 26%,rgba(255,255,255,.08) 52%,rgba(255,120,130,.45) 82%,rgba(255,255,255,.85));
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0)}
+.hero-card.morphing .card-rim{display:none}
 /* 红色流体层：四团高斯模糊光斑各自横穿卡片游动（熔岩灯式流体动效）。
    每团是独立合成层、内容静态、只动 transform/opacity —— 模糊结果被 GPU 缓存，逐帧零重绘。
    translate 百分比相对光斑自身尺寸：±50%~140% ≈ 横穿小半张到大半张卡片，肉眼明显。 */
@@ -250,14 +267,20 @@ ul{list-style:none}
 }
 .card-close{
   position:absolute;top:16px;right:16px;width:34px;height:34px;border-radius:50%;
-  background:var(--red);color:#fff;font-size:18px;display:flex;align-items:center;justify-content:center;
+  background:var(--red);font-size:0;line-height:0;transform-origin:50% 50%;display:flex;align-items:center;justify-content:center;
   transition:transform .3s,background .3s;z-index:3;
 }
+.card-close::before,.card-close::after{
+  content:"";position:absolute;left:50%;top:50%;width:15px;height:2px;border-radius:2px;
+  background:#fff;transform-origin:50% 50%;margin:-1px 0 0 -7.5px;
+}
+.card-close::before{transform:rotate(45deg)}
+.card-close::after{transform:rotate(-45deg)}
 .card-close:hover{transform:rotate(90deg) scale(1.1);background:var(--red-deep)}
 /* 左列纵向两端对齐：二维码顶部对齐右侧标题，联系信息底部对齐右侧按钮 */
 .card-left{flex:0 0 auto;text-align:left;position:relative;z-index:2;
   display:flex;flex-direction:column;justify-content:space-between}
-.qr{width:140px;height:140px;border-radius:12px;background:#fff;padding:8px;box-shadow:0 6px 18px rgba(0,0,0,.10),0 0 0 1px rgba(0,0,0,.05)}
+.qr{width:140px;height:140px;border-radius:12px;background:#fff;padding:8px;box-shadow:0 8px 20px rgba(0,0,0,.12),0 0 0 1px rgba(0,0,0,.05),0 0 0 5px rgba(255,255,255,.45)}
 .card-left .meta{margin-top:28px}
 .card-left .meta b{display:block;color:#2e2e2e;font-size:15px;margin-bottom:8px;font-weight:600;letter-spacing:2px}
 .card-left .meta .row{margin-bottom:22px;font-size:16px;color:#454545;font-weight:500;letter-spacing:.5px;font-variant-numeric:tabular-nums}
@@ -265,17 +288,19 @@ ul{list-style:none}
 .card-right{flex:1;position:relative;z-index:2}
 .card-right h3{font-size:clamp(25px,3.1vw,35px);font-weight:700;color:#111;letter-spacing:2px;line-height:1.5}
 .card-right .hotline-label{margin-top:48px;font-size:clamp(17px,2.2vw,26px);color:#555;font-weight:400;letter-spacing:6px}
-.card-right .hotline{font-size:clamp(40px,5.4vw,58px);font-weight:700;color:#111;letter-spacing:4px;line-height:1.15;margin-top:10px}
+.card-right .hotline{font-size:clamp(40px,5.4vw,58px);font-weight:700;color:#111;letter-spacing:4px;line-height:1.15;margin-top:10px;
+  text-shadow:0 1px 0 rgba(255,255,255,.9),0 2px 6px rgba(120,0,10,.12)}
+.card-right h3{text-shadow:0 1px 0 rgba(255,255,255,.85)}
 /* 行动按钮胶囊：三等分均布（对照设计稿：立即咨询 / 微信咨询 / 项目合作） */
 .card-actions{display:flex;gap:14px;margin-top:42px}
 .card-actions .tag{
   flex:1;min-width:0;text-align:center;white-space:nowrap;
-  background:linear-gradient(135deg,var(--red-bright),var(--red-deep));color:#fff;
+  background:linear-gradient(180deg,rgba(255,255,255,.3),rgba(255,255,255,0) 52%),linear-gradient(135deg,var(--red-bright),var(--red-deep));color:#fff;
   padding:9px 0;border-radius:30px;font-size:13.5px;font-weight:500;letter-spacing:1.5px;
-  box-shadow:0 4px 12px rgba(230,0,18,.22),inset 0 1px 0 rgba(255,255,255,.32);
+  box-shadow:0 4px 12px rgba(230,0,18,.22),inset 0 1px 0 rgba(255,255,255,.5),inset 0 -3px 6px rgba(110,0,8,.3);
   transition:transform .3s var(--ease-spring),box-shadow .3s;
 }
-.card-actions .tag:hover{transform:translateY(-3px) scale(1.04);box-shadow:0 8px 18px rgba(230,0,18,.38),inset 0 1px 0 rgba(255,255,255,.32)}
+.card-actions .tag:hover{transform:translateY(-3px) scale(1.04);box-shadow:0 8px 18px rgba(230,0,18,.38),inset 0 1px 0 rgba(255,255,255,.5),inset 0 -3px 6px rgba(110,0,8,.3)}
 /* 重新打开名片的悬浮电话按钮（液态玻璃收束的终点形态） */
 .card-reopen{
   position:fixed;right:24px;bottom:28px;z-index:900;width:60px;height:60px;border-radius:50%;
@@ -371,7 +396,19 @@ ul{list-style:none}
 .svc-card:hover .svc-icon{transform:scale(1.12) rotate(-4deg);color:var(--red)}
 .svc-card h4{font-size:20px;font-weight:800;color:var(--red);margin-bottom:14px;letter-spacing:1px}
 .svc-card p{font-size:13.5px;color:#555;line-height:1.8;flex:1;margin-bottom:22px;text-align:left;width:100%}
-.svc-card .btn{width:100%;border-radius:8px;padding:12px}
+.svc-card .btn{width:100%;border-radius:8px;padding:12px;
+  background:transparent;color:#8c8c8c;border:1px solid rgba(20,20,20,.13);box-shadow:none;isolation:isolate;
+  transition:color .45s var(--ease-out),border-color .45s var(--ease-out),box-shadow .5s var(--ease-out),transform .4s var(--ease-spring)}
+/* 红色底从中间向两侧丝滑铺开：默认中性灰，卡片悬浮才变红 */
+.svc-card .btn::before{content:"";position:absolute;inset:-1px;z-index:-1;border-radius:inherit;
+  background:linear-gradient(135deg,var(--red-bright),var(--red-deep));
+  transform:scaleX(0);transform-origin:50% 50%;opacity:0;
+  transition:transform .55s var(--ease-spring),opacity .35s var(--ease-out)}
+.svc-card .btn::after{opacity:0;transition:left .6s var(--ease-out),opacity .3s}
+.svc-card:hover .btn,.svc-card .btn:hover{color:#fff;border-color:transparent;
+  box-shadow:0 10px 24px rgba(230,0,18,.28);transform:translateY(-2px) scale(1.02)}
+.svc-card:hover .btn::before,.svc-card .btn:hover::before{transform:scaleX(1);opacity:1}
+.svc-card:hover .btn::after{opacity:1}
 
 /* ============ 企业实力 ============ */
 .strength{background:linear-gradient(180deg,#000,#0a0405,#000)}
@@ -451,23 +488,29 @@ ul{list-style:none}
   border-radius:14px;overflow:hidden;cursor:pointer;background:#111;
   transition:transform .45s var(--ease-spring),box-shadow .45s;position:relative;
 }
-.case-card:hover{transform:translateY(-8px);box-shadow:0 26px 54px rgba(0,0,0,.6)}
+.case-card:hover{transform:translateY(-8px);box-shadow:0 26px 54px rgba(0,0,0,.6),0 0 0 1px rgba(230,0,18,.35)}
 .case-img{aspect-ratio:16/10;overflow:hidden;background:#e9e9e9}
 .case-img .ph{background:linear-gradient(135deg,#e8e8e8,#cfcfcf);color:#888}
 .case-img .ph,.case-card:hover .case-img .ph{transition:transform .6s var(--ease-out)}
 .case-card:hover .case-img .ph{transform:scale(1.08)}
-.case-img img{width:100%;height:100%;object-fit:cover;object-position:50% 30%;display:block;
+.case-img img{width:100%;height:100%;object-fit:cover;object-position:50% 50%;display:block;
   transition:transform .6s var(--ease-out)}
 .case-card:hover .case-img img{transform:scale(1.08)}
 .news-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s var(--ease-out)}
 .news-card:hover .news-img img{transform:scale(1.06)}
 .modal-img img{width:100%;height:100%;object-fit:cover;display:block}
 .modal-img.has-img{background:#0b0b0b}
+/* 标题条：默认深灰，仅悬停的那一张渐变成红色（红色层用 opacity 过渡，渐变本身无法补间） */
 .case-title{
-  background:linear-gradient(135deg,var(--red-bright),var(--red-deep));
-  color:#fff;font-size:18px;font-weight:700;padding:18px 22px;letter-spacing:1px;
-  display:flex;align-items:center;justify-content:space-between;
+  position:relative;isolation:isolate;
+  background:#161616;border-top:1px solid rgba(255,255,255,.06);
+  color:#e6e6e6;font-size:18px;font-weight:700;padding:18px 22px;letter-spacing:1px;
+  display:flex;align-items:center;justify-content:space-between;transition:color .4s;
 }
+.case-title::before{content:"";position:absolute;inset:0;z-index:-1;opacity:0;transition:opacity .45s var(--ease-out);
+  background:linear-gradient(135deg,var(--red-bright),var(--red-deep))}
+.case-card:hover .case-title{color:#fff}
+.case-card:hover .case-title::before{opacity:1}
 .case-title .arrow{opacity:0;transform:translateX(-8px);transition:.4s}
 .case-card:hover .case-title .arrow{opacity:1;transform:none}
 
@@ -480,7 +523,7 @@ ul{list-style:none}
 @keyframes spin{to{transform:rotate(360deg)}}
 .orbit-dash{position:absolute;inset:2%;border-radius:50%;border:1px dashed rgba(230,0,18,.25);animation:spin 50s linear infinite}
 .orbit-comet{position:absolute;inset:8%;animation:spin 12s linear infinite;pointer-events:none}
-.orbit-comet::before{content:"";position:absolute;top:-6px;left:50%;width:12px;height:12px;margin-left:-6px;border-radius:50%;background:#ff5a64;box-shadow:0 0 18px 5px rgba(255,60,70,.85)}
+.orbit-comet::before{content:"";position:absolute;top:-5px;left:50%;width:10px;height:10px;margin-left:-5px;border-radius:50%;background:#ff5a64;box-shadow:0 0 12px 3px rgba(255,60,70,.6)}
 /* 3D 红色玻璃球 + 白色 logo 贴上 */
 .orbit-center{
   position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
@@ -491,14 +534,14 @@ ul{list-style:none}
   box-shadow:
     inset -20px -24px 52px rgba(110,0,7,.85),
     inset 14px 16px 40px rgba(255,185,190,.5),
-    0 26px 64px rgba(0,0,0,.6),0 0 60px var(--red-glow);
+    0 26px 64px rgba(0,0,0,.6),0 0 34px rgba(230,0,18,.28);
   display:flex;align-items:center;justify-content:center;
   animation:breathe 3.8s ease-in-out infinite;
 }
 .orbit-center::after{content:"";position:absolute;top:9%;left:18%;width:46%;height:26%;border-radius:50%;
   background:radial-gradient(ellipse at center,rgba(255,255,255,.6),transparent 70%);
   filter:blur(4px);transform:rotate(-18deg);pointer-events:none;z-index:3}
-@keyframes breathe{0%,100%{filter:drop-shadow(0 0 26px rgba(230,0,18,.45))}50%{filter:drop-shadow(0 0 66px rgba(230,0,18,.85))}}
+@keyframes breathe{0%,100%{filter:drop-shadow(0 0 14px rgba(230,0,18,.22))}50%{filter:drop-shadow(0 0 30px rgba(230,0,18,.42))}}
 .orbit-center .mark{width:32%;height:auto;position:relative;z-index:2;
   filter:drop-shadow(0 2px 6px rgba(110,0,8,.4))}
 /* 3D 小球 */
@@ -511,20 +554,20 @@ ul{list-style:none}
   display:flex;align-items:center;justify-content:center;text-align:center;
   font-size:13px;font-weight:700;color:#fff;
   box-shadow:inset -6px -8px 16px rgba(110,0,7,.7),inset 5px 6px 13px rgba(255,185,190,.5),
-    0 10px 24px rgba(230,0,18,.45),0 0 22px rgba(255,40,55,.3);
-  text-shadow:0 1px 3px rgba(120,0,8,.6);
+    0 10px 22px rgba(0,0,0,.45),0 0 12px rgba(255,40,55,.18);
+  text-shadow:0 1px 2px rgba(60,0,4,.85),0 0 6px rgba(80,0,6,.6);
   animation:nodeFloat 4.5s ease-in-out infinite;
   transition:box-shadow .35s,transform .35s;
 }
-.orbit-node:hover{box-shadow:inset -6px -8px 16px rgba(110,0,7,.7),inset 5px 6px 13px rgba(255,185,190,.5),0 14px 34px rgba(255,40,55,.7);z-index:3}
+.orbit-node:hover{box-shadow:inset -6px -8px 16px rgba(110,0,7,.7),inset 5px 6px 13px rgba(255,185,190,.5),0 14px 30px rgba(255,40,55,.45);z-index:3}
 @keyframes nodeFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
 /* 环形区背景呼吸光晕 */
 .orbit-sec{position:relative;overflow:hidden}
 .orbit-sec::before{content:"";position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);
   width:760px;height:760px;max-width:90vw;max-height:90vw;border-radius:50%;z-index:0;pointer-events:none;
-  background:radial-gradient(circle,rgba(190,12,22,.5),rgba(120,6,14,.2) 40%,transparent 70%);
+  background:radial-gradient(circle,rgba(170,10,20,.26),rgba(110,6,14,.1) 40%,transparent 70%);
   filter:blur(40px);animation:bgBreathe 6.5s ease-in-out infinite}
-@keyframes bgBreathe{0%,100%{opacity:.45;transform:translate(-50%,-50%) scale(.82)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.12)}}
+@keyframes bgBreathe{0%,100%{opacity:.4;transform:translate(-50%,-50%) scale(.86)}50%{opacity:.75;transform:translate(-50%,-50%) scale(1.06)}}
 .orbit-sec .container{position:relative;z-index:1}
 
 /* ============ 业务趋势 ============ */
@@ -541,6 +584,9 @@ ul{list-style:none}
 .trend-card .bg{position:absolute;inset:0;opacity:.5}
 .trend-card .bg .ph{background:linear-gradient(135deg,#333,#111)}
 .trend-card .bg img{width:100%;height:100%;object-fit:cover;display:block}
+/* 竖向卡片只能显示横图的一段：按每张图的主体位置取景，避免只剩虚化背景 */
+.trend-card:nth-child(2) .bg img{object-position:8% 50%}
+.trend-card:nth-child(4) .bg img{object-position:35% 100%}
 .trend-card::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.92),rgba(0,0,0,.2))}
 .trend-card .ct{position:relative;z-index:2}
 .trend-card h4{font-size:20px;font-weight:800;margin-bottom:12px;position:relative;padding-top:14px}
@@ -711,8 +757,14 @@ ul{list-style:none}
 .modal-body h3{font-size:26px;font-weight:800;color:var(--red-bright);margin-bottom:14px}
 .modal-body p{color:#bdbdbd;font-size:15px;line-height:1.9}
 .modal-close{position:absolute;top:18px;right:18px;width:38px;height:38px;border-radius:50%;
-  background:var(--red);color:#fff;font-size:20px;display:flex;align-items:center;justify-content:center;
-  transition:transform .3s;z-index:3}
+  background:var(--red);font-size:0;line-height:0;display:flex;align-items:center;justify-content:center;
+  transform-origin:50% 50%;transition:transform .3s;z-index:3}
+.modal-close::before,.modal-close::after{
+  content:"";position:absolute;left:50%;top:50%;width:16px;height:2px;border-radius:2px;
+  background:#fff;transform-origin:50% 50%;margin:-1px 0 0 -8px;
+}
+.modal-close::before{transform:rotate(45deg)}
+.modal-close::after{transform:rotate(-45deg)}
 .modal-close:hover{transform:rotate(90deg)}
 
 /* ============ 滚动揭示动画（变速） ============ */
@@ -815,7 +867,7 @@ html{scrollbar-width:thin;scrollbar-color:#8a000b #070707}
 .card-glare{position:absolute;left:0;top:0;width:340px;height:340px;border-radius:50%;z-index:1;
   pointer-events:none;opacity:0;transition:opacity .45s ease;will-change:transform;
   transform:translate(-9999px,-9999px);
-  background:radial-gradient(circle,rgba(255,255,255,.4),rgba(255,255,255,.12) 42%,transparent 70%)}
+  background:radial-gradient(circle,rgba(255,255,255,.55),rgba(255,255,255,.16) 40%,transparent 70%)}
 .hero-card:hover .card-glare{opacity:1}
 /* 悬浮电话按钮的呼吸光环：安静地提示“可点击” */
 .card-reopen::after{content:"";position:absolute;inset:-5px;border-radius:50%;pointer-events:none;
@@ -926,7 +978,12 @@ html{scrollbar-width:thin;scrollbar-color:#8a000b #070707}
         <a href="cases.html#graphic">平面设计</a>
       </div>
     </li>
-    <li><a href="news.html">动态</a></li>
+    <li>
+      <a href="news.html">动态</a>
+      <div class="dropdown">
+        <a href="news.html">动态新闻</a>
+      </div>
+    </li>
     <li>
       <a href="about.html">关于</a>
       <div class="dropdown">
@@ -970,6 +1027,7 @@ html{scrollbar-width:thin;scrollbar-color:#8a000b #070707}
     <span class="card-fluid" aria-hidden="true"><i class="f1"></i><i class="f2"></i><i class="f3"></i><i class="f4"></i></span>
     <span class="card-veil" id="cardVeil" aria-hidden="true"></span>
     <span class="card-glare" id="cardGlare" aria-hidden="true"></span>
+    <span class="card-rim" aria-hidden="true"></span>
     <button class="card-close" id="cardClose" aria-label="关闭">&times;</button>
     <div class="card-left">
       <div class="qr">

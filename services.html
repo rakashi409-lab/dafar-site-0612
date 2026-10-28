@@ -208,7 +208,7 @@ ul{list-style:none}
   color:#8a8a8a;font-size:13px;text-align:center;transition:transform .7s var(--ease-out);
 }
 .scope-card:hover .scope-img .ph{transform:scale(1.07)}
-.scope-img img{width:100%;height:100%;object-fit:cover;object-position:50% 32%;display:block;
+.scope-img img{width:100%;height:100%;object-fit:cover;object-position:50% 50%;display:block;
   transition:transform .7s var(--ease-out)}
 .scope-card:hover .scope-img img{transform:scale(1.07)}
 .scope-img::after{content:"";position:absolute;inset:0;pointer-events:none;
@@ -220,10 +220,17 @@ ul{list-style:none}
 .scope-card:nth-child(4) .ph{background:linear-gradient(135deg,#141d3d,#0a0c1c 55%,#101f38)}
 /* 红色信息区（对照设计稿）：超大编号+竖线+标题一行，小字标签横排在条带底部 */
 .scope-bar{
-  background:linear-gradient(135deg,var(--red-bright),var(--red-deep));
+  background:#161616;border-top:1px solid rgba(255,255,255,.06);
   padding:0 30px 18px;
   position:relative;z-index:2; /* 压过上方图片块，保证大数字探出的上半截可见 */
+  isolation:isolate;
 }
+/* 默认深灰，仅悬停的卡片红色层淡入 */
+.scope-bar::before{content:"";position:absolute;inset:0;z-index:-1;opacity:0;transition:opacity .45s var(--ease-out);
+  background:linear-gradient(135deg,var(--red-bright),var(--red-deep))}
+.scope-card:hover .scope-bar::before{opacity:1}
+.scope-tags{transition:color .4s}
+.scope-card:not(:hover) .scope-tags{color:#a9a9a9}
 .scope-head{display:flex;align-items:center;gap:26px}
 .scope-bar .no{
   font-size:clamp(72px,8vw,116px);font-weight:900;line-height:.82;color:#fff;
@@ -281,6 +288,9 @@ ul{list-style:none}
 .trend-card .bg{position:absolute;inset:0;opacity:.5}
 .trend-card .bg .ph{width:100%;height:100%;background:linear-gradient(135deg,#333,#111)}
 .trend-card .bg img{width:100%;height:100%;object-fit:cover;display:block}
+/* 竖向卡片只能显示横图的一段：按每张图的主体位置取景，避免只剩虚化背景 */
+.trend-card:nth-child(2) .bg img{object-position:8% 50%}
+.trend-card:nth-child(4) .bg img{object-position:35% 100%}
 .trend-card::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.92),rgba(0,0,0,.2))}
 .trend-card .ct{position:relative;z-index:2}
 .trend-card h4{font-size:20px;font-weight:800;margin-bottom:12px;position:relative;padding-top:14px}
@@ -290,7 +300,7 @@ ul{list-style:none}
 /* ============ 售后服务 ============ */
 .as-stage{position:relative;border-radius:18px;box-shadow:var(--shadow)}   /* 不裁切，徽标像印泥盖在整卡最上层 */
 .as-visual{position:relative;aspect-ratio:16/6.4;min-height:280px;overflow:hidden;border-radius:18px 18px 0 0}
-.as-visual img{width:100%;height:100%;object-fit:cover;object-position:50% 40%;display:block}
+.as-visual img{width:100%;height:100%;object-fit:cover;object-position:50% 35%;display:block}
 .as-visual .ph{
   width:100%;height:100%;display:flex;align-items:center;justify-content:center;
   background:
@@ -298,7 +308,7 @@ ul{list-style:none}
     linear-gradient(135deg,#2c2c2e,#161617 60%,#1e1214);
   color:#777;font-size:13px;
 }
-.as-visual::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.55),transparent 55%)}
+.as-visual::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 60% 70% at 50% 52%,rgba(0,0,0,.5),rgba(0,0,0,.12) 75%),linear-gradient(to top,rgba(0,0,0,.6),rgba(0,0,0,.08) 60%)}
 .as-phone{
   position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);z-index:2;width:100%;text-align:center;
   font-size:clamp(44px,7vw,92px);font-weight:900;letter-spacing:4px;color:#fff;
@@ -414,8 +424,14 @@ ul{list-style:none}
 .modal-body h3{font-size:26px;font-weight:800;color:var(--red-bright);margin-bottom:14px}
 .modal-body p{color:#bdbdbd;font-size:15px;line-height:1.9}
 .modal-close{position:absolute;top:18px;right:18px;width:38px;height:38px;border-radius:50%;
-  background:var(--red);color:#fff;font-size:20px;display:flex;align-items:center;justify-content:center;
-  transition:transform .3s;z-index:3}
+  background:var(--red);font-size:0;line-height:0;display:flex;align-items:center;justify-content:center;
+  transform-origin:50% 50%;transition:transform .3s;z-index:3}
+.modal-close::before,.modal-close::after{
+  content:"";position:absolute;left:50%;top:50%;width:16px;height:2px;border-radius:2px;
+  background:#fff;transform-origin:50% 50%;margin:-1px 0 0 -8px;
+}
+.modal-close::before{transform:rotate(45deg)}
+.modal-close::after{transform:rotate(-45deg)}
 .modal-close:hover{transform:rotate(90deg)}
 
 /* ============ 滚动揭示动画（与主页一致） ============ */
@@ -534,7 +550,12 @@ html{scrollbar-width:thin;scrollbar-color:#8a000b #070707}
         <a href="cases.html#graphic">平面设计</a>
       </div>
     </li>
-    <li><a href="news.html">动态</a></li>
+    <li>
+      <a href="news.html">动态</a>
+      <div class="dropdown">
+        <a href="news.html">动态新闻</a>
+      </div>
+    </li>
     <li>
       <a href="about.html">关于</a>
       <div class="dropdown">
@@ -687,7 +708,7 @@ html{scrollbar-width:thin;scrollbar-color:#8a000b #070707}
     <div class="sec-head reveal"><h2>专属客户 <em>售后服务</em></h2><p>长期迭代全周期售后</p></div>
     <div class="as-stage reveal-sc">
       <div class="as-visual">
-        <img src="assets/news/news1.png" alt="大方设计团队" loading="lazy">
+        <img src="assets/news2/news-6.jpg" alt="大方设计团队" loading="lazy">
         <div class="as-phone"><small>专属售后热线</small>027-87666138</div>
       </div>
       <div class="as-bar">

@@ -7,6 +7,7 @@
 <meta name="keywords" content="联系大方设计,武汉工业设计公司电话,工业设计招聘,汽车结构设计师,产品ID设计师,DAFAR DESIGN">
 <title>联系 — 大方设计 DAFAR DESIGN</title>
 <link rel="stylesheet" href="assets/site.css">
+<link rel="stylesheet" href="assets/vendor/leaflet/leaflet.css">
 <style>
   .c-card a.val:hover{color:var(--red-bright)}
   .jobs-head{text-align:center;margin-bottom:44px}
@@ -43,7 +44,12 @@
         <a href="cases.html#graphic">平面设计</a>
       </div>
     </li>
-    <li><a href="news.html">动态</a></li>
+    <li>
+      <a href="news.html">动态</a>
+      <div class="dropdown">
+        <a href="news.html">动态新闻</a>
+      </div>
+    </li>
     <li>
       <a href="about.html">关于</a>
       <div class="dropdown">
@@ -69,8 +75,8 @@
   <div class="sub-hero-tint" aria-hidden="true"></div>
   <div class="sub-hero-inner">
     <h1>联系我们</h1>
-    <div class="en">Contact Us</div>
-    <div class="sub">一次对话，可能就是下一个好产品的开始</div>
+    <div class="hero-lead">大方设计，承载万千想法。</div>
+    <p class="hero-note">每一次沟通，都是灵感的碰撞；每一次合作，都是匠心的相融。</p>
   </div>
   <div class="scroll-ind" aria-hidden="true"><span class="si-ring"></span><span class="si-pill"></span></div>
   <div class="breadcrumb"><a href="index.html">首页</a><span>&gt;</span>联系</div>
@@ -118,9 +124,10 @@
           <div><div class="k">公共交通</div><div class="v">地铁 8 号线「马湖」站步行约 10 分钟；自驾可停创意天地地下停车场</div></div>
         </div>
       </div>
-      <div class="map-pic">
-        <img src="assets/contact/map.png" alt="大方设计办公地点地图">
-        <span class="pin" aria-hidden="true"></span>
+      <div class="map-pic" id="dfMap" role="application" aria-label="大方设计办公地点地图：湖北省武汉市洪山区创意天地 06 艺术家工作室">
+        <span class="map-skel" aria-hidden="true"></span>
+        <span class="map-hint">悬停 · 放大到工作室门口</span>
+        <span class="map-badge" aria-hidden="true">可拖动平移</span>
       </div>
     </div>
   </div>
@@ -177,15 +184,21 @@
       </div>
       <div class="form-row">
         <div class="field reveal-l"><label>咨询方向</label>
-          <select name="topic">
-            <option value="交通工具设计">交通工具设计</option>
-            <option value="医疗设备设计">医疗设备设计</option>
-            <option value="消费电子设计">消费电子设计</option>
-            <option value="军工装备设计">军工装备设计</option>
-            <option value="品牌 / 平面设计">品牌 / 平面设计</option>
-            <option value="结构设计与样机制作">结构设计与样机制作</option>
-            <option value="其他合作">其他合作</option>
-          </select>
+          <div class="sel" id="dfSel">
+            <select name="topic" tabindex="-1" aria-hidden="true">
+              <option value="交通工具设计">交通工具设计</option>
+              <option value="医疗设备设计">医疗设备设计</option>
+              <option value="消费电子设计">消费电子设计</option>
+              <option value="军工装备设计">军工装备设计</option>
+              <option value="品牌 / 平面设计">品牌 / 平面设计</option>
+              <option value="结构设计与样机制作">结构设计与样机制作</option>
+              <option value="其他合作">其他合作</option>
+            </select>
+            <button type="button" class="sel-btn" aria-haspopup="listbox" aria-expanded="false">
+              <span class="sel-val">交通工具设计</span><i class="sel-caret" aria-hidden="true"></i>
+            </button>
+            <ul class="sel-list" role="listbox" aria-label="咨询方向"></ul>
+          </div>
         </div>
         <div class="field reveal-r" style="display:flex;align-items:flex-end"><p style="color:#8a8a8a;font-size:13.5px;line-height:1.8;padding-bottom:6px">我们通常会在一个工作日内回复。<br>急事请直接致电 027-87666138。</p></div>
       </div>
@@ -232,6 +245,7 @@
   </div>
 </div>
 
+<script src="assets/vendor/leaflet/leaflet.js"></script>
 <script src="assets/data.js"></script>
 <script src="assets/site.js"></script>
 <script>
@@ -239,12 +253,12 @@
   var list=document.getElementById('jobList');
   list.innerHTML=DF.JOBS.map(function(j,i){
     return '<article class="job reveal'+(i===0?' open':'')+'">'+
-      '<div class="job-head">'+
+      '<div class="job-head" role="button" tabindex="0" aria-expanded="'+(i===0?'true':'false')+'">'+
         '<div class="job-name">'+j.name+'</div>'+
         '<div class="job-meta"><i>学历</i><b>'+j.edu+'</b></div>'+
         '<div class="job-meta"><i>人数</i><b>'+j.num+'</b></div>'+
         '<div class="job-meta"><i>发布</i><b>'+j.date+'</b>　<i>地点</i><b>'+j.place+'</b></div>'+
-        '<span class="job-toggle">+</span>'+
+        '<span class="job-toggle" aria-hidden="true"></span>'+
       '</div>'+
       '<div class="job-body"><div class="job-body-inner">'+
         '<h5>岗位职责</h5><ol>'+j.duty.map(function(t){return '<li>'+t+'</li>'}).join('')+'</ol>'+
@@ -254,9 +268,89 @@
       '</div></div></article>';
   }).join('');
 
-  /* 手风琴：默认展开第一项 */
-  var first=list.querySelector('.job.open .job-body');
-  if(first)first.style.maxHeight=first.scrollHeight+'px';
+  /* ---------- 咨询方向：自定义下拉（保留原生 select 参与表单提交） ---------- */
+  (function(){
+    var box=document.getElementById('dfSel'); if(!box) return;
+    var sel=box.querySelector('select'),btn=box.querySelector('.sel-btn'),
+        val=box.querySelector('.sel-val'),list=box.querySelector('.sel-list');
+    list.innerHTML=Array.prototype.map.call(sel.options,function(o,i){
+      return '<li role="option" data-i="'+i+'" aria-selected="'+(i===sel.selectedIndex)+'">'+o.textContent+'</li>';
+    }).join('');
+    function sync(){
+      val.textContent=sel.options[sel.selectedIndex].textContent;
+      Array.prototype.forEach.call(list.children,function(li,i){li.setAttribute('aria-selected',i===sel.selectedIndex)});
+    }
+    function open(){box.classList.add('open');btn.setAttribute('aria-expanded','true')}
+    function close(){box.classList.remove('open');btn.setAttribute('aria-expanded','false')}
+    btn.addEventListener('click',function(e){e.stopPropagation();box.classList.contains('open')?close():open()});
+    list.addEventListener('click',function(e){
+      var li=e.target.closest('li'); if(!li) return;
+      sel.selectedIndex=+li.dataset.i; sync(); close(); btn.focus();
+    });
+    btn.addEventListener('keydown',function(e){
+      if(e.key==='ArrowDown'||e.key==='ArrowUp'){
+        e.preventDefault();
+        var d=e.key==='ArrowDown'?1:-1;
+        sel.selectedIndex=(sel.selectedIndex+d+sel.options.length)%sel.options.length;
+        sync(); if(!box.classList.contains('open')) open();
+      } else if(e.key==='Escape'){close()}
+      else if(e.key==='Enter'||e.key===' '){e.preventDefault();box.classList.contains('open')?close():open()}
+    });
+    document.addEventListener('click',function(e){ if(!box.contains(e.target)) close() });
+    sync();
+  })();
+
+  /* ---------- 地图：Leaflet + 高德瓦片，悬浮平滑飞入真实细节 ---------- */
+  (function(){
+    var el=document.getElementById('dfMap'); if(!el||!window.L) return;
+    var HOME=[30.47130,114.32350];      /* 创意天地 A 区 · 06 艺术家工作室（GCJ-02） */
+    var Z0=15.4, Z1=18;                 /* 高德底图最高可用 z18，缩放后仍是原图细节，不糊 */
+    var map=L.map(el,{
+      center:HOME, zoom:Z0, zoomSnap:.2, zoomDelta:1,
+      minZoom:13, maxZoom:Z1, attributionControl:false,
+      zoomControl:false, dragging:false, scrollWheelZoom:false,
+      doubleClickZoom:false, boxZoom:false, keyboard:false, tap:false,
+      inertia:true, inertiaDeceleration:2400, fadeAnimation:true, zoomAnimation:true
+    });
+    L.tileLayer('https://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}',{
+      subdomains:'1234', maxNativeZoom:Z1, maxZoom:Z1, minZoom:13, keepBuffer:3
+    }).addTo(map);
+
+    var icon=L.divIcon({className:'df-pin',iconSize:[18,18],iconAnchor:[9,9],
+      html:'<span class="ring"></span><span class="stem"></span><span class="dot"></span>'+
+           '<span class="tag">大方设计<small>创意天地 A区 · 06 艺术家工作室</small></span>'});
+    var pin=L.marker(HOME,{icon:icon,keyboard:false,title:'大方设计 · 06 艺术家工作室'}).addTo(map);
+
+    var to, out, hovering=false;
+    function zoomIn(){
+      if(hovering) return; hovering=true;
+      clearTimeout(out);
+      el.classList.add('zoomed');
+      map.dragging.enable();
+      to=setTimeout(function(){
+        map.flyTo(HOME,Z1,{animate:true,duration:1.35,easeLinearity:.18});
+      },90);
+    }
+    function zoomOut(){
+      hovering=false; clearTimeout(to);
+      out=setTimeout(function(){
+        el.classList.remove('zoomed');
+        map.dragging.disable();
+        map.flyTo([HOME[0]-0.0004,HOME[1]],Z0,{animate:true,duration:1.15,easeLinearity:.3});
+      },260);
+    }
+    el.addEventListener('mouseenter',zoomIn);
+    el.addEventListener('mouseleave',zoomOut);
+    /* 触屏：点一下进入细节，再点一下回到全景 */
+    el.addEventListener('touchstart',function(){
+      if(el.classList.contains('zoomed')) zoomOut(); else zoomIn();
+    },{passive:true});
+    el.addEventListener('focusin',zoomIn);
+
+    el.classList.add('ready');
+    new ResizeObserver(function(){map.invalidateSize()}).observe(el);
+    addEventListener('load',function(){map.invalidateSize()});
+  })();
 
   setTimeout(function(){document.querySelectorAll('.reveal').forEach(function(el){
     var r=el.getBoundingClientRect();

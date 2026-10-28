@@ -6,3 +6,4 @@ measure.js
 probe.js
 perf*.js
 fps*.js
+serve.js

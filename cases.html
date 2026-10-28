@@ -207,7 +207,7 @@ ul{list-style:none}
   border-radius:14px;overflow:hidden;cursor:pointer;background:#111;
   transition:transform .45s var(--ease-spring),box-shadow .45s;position:relative;
 }
-.case-card:hover{transform:translateY(-8px);box-shadow:0 26px 54px rgba(0,0,0,.6)}
+.case-card:hover{transform:translateY(-8px);box-shadow:0 26px 54px rgba(0,0,0,.6),0 0 0 1px rgba(230,0,18,.35)}
 .case-img{aspect-ratio:16/10;overflow:hidden;background:#e9e9e9}
 .case-img .ph{
   width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
@@ -226,14 +226,20 @@ ul{list-style:none}
 .ph-name{margin-top:78px;font-weight:700}
 .ph-note{font-size:12px;color:#6d6d72;letter-spacing:2px}
 .case-card:hover .case-img .ph{transform:scale(1.08)}
-.case-img img{width:100%;height:100%;object-fit:cover;object-position:50% 30%;display:block;
+.case-img img{width:100%;height:100%;object-fit:cover;object-position:50% 50%;display:block;
   transition:transform .6s var(--ease-out)}
 .case-card:hover .case-img img{transform:scale(1.08)}
+/* 标题条：默认深灰，仅悬停的那一张渐变成红色（红色层用 opacity 过渡，渐变本身无法补间） */
 .case-title{
-  background:linear-gradient(135deg,var(--red-bright),var(--red-deep));
-  color:#fff;font-size:18px;font-weight:700;padding:18px 22px;letter-spacing:1px;
-  display:flex;align-items:center;justify-content:space-between;
+  position:relative;isolation:isolate;
+  background:#161616;border-top:1px solid rgba(255,255,255,.06);
+  color:#e6e6e6;font-size:18px;font-weight:700;padding:18px 22px;letter-spacing:1px;
+  display:flex;align-items:center;justify-content:space-between;transition:color .4s;
 }
+.case-title::before{content:"";position:absolute;inset:0;z-index:-1;opacity:0;transition:opacity .45s var(--ease-out);
+  background:linear-gradient(135deg,var(--red-bright),var(--red-deep))}
+.case-card:hover .case-title{color:#fff}
+.case-card:hover .case-title::before{opacity:1}
 .case-title .arrow{opacity:0;transform:translateX(-8px);transition:.4s}
 .case-card:hover .case-title .arrow{opacity:1;transform:none}
 .sec-more{text-align:center;margin-top:50px}
@@ -312,8 +318,14 @@ ul{list-style:none}
 .modal-body h3{font-size:26px;font-weight:800;color:var(--red-bright);margin-bottom:14px}
 .modal-body p{color:#bdbdbd;font-size:15px;line-height:1.9}
 .modal-close{position:absolute;top:18px;right:18px;width:38px;height:38px;border-radius:50%;
-  background:var(--red);color:#fff;font-size:20px;display:flex;align-items:center;justify-content:center;
-  transition:transform .3s;z-index:3}
+  background:var(--red);font-size:0;line-height:0;display:flex;align-items:center;justify-content:center;
+  transform-origin:50% 50%;transition:transform .3s;z-index:3}
+.modal-close::before,.modal-close::after{
+  content:"";position:absolute;left:50%;top:50%;width:16px;height:2px;border-radius:2px;
+  background:#fff;transform-origin:50% 50%;margin:-1px 0 0 -8px;
+}
+.modal-close::before{transform:rotate(45deg)}
+.modal-close::after{transform:rotate(-45deg)}
 .modal-close:hover{transform:rotate(90deg)}
 
 /* ============ 滚动揭示动画（与主页一致） ============ */
@@ -413,7 +425,12 @@ html{scrollbar-width:thin;scrollbar-color:#8a000b #070707}
         <a href="#graphic">平面设计</a>
       </div>
     </li>
-    <li><a href="news.html">动态</a></li>
+    <li>
+      <a href="news.html">动态</a>
+      <div class="dropdown">
+        <a href="news.html">动态新闻</a>
+      </div>
+    </li>
     <li>
       <a href="about.html">关于</a>
       <div class="dropdown">
@@ -608,9 +625,11 @@ document.querySelectorAll('.cases-grid[data-cat]').forEach(function(grid){
       var t=x.title.split(' ').join('').split('·').join(''),k=c.split(' ').join('').split('·').join('');
       return t.indexOf(k)>-1||k.indexOf(t)>-1;
     })[0];
+    /* 每个产品都进详情页：有独立数据的走 id，没有的用名称/分类/图片走同一模板 */
     el.onclick=function(){
-      if(hit){location.href='case-detail.html?id='+hit.id;return}
-      openModal(c,'这是大方设计为客户打造的「'+c+'」项目。涵盖外观设计、结构设计、样机制作到量产落地的完整设计开发服务。',img)
+      if(hit){location.href='case-detail.html?id='+encodeURIComponent(hit.id);return}
+      var pic=n?('assets/cases/case'+n+'.png'):'';
+      location.href='case-detail.html?name='+encodeURIComponent(c)+'&cat='+grid.dataset.cat+'&img='+encodeURIComponent(pic);
     };
     grid.appendChild(el);
   });

@@ -42,7 +42,12 @@
         <a href="cases.html#graphic">平面设计</a>
       </div>
     </li>
-    <li><a href="news.html" class="active">动态</a></li>
+    <li>
+      <a href="news.html" class="active">动态</a>
+      <div class="dropdown">
+        <a href="news.html">动态新闻</a>
+      </div>
+    </li>
     <li>
       <a href="about.html">关于</a>
       <div class="dropdown">
@@ -71,10 +76,23 @@
     <div class="sub">洞察工业设计前沿，记录项目服务新进程</div>
     <div class="act"><button class="btn" onclick="document.getElementById('newsRows').scrollIntoView({behavior:'smooth'})">探索更多</button></div>
   </div>
+  <div class="scroll-ind" aria-hidden="true"><span class="si-ring"></span><span class="si-pill"></span></div>
   <div class="breadcrumb"><a href="index.html">首页</a><span>&gt;</span>动态</div>
 </header>
 
-<div class="brand-orb" aria-hidden="true"><img src="assets/logo-v.png" alt=""></div>
+<section class="news-brand" data-sec="品牌卡">
+  <div class="nb-wrap">
+    <div class="nb-card">
+      <img class="nb-photo" src="assets/pages/news-card.jpg" alt="地球与键盘">
+      <div class="nb-copy">
+        <h2>大方设计 · 行业动态</h2>
+        <p>坚持“设计先行、全程护航”的服务理念，依托完善的全流程服务体系，为合作客户提供一体化落地支持。</p>
+      </div>
+    </div>
+    <div class="nb-orb" aria-hidden="true"><img src="assets/logo-v.png" alt=""></div>
+    <div class="nb-mark"><span class="en-mark">DAFAR DESIGN</span></div>
+  </div>
+</section>
 
 <main class="news-wrap">
   <div class="container">

@@ -52,7 +52,12 @@
         <a href="cases.html#graphic">平面设计</a>
       </div>
     </li>
-    <li><a href="news.html">动态</a></li>
+    <li>
+      <a href="news.html">动态</a>
+      <div class="dropdown">
+        <a href="news.html">动态新闻</a>
+      </div>
+    </li>
     <li>
       <a href="about.html" class="active">关于</a>
       <div class="dropdown">
@@ -94,18 +99,17 @@
       <div class="intro-card reveal" id="intro">
         <div class="intro-copy">
           <h3>公司介绍</h3>
-          <p>武汉大方工业设计有限公司（DAFAR DESIGN）成立于 2013 年，是一家以工业设计为核心、覆盖结构设计、交互设计与品牌推广的全链路设计服务商。2015 年完成对武汉明匠工业设计的合并重组，2021 年成立武汉丰泰智造并自投 2000 平米机加工中心，打通了从设计到制造的最后一公里。</p>
-          <p style="margin-top:16px">公司先后获得“武汉市工业设计中心”“省级工业设计中心”“高新技术企业”“科技小巨人企业”“专精特新服务机构”等资质认定，服务覆盖家电、消费电子、装备制造、医疗器械、军工装备等多个行业，累计服务 200 余家客户、800 余个设计案例。</p>
-          <p style="margin-top:16px">2025 年，公司引入北京福睿斯特，全面扩展品牌设计与空间设计业务，并正式启动集团化运营模式，构建涵盖工业、品牌、空间的全维度设计生态圈。</p>
+          <p>一家集品牌建设、设计研究、外观设计、结构设计、样机制作、模具加工制造、生产监理、品牌推广为一体的综合性专业设计公司，专注于交通工具、医疗设备、消费电子、军工装备设计开发服务。</p>
         </div>
-        <div class="intro-pic"><img src="assets/about/building.jpg" alt="大方设计办公楼"></div>
+        <div class="intro-pic"><img src="assets/building.jpg" alt="大方设计公司大楼实景"></div>
       </div>
 
       <div class="stats" id="stats"></div>
     </div>
 
-    <div class="marquee" aria-hidden="true">
-      <div class="marquee-track" id="marquee"></div>
+    <div class="marquee-wall" aria-hidden="true">
+      <div class="marquee" data-dir="1" id="mq1"></div>
+      <div class="marquee" data-dir="-1" id="mq2"></div>
     </div>
   </section>
 
@@ -222,22 +226,48 @@
     return '<div class="stat reveal d'+(i%3+1)+'"><b data-count="'+s.n+'">0<i>'+s.suffix+'</i></b><span>'+s.label+'</span></div>';
   }).join('');
 
-  /* 合作品牌跑马灯 */
+  /* 合作品牌 logo：上下两条反向滚动，自动播放 + 可拖拽（与首页同一套） */
   var logos=[];
   for(var i=1;i<=29;i++)logos.push('assets/partners/'+i+'.png');
-  var track=logos.concat(logos).map(function(src){
-    return '<img src="'+src+'" alt="合作伙伴">';
-  }).join('');
-  document.getElementById('marquee').innerHTML=track;
+  var mid=Math.ceil(logos.length/2);
+  function fill(box,arr){
+    var once=arr.map(function(src){
+      return '<img src="'+src+'" alt="合作伙伴" loading="lazy">';
+    }).join('');
+    box.innerHTML=once+once;  /* 复制一份实现无缝循环 */
+  }
+  fill(document.getElementById('mq1'),logos.slice(0,mid));
+  fill(document.getElementById('mq2'),logos.slice(mid));
+
+  document.querySelectorAll('.marquee-wall .marquee').forEach(function(m){
+    var dir=+m.dataset.dir||1;
+    var paused=false,dragging=false,startX=0,startLeft=0,moved=false;
+    var half=function(){return m.scrollWidth/2};
+    if(dir<0) m.scrollLeft=half();
+    function wrap(){var h=half();if(m.scrollLeft<=0)m.scrollLeft+=h;else if(m.scrollLeft>=h)m.scrollLeft-=h;}
+    var vis=false;   /* 离屏时停写 scrollLeft */
+    new IntersectionObserver(function(es){vis=es[0].isIntersecting}).observe(m);
+    (function tick(){
+      if(vis&&!dragging&&!paused){m.scrollLeft+=0.55*dir;wrap();}
+      requestAnimationFrame(tick);
+    })();
+    m.addEventListener('mouseenter',function(){paused=true});
+    m.addEventListener('mouseleave',function(){paused=false;dragging=false;m.classList.remove('grabbing')});
+    m.addEventListener('pointerdown',function(e){dragging=true;moved=false;startX=e.clientX;startLeft=m.scrollLeft;m.classList.add('grabbing');m.setPointerCapture(e.pointerId)});
+    m.addEventListener('pointermove',function(e){if(!dragging)return;var dx=e.clientX-startX;if(Math.abs(dx)>4)moved=true;m.scrollLeft=startLeft-dx;wrap()});
+    function end(){dragging=false;m.classList.remove('grabbing')}
+    m.addEventListener('pointerup',end);m.addEventListener('pointercancel',end);
+    m.addEventListener('click',function(e){if(moved){e.preventDefault();e.stopPropagation()}},true);
+  });
 
   /* 资质证书 */
   var certs=[
-    ['省级工业设计中心','cert1'],['高新技术企业','cert2'],['武汉市工业设计中心','cert3'],
-    ['科技小巨人企业','cert4'],['专精特新服务机构','cert5'],['ISO 29001 认证','cert6'],
-    ['二类医疗器械注册证','cert7'],['发明专利证书','cert8']
+    ['高新技术企业','cert1'],['省级工业设计中心','cert2'],['武汉市工业设计中心','cert3'],
+    ['专精特新企业服务机构','cert4'],['工业设计协会理事单位','cert5'],['AAA 级企业信用等级','cert6'],
+    ['武汉市科技“小巨人”企业','cert7'],['低速无人驾驶产业联盟会员','cert8']
   ];
   document.getElementById('certGrid').innerHTML=certs.map(function(c,i){
-    return '<figure class="cert reveal-sc d'+(i%4+1)+(i===0?' on':'')+'">'+
+    return '<figure class="cert reveal-sc d'+(i%4+1)+'">'+
       '<div class="pic"><img src="assets/about/'+c[1]+'.png" alt="'+c[0]+'" loading="lazy"></div>'+
       '<figcaption class="cap">'+c[0]+'</figcaption></figure>';
   }).join('');
@@ -245,11 +275,14 @@
   /* 证书点击放大 */
   document.querySelectorAll('.cert').forEach(function(fig){
     fig.addEventListener('click',function(){
-      document.querySelectorAll('.cert').forEach(function(f){f.classList.remove('on')});
-      fig.classList.add('on');
       var im=fig.querySelector('img');
       openModal(fig.querySelector('.cap').textContent,'大方设计资质证书 — 点击关闭查看大图。',im.src,true);
     });
+  });
+
+  /* 专利证书点击放大 */
+  document.querySelectorAll('#patentStage img').forEach(function(im){
+    im.addEventListener('click',function(){openModal('专利证书','大方设计专利与资质证书 — 点击关闭查看大图。',im.src,true)});
   });
 
   /* 数字滚动需要重新绑定（节点是后插入的） */
