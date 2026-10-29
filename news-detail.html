@@ -64,16 +64,13 @@
   <button class="nav-toggle" id="navToggle" aria-label="菜单"><span></span><span></span><span></span></button>
 </nav>
 
-<header class="sub-hero" id="top">
-  <div class="sub-hero-bg" aria-hidden="true"><img src="assets/pages/hero-newsd.jpg" alt=""></div>
-  <div class="sub-hero-tint" aria-hidden="true"></div>
-  <div class="sub-hero-inner">
-    <h1>大方设计 · 洞察工业设计前沿</h1>
-    <div class="en">Insight Into The Frontier Of Industrial Design</div>
+<div class="crumb-bar page-top" id="top" data-sec="面包屑">
+  <div class="container">
+    <a href="cases.html">案例</a><span class="sp">&gt;</span>
+    <a href="news.html">动态</a><span class="sp">&gt;</span>
+    <span class="cur">动态新闻</span>
   </div>
-  <div class="scroll-ind" aria-hidden="true"><span class="si-ring"></span><span class="si-pill"></span></div>
-  <div class="breadcrumb"><a href="cases.html">案例</a><span>&gt;</span><a href="news.html">动态</a><span>&gt;</span>动态新闻</div>
-</header>
+</div>
 
 <main class="article-sec">
   <div class="container">
@@ -82,7 +79,7 @@
       <div class="article-meta"><span>时间：</span><time id="arDate">2019-07-29 10:15</time><span id="arCat" style="margin-left:24px"></span></div>
       <div class="article-body" id="arBody"></div>
       <div class="article-actions">
-        <a class="btn btn-ghost" href="news.html">← 返回动态列表</a>
+        <a class="btn btn-ghost" href="news.html" id="backList">← 返回动态列表</a>
         <a class="btn" href="contact.html">咨询合作</a>
       </div>
     </article>
@@ -151,6 +148,12 @@
   });
   body.innerHTML=html;
 
+  /* 返回列表时落回正在看的这条：列表前两条是头条卡，其余按每页 3 条分页，
+     页码算准后再带 #n-<id> 让列表页滚到这张卡片 */
+  var back=document.getElementById('backList');
+  var href=idx<2?'news.html':'news.html?p='+(Math.floor((idx-2)/3)+1);
+  back.href=href+'#n-'+encodeURIComponent(id);
+
   var prev=DF.NEWS[(idx-1+DF.NEWS.length)%DF.NEWS.length];
   var next=DF.NEWS[(idx+1)%DF.NEWS.length];
   document.getElementById('arNav').innerHTML=
@@ -163,5 +166,6 @@
   })},60);
 })();
 </script>
+<script src="assets/scroll.js"></script>
 </body>
 </html>

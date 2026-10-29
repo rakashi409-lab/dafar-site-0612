@@ -128,14 +128,11 @@
 
       <div class="honor-band" data-sec="专利证书">
         <div class="t reveal">专利 <em>证书</em></div>
-        <div class="s reveal">外观专利 · 实用新型 · 软件著作权</div>
+        <div class="s reveal">外观专利 · 实用新型 · 软件著作权 · 共 21 项</div>
         <div class="patent-stage reveal" id="patentStage">
-          <img src="assets/about/cert2.png" alt="专利证书">
-          <img src="assets/about/cert3.png" alt="专利证书">
-          <img src="assets/about/patent.png" alt="专利证书">
-          <img src="assets/about/cert5.png" alt="专利证书">
-          <img src="assets/about/cert7.png" alt="专利证书">
+          <div class="pt-rail" id="ptRail"></div>
         </div>
+        <div class="pt-cap" id="ptCap" aria-live="polite"></div>
       </div>
     </div>
   </section>
@@ -194,6 +191,7 @@
       <div class="f-col"><h5>服务</h5><a href="services.html#scope">服务范围</a><a href="services.html#flow">业务流程</a><a href="services.html#trends">核心趋势</a><a href="services.html#aftersale">售后保障</a></div>
       <div class="f-col"><h5>案例</h5><a href="cases.html#transport">交通工具</a><a href="cases.html#medical">医疗设备</a><a href="cases.html#consumer">消费电子</a><a href="cases.html#military">军工装备</a><a href="cases.html#graphic">平面设计</a></div>
       <div class="f-col"><h5>关于</h5><a href="about.html#intro">公司介绍</a><a href="about.html#honor">企业荣誉</a><a href="news.html">新闻动态</a><a href="contact.html">联系方式</a></div>
+      <div class="f-col"><h5>联系</h5><a href="contact.html#reach">联系我们</a><a href="contact.html#jobs">招聘信息</a></div>
       <div class="f-qr">
         <div class="qr"><img src="assets/qrcode.png" alt="大方设计微信公众号二维码"></div>
         <p>关注我们的公众号</p>
@@ -223,7 +221,7 @@
 (function(){
   /* 数字 */
   document.getElementById('stats').innerHTML=DF.STATS.map(function(s,i){
-    return '<div class="stat reveal d'+(i%3+1)+'"><b data-count="'+s.n+'">0<i>'+s.suffix+'</i></b><span>'+s.label+'</span></div>';
+    return '<div class="stat reveal d'+(i%3+1)+'"><b data-count="'+s.n+'" data-suffix="'+s.suffix+'">0<i>'+s.suffix+'</i></b><span>'+s.label+'</span></div>';
   }).join('');
 
   /* 合作品牌 logo：上下两条反向滚动，自动播放 + 可拖拽（与首页同一套） */
@@ -280,10 +278,293 @@
     });
   });
 
-  /* 专利证书点击放大 */
-  document.querySelectorAll('#patentStage img').forEach(function(im){
-    im.addEventListener('click',function(){openModal('专利证书','大方设计专利与资质证书 — 点击关闭查看大图。',im.src,true)});
-  });
+  /* 专利证书：21 张围成一把扇子，每 3.4 秒缓转一格，下一张转到正中当主角，走完接回开头。
+     每张的位置由"离正中几格"实时算出（外移 / 下沉 / 外倾 / 缩小 / 变暗），所以从任意一格到下一格都是平滑的；
+     悬停时那张从扇面抽出并翻到最上层，点开时再升一档并打开大图，关掉后收回扇面。 */
+  (function(){
+    var P=[
+      {c:'发明专利',t:'一种洗衣机用外置洗衣液控制器',y:'2018',s:'p01'},
+      {c:'外观专利',t:'洗衣液控制器',y:'2019',s:'p02'},
+      {c:'外观专利',t:'洗衣液壶',y:'2019',s:'p03'},
+      {c:'外观专利',t:'多用药箱',y:'2019',s:'p04'},
+      {c:'外观专利',t:'时钟小夜灯',y:'2020',s:'p05'},
+      {c:'外观专利',t:'多普勒 B 超机',y:'2021',s:'p06'},
+      {c:'外观专利',t:'皮肤屏障治疗机',y:'2021',s:'p07'},
+      {c:'实用新型',t:'一种三轮车车架',y:'2019',s:'p08'},
+      {c:'实用新型',t:'三轮车可翻折靠背座椅',y:'2019',s:'p09'},
+      {c:'实用新型',t:'一种可拆卸便携菜篮',y:'2019',s:'p10'},
+      {c:'实用新型',t:'多功能老年人药箱',y:'2019',s:'p11'},
+      {c:'实用新型',t:'无链条折叠电动自行车',y:'2020',s:'p12'},
+      {c:'实用新型',t:'外置洗衣液控制器',y:'2020',s:'p13'},
+      {c:'实用新型',t:'成人可坐折叠婴儿车',y:'2020',s:'p14'},
+      {c:'实用新型',t:'机动车座椅菜筐锁',y:'2021',s:'p15'},
+      {c:'软件著作权',t:'大方三维建模软件',y:'2019',s:'p16'},
+      {c:'软件著作权',t:'大方结构设计软件',y:'2019',s:'p17'},
+      {c:'软件著作权',t:'大方工业设计服务平台',y:'2019',s:'p18'},
+      {c:'软件著作权',t:'工业设计智能展示系统',y:'2020',s:'p19'},
+      {c:'软件著作权',t:'产品在线辅助设计系统',y:'2020',s:'p20'},
+      {c:'软件著作权',t:'产品设计可视化管理平台',y:'2024',s:'p21'}
+    ];
+    var stage=document.getElementById('patentStage');
+    var rail=document.getElementById('ptRail');
+    var cap=document.getElementById('ptCap');
+    if(!stage||!rail)return;
+    var N=P.length;
+
+    rail.innerHTML=P.map(function(it,i){
+      return '<button class="pt-card" type="button" data-i="'+i+'" aria-label="'+it.c+'：'+it.t+'（'+it.y+'）">'+
+        '<span class="pt-face"><img src="assets/patents/'+it.s+'.jpg" alt="'+it.c+'证书 — '+it.t+'"'+
+        (i<5?'':' loading="lazy"')+' width="720" height="1000"></span></button>';
+    }).join('');
+    var cards=[].slice.call(rail.querySelectorAll('.pt-card'));
+
+    var slow=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var pos=0, tween=null, timer=0, hotI=-1, taking=null;
+    /* 抽取量：0 = 合拢的扇面，1 = 那一张被抽出、两侧让开。用缓动过渡，进出都不突兀 */
+    var heat=0, hotRef=-1, heatTarget=0, heatFrom=0, heatT0=0, heatRaf=0;
+
+    /* 扇形参数：随 --cw 一起缩放，换断点时不用改逻辑 */
+    function geo(){
+      var cw=parseFloat(getComputedStyle(stage).getPropertyValue('--cw'))||206;
+      return {cw:cw,dx:cw*.9,dy:cw*.028,rot:4.2,fall:.078};
+    }
+    /* 把"相差几格"折到 -(N/2, N/2]，扇子左右各摊一半，两头之外的那张正好在看不见的地方换位 */
+    function dist(i){
+      var d=(i-pos)%N;
+      if(d>N/2)d-=N;
+      if(d<=-N/2)d+=N;
+      return d;
+    }
+    function paint(){
+      var g=geo();
+      var half=stage.clientWidth/2;
+      /* 扇面从中间被掰开的幅度：点开时那张放得更大，让位的空隙也相应加宽 */
+      var part=(heat>.0005&&hotRef>=0)?g.cw*(taking ? 0.6 : 0.46)*heat:0;
+      /* 让开的量：至少要让到邻卡的边离开被抽那张（need），
+         但两侧走得动的距离有限（room），窄屏就按 room 封顶，别把邻居整片推出画面 */
+      var partR=part,partL=part;
+      if(part){
+        var scHot=taking?1.12:1.08;
+        var need=Math.max(6,g.cw*.5*(scHot+1-g.fall)+6-g.dx);
+        var roomL=1e9,roomR=1e9;
+        for(var k=0;k<N;k++){
+          var dk=dist(k);if(k===hotRef)continue;
+          var slack=half-(Math.abs(dk*g.dx)+g.cw*.5);
+          if(dk>dist(hotRef))roomR=Math.min(roomR,slack);else roomL=Math.min(roomL,slack);
+        }
+        partR=Math.min(part,Math.max(need,roomR));
+        partL=Math.min(part,Math.max(need,roomL));
+      }
+      for(var i=0;i<N;i++){
+        var c=cards[i], d=dist(i), a=Math.abs(d);
+        var s=Math.max(.5,1-a*g.fall);
+        var x=d*g.dx;
+        /* 抽出时左右两侧整片让开（像把一张从牌堆里抽走），间距保持不变，不会互相挤 */
+        if(part&&i!==hotRef)x+=d>dist(hotRef)?partR:-partL;
+        /* 淡出跟着屏幕位置走：整张卡完全进画面前才开始化，
+           贴到边缘时已经不透明度为 0 —— 不会突然消失，也不会被 overflow 切掉 */
+        var over=(Math.abs(x)+g.cw*.5)-half;          /* 越出舞台多少像素，没越界就是负数 */
+        var f=Math.max(0,Math.min(1,1-over/(g.cw*.5)));
+        var o=Math.max(.28,1-a*.13)*(f*f*(3-2*f));
+        c.style.transform='translate3d('+x.toFixed(1)+'px,'+(a*a*g.dy).toFixed(1)+
+          'px,0) rotate('+(d*g.rot).toFixed(2)+'deg) scale('+s.toFixed(3)+')';
+        c.style.opacity=o.toFixed(3);
+        c.style.zIndex=String(400-Math.round(a*10));
+        c.style.pointerEvents=o<.3?'none':'';
+        /* 内层要抵消外层的倾斜，抽出后才能立正 */
+        c.firstChild.style.setProperty('--cr',(-d*g.rot).toFixed(2)+'deg');
+      }
+      if(taking)cards[cards.indexOf(taking)].style.zIndex='600';
+      else if(hotI>=0)cards[hotI].style.zIndex='500';
+    }
+
+    /* 抽取量缓动：悬停进出时扇面是"撑开 / 合拢"，不是闪现 */
+    function animateHeat(){
+      cancelAnimationFrame(heatRaf);
+      heatFrom=heat; heatT0=0;
+      if(slow){heat=heatTarget;paint();return}
+      function step(t){
+        if(!heatT0)heatT0=t;
+        var k=Math.min(1,(t-heatT0)/340), e=1-Math.pow(1-k,3);
+        heat=heatFrom+(heatTarget-heatFrom)*e;
+        paint();
+        if(k<1)heatRaf=requestAnimationFrame(step);
+        else{
+          heat=heatTarget;
+          if(heatTarget===0)hotRef=-1;   /* 合拢完再清掉参照，避免中途跳位 */
+          paint();
+        }
+      }
+      heatRaf=requestAnimationFrame(step);
+    }
+    function setHeat(i,to){
+      if(to&&i>=0)hotRef=i;
+      heatTarget=to?1:0;
+      animateHeat();
+    }
+
+    /* 逐格转动：一格 1，缓入缓出，转的过程中整把扇子像被手指拨了一下 */
+    function moveTo(target,dur,done){
+      cancelAnimationFrame(tween);
+      var from=pos, delta=target-pos, t0=0;
+      var capTick=function(){if(hotI<0&&!taking)frontCap()};   /* 自动转的时候说明文字跟着正中那张走 */
+      if(slow||!dur||Math.abs(delta)<1e-4){pos=target;paint();capTick();if(done)done();return}
+      function step(t){
+        if(!t0)t0=t;
+        var k=Math.min(1,(t-t0)/dur), e=k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2;
+        pos=from+delta*e;paint();capTick();
+        if(k<1)tween=requestAnimationFrame(step);
+        else{pos=target;paint();capTick();if(done)done()}
+      }
+      tween=requestAnimationFrame(step);
+    }
+    function next(){
+      clearTimeout(timer);
+      moveTo(Math.round(pos)+1,1180);
+      timer=setTimeout(next,3440);
+    }
+    function play(){if(slow||timer)return;timer=setTimeout(next,1200)}
+    function stop(){clearTimeout(timer);timer=0;cancelAnimationFrame(tween)}
+
+    paint();
+    if('IntersectionObserver' in window){
+      new IntersectionObserver(function(es){
+        if(es[0].isIntersecting&&hotI<0&&!taking&&!dragging)play();else stop();
+      },{rootMargin:'120px 0px'}).observe(stage);
+    }else play();
+    document.addEventListener('visibilitychange',function(){
+      if(document.hidden)stop();else if(hotI<0&&!taking)play();
+    });
+
+    /* 正前方那张的名字：自动播放时每转到新的一格就跟着换 */
+    var shownI=-1;
+    function writeCap(i){
+      if(i===shownI)return;
+      shownI=i;
+      var it=P[i];
+      cap.innerHTML='<b>'+it.c+'</b><span>'+it.t+'</span><i>'+it.y+'</i>'+
+        '<u>'+String(i+1).padStart(2,'0')+' / '+N+'</u>';
+    }
+    function frontCap(){writeCap(((Math.round(pos)%N)+N)%N)}
+    frontCap();
+
+    /* 悬停：抽出扇面、翻到最上层，其余退暗 */
+    function clearHot(){
+      if(taking)return;   /* 已点开时遮罩会盖住扇面、触发 pointerleave，别把它当成"鼠标移开" */
+      if(hotI<0)return;
+      var c=cards[hotI];
+      c.classList.remove('hot');
+      hotI=-1;
+      stage.classList.remove('hovering');
+      setHeat(-1,false);
+      frontCap();
+      if(!taking&&!dragging&&!document.hidden)play();
+    }
+    function setHot(i){
+      if(i===hotI)return;
+      clearHot();
+      hotI=i;
+      cards[i].classList.add('hot');
+      stage.classList.add('hovering');
+      cards[i].style.zIndex='500';
+      setHeat(i,true);
+      writeCap(i);
+      stop();
+    }
+    stage.addEventListener('pointerover',function(e){
+      var c=e.target.closest?e.target.closest('.pt-card'):null;
+      if(c){var i=cards.indexOf(c);if(i>=0)setHot(i)}
+    });
+    stage.addEventListener('pointerout',function(e){
+      var to=e.relatedTarget&&e.relatedTarget.closest?e.relatedTarget.closest('.pt-card'):null;
+      if(!to)clearHot();
+    });
+    stage.addEventListener('pointerleave',clearHot);
+
+    /* 拖动：按住横向拨动整把扇子，松手吸附到最近一格 */
+    var dragging=false,moved=false,startX=0,startPos=0,pid=null;
+    stage.addEventListener('pointerdown',function(e){
+      if(e.button!==0)return;
+      dragging=true;moved=false;pid=e.pointerId;
+      startX=e.clientX;startPos=pos;
+      stop();
+    });
+    stage.addEventListener('pointermove',function(e){
+      if(!dragging)return;
+      var dx=e.clientX-startX;
+      if(!moved&&Math.abs(dx)>5){
+        moved=true;
+        stage.classList.add('drag');
+        stage.classList.add('dragging');   /* 拖的时候先别抽卡 */
+        if(hotI>=0){var h=cards[hotI];h.classList.remove('hot');hotI=-1;stage.classList.remove('hovering')}
+        try{stage.setPointerCapture(pid)}catch(err){}
+      }
+      if(!moved)return;
+      var g=geo();
+      pos=startPos-dx/g.dx*1.6;
+      paint();
+    });
+    function endDrag(){
+      if(!dragging)return;
+      dragging=false;
+      stage.classList.remove('drag');stage.classList.remove('dragging');
+      try{stage.releasePointerCapture&&stage.releasePointerCapture(pid)}catch(err){}
+      if(moved){clearHot();moveTo(Math.round(pos),420,function(){if(!document.hidden)play()})}
+      else if(!document.hidden&&!taking)play();
+      setTimeout(function(){moved=false},60);
+    }
+    stage.addEventListener('pointerup',endDrag);
+    stage.addEventListener('pointercancel',endDrag);
+
+    /* 点开：先抽出，停一拍让人看清是哪张，再弹大图；关闭后收回扇面 */
+    function release(){
+      if(taking)taking.classList.remove('take');
+      taking=null;
+      stage.classList.remove('taking');
+      clearHot();
+      frontCap();
+      if(!document.hidden)play();
+    }
+    cards.forEach(function(c){
+      c.addEventListener('click',function(){
+        if(moved)return;
+        if(taking)return;
+        var i=cards.indexOf(c),it=P[i];
+        taking=c;hotI=i;
+        stage.classList.add('taking');
+        c.classList.add('hot','take');
+        stage.classList.add('hovering');
+        c.style.zIndex='600';
+        setHeat(i,true);   /* 抬得更高，两侧同样让开，不会压到邻卡 */
+        cap.innerHTML='<b>'+it.c+'</b><span>'+it.t+'</span><i>'+it.y+'</i>';
+        stop();
+        if(c.blur)c.blur();
+        setTimeout(function(){
+          openModal(it.c+'证书',it.t+'　·　'+it.y+'　—　点击关闭查看大图。','assets/patents/'+it.s+'.jpg',true);
+        },300);
+      });
+    });
+    var baseClose=window.closeModal;
+    window.closeModal=function(){
+      if(baseClose)baseClose.apply(this,arguments);
+      release();
+    };
+
+    /* 键盘 Tab 到某张：把它转到正中并抽出 */
+    stage.addEventListener('focusin',function(e){
+      var c=e.target.closest&&e.target.closest('.pt-card');
+      if(!c)return;
+      var i=cards.indexOf(c);
+      stage.scrollLeft=0;
+      moveTo(i,520);
+      setHot(i);
+    });
+    stage.addEventListener('focusout',function(e){
+      if(!stage.contains(e.relatedTarget))clearHot();
+    });
+    stage.addEventListener('scroll',function(){stage.scrollLeft=0});
+  })();
+
 
   /* 数字滚动需要重新绑定（节点是后插入的） */
   var numIO=new IntersectionObserver(function(es){es.forEach(function(en){
@@ -305,5 +586,6 @@
   })},60);
 })();
 </script>
+<script src="assets/scroll.js"></script>
 </body>
 </html>

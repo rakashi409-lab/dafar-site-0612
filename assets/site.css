@@ -84,16 +84,18 @@ ul{list-style:none}
   view-transition-name:site-nav;
   position:fixed;top:0;left:0;width:100%;z-index:1000;
   display:flex;align-items:center;justify-content:space-between;
-  padding:18px 40px;transition:background .4s,backdrop-filter .4s,padding .4s,box-shadow .4s;
+  padding:18px 40px;transition:background .4s,backdrop-filter .4s,box-shadow .4s;
 }
+/* 滚动时只换底与描边，不压行高：压 padding / 缩 logo 都会让六个菜单项整体位移，回顶时看着像抖了一下。
+   底边线用 inset 阴影画，避免 border 参与盒模型把行高顶出 1px。 */
 .nav.scrolled{
   background:rgba(8,4,5,.85);backdrop-filter:blur(14px) saturate(1.5);-webkit-backdrop-filter:blur(14px) saturate(1.5);
-  padding:12px 40px;
-  box-shadow:0 4px 30px rgba(0,0,0,.6);border-bottom:1px solid var(--line);
+  box-shadow:inset 0 -1px 0 var(--line),0 4px 30px rgba(0,0,0,.6);
 }
 .logo{display:flex;align-items:center;gap:10px}
-.logo img{height:46px;width:auto;display:block;transition:height .4s,filter .4s;filter:drop-shadow(0 2px 8px rgba(0,0,0,.5))}
-.nav.scrolled .logo img{height:40px}
+.logo img{height:46px;width:auto;display:block;transform-origin:left center;
+  transition:transform .45s var(--ease-out),filter .4s;filter:drop-shadow(0 2px 8px rgba(0,0,0,.5))}
+.nav.scrolled .logo img{transform:scale(.87)}
 .nav-menu{display:flex;gap:36px}
 .nav-menu li{position:relative}
 .nav-menu>li>a{font-size:16px;font-weight:500;position:relative;padding:6px 0;color:#e8e8e8;transition:color .3s;display:inline-block}
@@ -259,6 +261,9 @@ ul{list-style:none}
 .pd-crumb a:hover,.crumb-bar a:hover{color:var(--red-bright)}
 .pd-crumb .sp,.crumb-bar .sp{color:#5a5a5a;font-size:12px}
 .pd-crumb .cur,.crumb-bar .cur{color:#cfcfcf}
+/* 详情页不设首屏：面包屑直接顶到固定导航下方，自带让位高度 */
+.pd-crumb.page-top .container,.crumb-bar.page-top .container{
+  padding-top:calc(82px + clamp(18px,2vw,28px))}
 
 .pd-hero{padding:clamp(34px,4.6vw,66px) 0 0}
 .pd-wrap{display:grid;grid-template-columns:minmax(0,1.32fr) minmax(0,1fr);
@@ -338,6 +343,33 @@ ul{list-style:none}
 .pd-apps .k{border-radius:4px 0 0 4px}
 .pd-apps td:last-child{border-radius:0 4px 4px 0}
 
+/* ---------- 案例详情：顶部切换器（跟在面包屑同一行右侧） ----------
+   读者看完主图想继续翻，视线本来就在页首，放在面包屑这一行比压到页尾找得着得多。
+   三枚胶囊：上一个 / 下一个 / 下一个类别，悬停时标题才明确显示，不抢面包屑的信息层级。 */
+.pd-crumb .container{justify-content:space-between;gap:clamp(14px,3vw,32px)}
+.pd-crumb-path{display:flex;align-items:center;gap:12px;min-width:0;white-space:nowrap}
+.pd-switch{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+.pd-sw{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 13px;
+  border-radius:999px;border:1px solid var(--line);background:#121212;
+  font-size:12.5px;letter-spacing:1px;color:#9a9a9a;line-height:1;
+  transition:color .3s var(--ease-out),border-color .3s var(--ease-out),background .3s var(--ease-out)}
+.pd-sw .ic{font-size:14px;transition:color .3s}
+.pd-sw:hover{color:#f0f0f0;border-color:rgba(230,0,18,.55);background:#1a0e10}
+.pd-sw:hover .ic{color:var(--red-bright)}
+/* 下一个类别：红色描边区分，携带类别名 */
+.pd-sw-cat{border-color:rgba(230,0,18,.3);color:#c8c8c8;padding-right:11px}
+.pd-sw-cat .k{color:#7d7d7d;font-size:11.5px;letter-spacing:1.5px}
+.pd-sw-cat .v{color:#e8e8e8;font-weight:600}
+.pd-sw-cat .ic{color:var(--red-bright);font-size:12px}
+.pd-sw-cat:hover .k{color:#a0a0a0}
+/* 切换案例时只淡出正文，导航与面包屑整行（含三个切换按钮）都留在原处、不参与动画：
+   它们一旦跟着淡出再淡入，看着就是闪两下，切换时手也没法连续点 */
+.pd-hero{transition:opacity .26s var(--ease-out),transform .26s var(--ease-out)}
+body.pd-leaving .pd-hero{opacity:0;transform:translateY(-6px)}
+/* 新页正文轻轻浮入；fill 用 backwards，跳转前的淡出仍然生效 */
+.pd-hero{animation:pdIn .42s var(--ease-out) backwards}
+@keyframes pdIn{from{opacity:0;transform:translateY(10px)}}
+
 /* ---------- 动态页：品牌卡（对齐 PSD 第五页第二屏） ---------- */
 .news-brand{position:relative;padding:clamp(64px,7.6vw,124px) 24px 0}
 .nb-wrap{position:relative;container-type:inline-size;max-width:1180px;margin:0 auto}
@@ -410,6 +442,8 @@ ul{list-style:none}
 
 .news-rows{display:flex;flex-direction:column;gap:66px;padding:64px 0 0}
 .news-row{display:grid;grid-template-columns:1.02fr 1fr;gap:clamp(28px,4vw,64px);align-items:center}
+/* 锚点落位留出固定导航的高度，卡片不会被压到导航底下 */
+[id^="n-n"],.news-row[id],.news-feature a[id]{scroll-margin-top:120px}
 .news-row:nth-child(even) .nr-img{order:2}
 .nr-img{border-radius:12px;overflow:hidden;aspect-ratio:16/10;background:#131313;position:relative}
 .nr-img img{width:100%;height:100%;object-fit:cover;transition:transform .9s var(--ease-out)}
@@ -423,6 +457,10 @@ ul{list-style:none}
 .nr-more{display:inline-flex;align-items:center;gap:8px;margin-top:22px;color:var(--red-bright);font-size:14px;letter-spacing:2px;font-weight:600}
 .nr-more i{font-style:normal;transition:transform .35s var(--ease-spring)}
 .news-row:hover .nr-more i{transform:translateX(6px)}
+/* 从详情页返回时，当前这条短暂描红提示；头条卡用外圈阴影，列表用内描边 */
+.news-row.nr-flash .nr-img{box-shadow:0 0 0 2px rgba(230,0,18,.75),0 0 26px rgba(230,0,18,.35)}
+.news-feature a.nr-flash{box-shadow:0 0 0 2px rgba(230,0,18,.8),0 0 30px rgba(230,0,18,.4);border-radius:12px}
+.news-row.nr-flash .nr-img,.news-feature a.nr-flash{transition:box-shadow .9s var(--ease-out)}
 
 .news-pager{display:flex;justify-content:center;align-items:center;gap:10px;padding:76px 0 0}
 .news-pager a,.news-pager span.pg{
@@ -435,7 +473,7 @@ ul{list-style:none}
 .news-pager .dots{color:#555;background:none}
 
 /* ---------- 文章详情 ---------- */
-.article-sec{padding:120px 0 0}
+.article-sec{padding:clamp(36px,4.4vw,58px) 0 0}
 .article-card{
   background:#1b1b1b;border-radius:6px;padding:clamp(28px,4vw,58px);position:relative;overflow:hidden;
   border:1px solid rgba(255,255,255,.05);
@@ -484,6 +522,7 @@ ul{list-style:none}
   background:linear-gradient(180deg,#ff3a44,#b3000e);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
   font-variant-numeric:tabular-nums}
 .stat b i{font-style:normal;font-size:.55em;vertical-align:6px;margin-left:2px}
+/* 数字与单位作为整体居中，整块字形中线与下方标签同轴 */
 .stat span{display:block;margin-top:12px;font-size:14px;color:#c2c2c2;letter-spacing:1.5px}
 
 .marquee-wall{position:relative;padding:22px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);
@@ -505,25 +544,58 @@ ul{list-style:none}
 .cert .cap{background:#d9d9d9;color:#222;font-size:15px;text-align:center;padding:13px 10px;letter-spacing:1px;transition:.35s}
 .cert:hover .cap{background:linear-gradient(135deg,var(--red-bright),var(--red-deep));color:#fff}
 
-/* 专利证书：中间竖版专利证书为主角，两侧横版证书由大到小呈弧形展开、整体完整可见；
-   进场时由中心扇形散开，悬停的那张上浮放大并置顶。尺寸统一乘 --k 适配屏宽 */
-.patent-stage{--k:1;position:relative;height:calc(var(--k)*470px);margin-top:30px}
-.patent-stage::after{content:"";position:absolute;left:50%;bottom:calc(var(--k)*8px);width:calc(var(--k)*900px);height:calc(var(--k)*60px);
-  transform:translateX(-50%);border-radius:50%;pointer-events:none;
-  background:radial-gradient(ellipse at center,rgba(230,0,18,.22),rgba(230,0,18,.06) 45%,transparent 70%)}
-.patent-stage img{position:absolute;left:50%;top:46%;width:var(--w);height:auto;border-radius:6px;cursor:zoom-in;
-  transform:translate(-50%,-50%) translate(var(--x),var(--y)) rotate(var(--r));
-  box-shadow:0 22px 48px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.06);
-  filter:brightness(var(--b,.82));transition:transform .55s var(--ease-spring),filter .4s}
-.patent-stage img:nth-child(1){--w:calc(var(--k)*215px);--x:calc(var(--k)*-425px);--y:calc(var(--k)*34px);--r:-8deg;--d:.32s;z-index:1}
-.patent-stage img:nth-child(2){--w:calc(var(--k)*250px);--x:calc(var(--k)*-235px);--y:calc(var(--k)*12px);--r:-4deg;--d:.16s;z-index:2}
-.patent-stage img:nth-child(3){--w:calc(var(--k)*270px);--x:0px;--y:0px;--r:0deg;--d:0s;--b:1;z-index:3}
-.patent-stage img:nth-child(4){--w:calc(var(--k)*250px);--x:calc(var(--k)*235px);--y:calc(var(--k)*12px);--r:4deg;--d:.16s;z-index:2}
-.patent-stage img:nth-child(5){--w:calc(var(--k)*215px);--x:calc(var(--k)*425px);--y:calc(var(--k)*34px);--r:8deg;--d:.32s;z-index:1}
-.patent-stage img:hover{transform:translate(-50%,-50%) translate(var(--x),calc(var(--y) - 18px)) rotate(0deg) scale(1.08);filter:brightness(1);z-index:9}
-.patent-stage:not(.in) img{opacity:0}
-.patent-stage.in img{animation:patFan 1.1s var(--ease-spring) var(--d) backwards}
-@keyframes patFan{from{opacity:0;transform:translate(-50%,-50%) translateY(40px) scale(.6)}}
+/* 专利证书：21 张证书围成一把扇子 —— 正中那张立正、最亮最大，向两侧依次外移、下沉、外倾、
+   缩小变暗，像手里摊开的一叠牌。每 3.4 秒扇面缓转一格，下一张转到正中，21 张轮流当主角，
+   走完无缝接回开头。鼠标掠过时那张被"抽"出扇面、翻到最上层、回正并点亮；
+   点开时升得更高，其余压暗，随后查看大图，关掉再收回扇面。 */
+.patent-stage{--cw:206px;--top:calc(var(--cw)*.5);
+  position:relative;margin-top:30px;height:calc(var(--cw)*2.5);overflow:hidden;
+  cursor:grab;touch-action:pan-y;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);
+          mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)}
+.patent-stage.drag{cursor:grabbing}
+/* 扇面下方的一圈红色地光 */
+.patent-stage::after{content:"";position:absolute;left:50%;bottom:10px;z-index:0;width:min(1080px,96%);
+  height:calc(var(--cw)*.34);transform:translateX(-50%);border-radius:50%;pointer-events:none;
+  background:radial-gradient(ellipse at center,rgba(230,0,18,.2),rgba(230,0,18,.05) 46%,transparent 72%)}
+.pt-rail{position:absolute;inset:0;z-index:2}
+/* 外层只负责扇面里的位置：平移 / 下沉 / 外倾 / 缩放，全部由脚本逐帧写入 */
+.pt-card{position:absolute;left:50%;top:var(--top);width:var(--cw);height:calc(var(--cw)*1.39);
+  margin-left:calc(var(--cw) / -2);padding:0;border:0;background:none;display:block;
+  transform-origin:50% 100%;will-change:transform,opacity;cursor:zoom-in}
+.pt-card:focus-visible{outline:none}
+.pt-card:focus-visible .pt-face{outline:2px solid var(--red-bright);outline-offset:4px}
+/* 内层负责"从扇面里抽出来"：抬起、放大，并把外层的倾角抵消回正 */
+.pt-face{display:block;width:100%;height:100%;border-radius:6px;overflow:hidden;background:#fff;
+  box-shadow:0 18px 40px rgba(0,0,0,.66),0 0 0 1px rgba(255,255,255,.07);
+  transform-origin:50% 100%;
+  transition:transform .6s var(--ease-spring),opacity .42s var(--ease-out),
+             box-shadow .45s var(--ease-out),filter .42s var(--ease-out)}
+.pt-card img{display:block;width:100%;height:100%;object-fit:cover;object-position:center;
+  user-select:none;-webkit-user-drag:none}
+
+/* 悬停：这一张抽出扇面并点亮，其余退下去 */
+.patent-stage.hovering .pt-card:not(.hot):not(.take) .pt-face{opacity:.4;filter:brightness(.6) saturate(.68)}
+.pt-card.hot .pt-face{transform:translateY(calc(var(--cw)*-.3)) scale(1.08) rotate(var(--cr,0deg));
+  opacity:1;filter:none;
+  box-shadow:0 52px 96px rgba(0,0,0,.86),0 0 0 1px rgba(255,255,255,.18),0 0 44px rgba(230,0,18,.3)}
+
+/* 点开：扇面整体退暗，被选中的那张再升一档 */
+.patent-stage.taking .pt-card .pt-face{opacity:.24;filter:brightness(.52) saturate(.55)}
+.patent-stage.taking .pt-card.take .pt-face{opacity:1;filter:none;
+  transform:translateY(calc(var(--cw)*-.4)) scale(1.12) rotate(var(--cr,0deg));
+  box-shadow:0 54px 96px rgba(0,0,0,.88),0 0 0 1px rgba(255,255,255,.18),0 0 50px rgba(230,0,18,.34)}
+
+/* 扇面正前方的证书名、年份与序号 */
+.pt-cap{margin-top:10px;text-align:center;min-height:24px;font-size:13.5px;letter-spacing:.6px;
+  color:var(--text-dim);transition:opacity .35s var(--ease-out)}
+.pt-cap b{color:var(--red-bright);font-weight:700;letter-spacing:2px;margin-right:12px}
+.pt-cap span{color:#e6e6e6}
+.pt-cap i{font-style:normal;margin-left:12px;color:#8a8a8a;font-variant-numeric:tabular-nums}
+.pt-cap u{text-decoration:none;margin-left:18px;color:#666;font-variant-numeric:tabular-nums;letter-spacing:1.5px}
+@media(prefers-reduced-motion:reduce){
+  .pt-face{transition:box-shadow .3s linear,filter .3s linear,opacity .3s linear}
+}
 
 .vision-grid{display:grid;grid-template-columns:1fr 1fr;gap:26px}
 .vision{border-radius:12px;overflow:hidden;background:#fff;color:#222;transition:transform .5s var(--ease-spring),box-shadow .5s}
@@ -773,7 +845,7 @@ ul{list-style:none}
 
 /* ---------- 页脚 ---------- */
 .footer{border-top:1px solid rgba(230,0,18,.5);background:#000;padding:64px 0 0}
-.footer-top{display:grid;grid-template-columns:1fr auto auto auto auto;gap:48px 64px;align-items:start;padding-bottom:46px}
+.footer-top{display:grid;grid-template-columns:1fr auto auto auto auto auto;gap:48px clamp(32px,3.6vw,58px);align-items:start;padding-bottom:46px}
 .f-brand{display:flex;align-items:center;gap:44px}
 .f-brand .f-logo{height:110px;width:auto;flex-shrink:0;filter:drop-shadow(0 4px 12px rgba(0,0,0,.5))}
 .f-info{display:flex;flex-direction:column;gap:14px;min-width:0}
@@ -854,11 +926,40 @@ ul{list-style:none}
 /* ---------- 质感层 ---------- */
 ::selection{background:rgba(230,0,18,.85);color:#fff}
 :where(a,button,input,textarea,select):focus-visible{outline:2px solid rgba(255,80,90,.75);outline-offset:3px}
-html{scrollbar-width:thin;scrollbar-color:#8a000b #070707}
-::-webkit-scrollbar{width:10px}
-::-webkit-scrollbar-track{background:#070707}
-::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#7a0009,#b3000e);border-radius:8px;border:2px solid #070707}
-::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,#b3000e,#ff1f2d)}
+/* 系统滚动条收起：右侧只保留一条品牌线（下方 .sb-rail），避免两条红线并排 */
+html{-ms-overflow-style:none;scrollbar-width:none}
+::-webkit-scrollbar{width:0;height:0}
+::-webkit-scrollbar-track,::-webkit-scrollbar-thumb{background:transparent}
+/* ---------- 右侧滚动进度（品牌红线） ----------
+   原生滚动条只能换色不能做过渡，这里叠一条 2px 贴边轨道：
+   红色渐变随阅读进度伸长，头部一点微光，滚到底时整条亮起。 */
+/* ---------- 右侧品牌滚动线 ----------
+   3px 贴边红线随阅读进度生长，前端一颗呼吸的光头；滚动时光头亮起并拖出尾迹，
+   滚到底整条转亮。右侧 10px 范围可直接拖动定位，替代被收起的系统滚动条。 */
+.sb-rail{position:fixed;top:0;right:0;width:10px;height:100vh;z-index:1200;
+  cursor:grab;touch-action:none}
+.sb-rail.drag{cursor:grabbing}
+.sb-rail s,.sb-rail i,.sb-rail b{position:absolute;right:0;top:0;pointer-events:none;text-decoration:none;display:block}
+.sb-rail s{width:3px;height:100%;background:rgba(230,0,18,.07)}
+.sb-rail i{width:3px;height:100%;transform-origin:top center;transform:scaleY(var(--p,0));
+  background:linear-gradient(180deg,rgba(230,0,18,.42),rgba(255,45,58,.9));
+  box-shadow:0 0 10px rgba(230,0,18,.45);
+  transition:box-shadow .45s var(--ease-out),filter .45s var(--ease-out)}
+.sb-rail b{width:3px;height:22px;border-radius:3px;opacity:.9;
+  background:linear-gradient(180deg,rgba(255,80,90,0),#ff3b45 42%,#ffe3e5);
+  transform:translateY(calc(var(--y,22px) - 22px));
+  filter:drop-shadow(0 0 6px rgba(255,40,60,.85));
+  animation:sbBreath 2.6s ease-in-out infinite}
+@keyframes sbBreath{50%{opacity:.5}}
+.sb-rail.moving b{animation:none;opacity:1}
+.sb-rail.moving i{box-shadow:0 0 16px rgba(255,40,60,.8);filter:brightness(1.18)}
+.sb-rail.moving b::before{content:"";position:absolute;left:0;bottom:100%;width:100%;height:74px;
+  background:linear-gradient(0deg,rgba(255,59,69,.5),transparent);border-radius:2px}
+.sb-rail.at-end i{background:linear-gradient(180deg,rgba(230,0,18,.5),#ff6b73);
+  box-shadow:0 0 18px rgba(255,60,70,.9)}
+.sb-rail.at-end b{background:linear-gradient(180deg,rgba(255,120,130,0),#ff8a90 42%,#fff);
+  filter:drop-shadow(0 0 10px rgba(255,80,90,1));opacity:1}
+@media(prefers-reduced-motion:reduce){.sb-rail b{animation:none}.sb-rail i{transition:none}}
 .grain{position:fixed;inset:0;z-index:3000;pointer-events:none;opacity:.045;mix-blend-mode:overlay;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   background-size:280px 280px}
@@ -872,7 +973,7 @@ html{scrollbar-width:thin;scrollbar-color:#8a000b #070707}
   .pd-main{max-width:640px}
   .stats{grid-template-columns:repeat(3,1fr);gap:34px 18px}
   .cert-grid{grid-template-columns:repeat(3,1fr)}
-  .patent-stage{--k:.78}
+  .patent-stage{--cw:168px}
   .c-cards{grid-template-columns:1fr 1fr}
   .c-card:last-child{grid-column:span 2}
   .job-head{grid-template-columns:1.2fr 1fr .8fr auto;row-gap:8px}
@@ -881,7 +982,7 @@ html{scrollbar-width:thin;scrollbar-color:#8a000b #070707}
   .intro-pic{order:-1}
 }
 @media(max-width:820px){
-  .patent-stage{--k:.62}
+  .patent-stage{--cw:142px}
   .nav{padding:14px 20px}
   .nav.scrolled{padding:10px 20px}
   .nav-toggle{display:flex}
@@ -900,12 +1001,12 @@ html{scrollbar-width:thin;scrollbar-color:#8a000b #070707}
   .sub-hero{min-height:100svh}
   .section{padding:70px 0}
   .page-title{padding:70px 0 0}
-  .pd-hero{padding:110px 0 0}
+  .pd-hero{padding:26px 0 0}
   .news-wrap{padding:76px 0 0}
   .news-feature{grid-template-columns:1fr;margin-top:-40px}
   .news-row,.news-row:nth-child(even) .nr-img{grid-template-columns:1fr;order:0}
   .news-rows{gap:48px}
-  .article-sec{padding:80px 0 0}
+  .article-sec{padding:26px 0 0}
   .about-intro{padding:84px 0 0}
   .contact-sec,.jobs-sec{padding:80px 0 0}
   .vision-grid{grid-template-columns:1fr}
@@ -920,8 +1021,7 @@ html{scrollbar-width:thin;scrollbar-color:#8a000b #070707}
   .pd-table th{width:26%}
 }
 @media(max-width:560px){
-  .patent-stage{--k:.45}
-  .patent-stage img:nth-child(1),.patent-stage img:nth-child(5){display:none}
+  .patent-stage{--cw:116px}
   .form-row{grid-template-columns:1fr}
   .footer-top{grid-template-columns:1fr 1fr}
   .f-brand{flex-direction:column;align-items:center;text-align:center;gap:18px;grid-column:span 2}
@@ -933,10 +1033,13 @@ html{scrollbar-width:thin;scrollbar-color:#8a000b #070707}
   .cert .cap{font-size:13px;padding:10px 6px}
   .c-cards{grid-template-columns:1fr}
   .c-card:last-child{grid-column:auto}
-  .patent-stage{height:260px}
-  .patent-stage img{height:170px}
-  .patent-stage img:nth-child(3){height:230px}
-  .pd-nav,.ar-nav{grid-template-columns:1fr}
+  .ar-nav{grid-template-columns:1fr}
+  /* 面包屑一行放不下切换器时，换行到下面一行，整体仍贴着页首 */
+  .pd-crumb .container{flex-wrap:wrap;row-gap:14px}
+  .pd-crumb-path{flex:1 1 100%;justify-content:flex-start}
+  .pd-switch{width:100%;justify-content:flex-start;gap:6px}
+  .pd-sw{height:30px;padding:0 11px;font-size:12px}
+  .pd-sw-cat{padding-right:9px}
   .pd-table th,.pd-table td{padding:14px;font-size:13px;display:block;width:100%}
   .pd-table th{padding-bottom:2px}
   .pd-table td{padding-top:0}

@@ -62,20 +62,20 @@
   <button class="nav-toggle" id="navToggle" aria-label="菜单"><span></span><span></span><span></span></button>
 </nav>
 
-<header class="sub-hero case-hero" id="top">
-  <div class="sub-hero-bg" aria-hidden="true"><img src="assets/pages/hero-case.jpg" alt=""></div>
-  <div class="sub-hero-tint" aria-hidden="true"></div>
-  <div class="sub-hero-inner">
-    <h1>专注设计是我们不变的追求</h1>
-    <div class="en">Focusing Design Is Our Constant Pursuit</div>
-  </div>
-</header>
-
-<div class="pd-crumb" data-sec="面包屑">
+<div class="pd-crumb page-top" id="top" data-sec="面包屑">
   <div class="container">
-    <a href="services.html">服务</a><span class="sp">&lt;</span>
-    <a href="cases.html">案例</a><span class="sp">&lt;</span>
-    <a href="cases.html" id="crumbCat">消费电子</a>
+    <div class="pd-crumb-path">
+      <a href="services.html">服务</a><span class="sp">&lt;</span>
+      <a href="cases.html">案例</a><span class="sp">&lt;</span>
+      <a href="cases.html" id="crumbCat">消费电子</a>
+    </div>
+    <nav class="pd-switch" id="pdNav" aria-label="案例切换">
+      <a href="cases.html" class="pd-sw" id="pdPrevCase"><span class="ic">‹</span><span class="tx">上一个</span></a>
+      <a href="cases.html" class="pd-sw" id="pdNextCase"><span class="tx">下一个</span><span class="ic">›</span></a>
+      <a href="cases.html" class="pd-sw pd-sw-cat" id="pdNextCat">
+        <span class="k">下一个类别</span><span class="v" id="pdNextCatName"></span><span class="ic">↗</span>
+      </a>
+    </nav>
   </div>
 </div>
 
@@ -284,6 +284,63 @@
     return '<tr><th class="k">'+r[0]+'</th><td>'+r[1]+'</td></tr>';
   }).join('');
 
+  /* 案例切换：同分类内上一篇 / 下一篇循环，再加一个「下一个案例类别」。
+     顺序以案例页的卡片清单为准 —— 有独立数据的案例用 id 跳，其余用名称/分类/序号走同一套模板。 */
+  (function(){
+    var grid=DF.GRID[c.cat]||[];
+    /* 清单里每张卡片对应的详情入口：都带序号，链式跳转时顺序不会乱 */
+    var pool=grid.map(function(item,i){
+      var hit=DF.match(item[0],DF.CASES);
+      var img=item[1]?'assets/cases/case'+item[1]+'.png':'';
+      return hit?{href:'case-detail.html?id='+encodeURIComponent(hit.id)+'&i='+i,title:hit.title}
+                :{href:'case-detail.html?name='+encodeURIComponent(item[0])+'&cat='+c.cat+'&i='+i+
+                      '&img='+encodeURIComponent(img),
+                  title:item[0]};
+    });
+
+    /* 定位自己：入口带了序号就按序号（清单里同名、互相包含的项目才不会串位）；
+       没有序号时，真实案例按 id、模板案例按名称兜底 */
+    var at=-1;
+    var i=parseInt(q.get('i'),10);
+    if(!(i>=0&&i<grid.length))i=-1;
+    if(i>=0){
+      var h=DF.match(grid[i][0],DF.CASES);
+      if((c.id&&h&&h.id===c.id)||(!c.id&&grid[i][0]===c.title&&!h))at=i;
+    }
+    if(at<0&&c.id){
+      at=grid.map(function(item){var x=DF.match(item[0],DF.CASES);return x?x.id:''}).indexOf(c.id);
+    }
+    if(at<0)for(var k=0;k<grid.length;k++)if(grid[k][0]===c.title){at=k;break}
+    if(at<0)at=0;
+
+    var n=pool.length;
+    function card(el,item,label){
+      if(!item||n<2){el.style.display='none';return}
+      el.href=item.href;
+      el.querySelector('.tx').textContent=label;
+      el.title=item.title;
+      el.setAttribute('aria-label',label+'：'+item.title);
+    }
+    card(document.getElementById('pdPrevCase'),pool[(at-1+n)%n],'上一个');
+    card(document.getElementById('pdNextCase'),pool[(at+1)%n],'下一个');
+
+    var keys=Object.keys(DF.CATS);
+    var nk=keys[(keys.indexOf(c.cat)+1)%keys.length];
+    document.getElementById('pdNextCatName').textContent=DF.CATS[nk].name;
+    document.getElementById('pdNextCat').href='cases.html#'+DF.CATS[nk].slug;
+
+    /* 点击后先淡出当前页再跳转，避免硬切 */
+    document.querySelectorAll('#pdNav a').forEach(function(a){
+      a.addEventListener('click',function(e){
+        if(e.metaKey||e.ctrlKey||e.shiftKey||e.button!==0)return;
+        e.preventDefault();
+        var href=a.getAttribute('href');
+        document.body.classList.add('pd-leaving');
+        setTimeout(function(){location.href=href},240);
+      });
+    });
+  })();
+
   /* 页面进入后补一次 reveal 检测（数据渲染的节点） */
   setTimeout(function(){document.querySelectorAll('.reveal,.reveal-l,.reveal-r').forEach(function(el){
     var r=el.getBoundingClientRect();
@@ -291,5 +348,6 @@
   })},60);
 })();
 </script>
+<script src="assets/scroll.js"></script>
 </body>
 </html>

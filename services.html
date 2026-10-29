@@ -181,7 +181,8 @@ ul{list-style:none}
 .strength{background:linear-gradient(180deg,#000,#0a0405,#000)}
 .stats{display:grid;grid-template-columns:repeat(5,1fr);gap:20px;text-align:center}
 .stat .num{font-size:clamp(34px,4.5vw,56px);font-weight:900;color:var(--red-bright);line-height:1;
-  display:flex;align-items:baseline;justify-content:center;font-variant-numeric:tabular-nums lining-nums}
+  text-align:center;font-variant-numeric:tabular-nums lining-nums}
+/* 数字和单位作为一个整体居中，整块字形中线与下方标签同轴 */
 .stat .num small{font-size:.42em;margin-left:4px;font-weight:700}
 .stat .lbl{color:var(--text-dim);font-size:15px;margin-top:12px;letter-spacing:2px}
 
@@ -226,7 +227,8 @@ ul{list-style:none}
   isolation:isolate;
 }
 /* 默认深灰，仅悬停的卡片红色层淡入 */
-.scope-bar::before{content:"";position:absolute;inset:0;z-index:-1;opacity:0;transition:opacity .45s var(--ease-out);
+/* 红色层向上多盖 1px，压住 border-top 那一行，否则悬停时红条上方会露出一条深灰线 */
+.scope-bar::before{content:"";position:absolute;inset:-1px 0 0 0;z-index:-1;opacity:0;transition:opacity .45s var(--ease-out);
   background:linear-gradient(135deg,var(--red-bright),var(--red-deep))}
 .scope-card:hover .scope-bar::before{opacity:1}
 .scope-tags{transition:color .4s}
@@ -376,7 +378,7 @@ ul{list-style:none}
 
 /* ============ 页脚（与主页一致） ============ */
 .footer{border-top:1px solid rgba(230,0,18,.5);background:#000;padding:64px 0 0}
-.footer-top{display:grid;grid-template-columns:1fr auto auto auto auto;gap:48px 64px;align-items:start;padding-bottom:46px}
+.footer-top{display:grid;grid-template-columns:1fr auto auto auto auto auto;gap:48px clamp(32px,3.6vw,58px);align-items:start;padding-bottom:46px}
 .f-brand{display:flex;align-items:center;gap:44px}
 .f-brand .f-logo{height:110px;width:auto;flex-shrink:0;filter:drop-shadow(0 4px 12px rgba(0,0,0,.5))}
 .f-info{display:flex;flex-direction:column;gap:14px;min-width:0}
@@ -453,11 +455,10 @@ ul{list-style:none}
 /* ============ V3 质感层（与主页一致） ============ */
 ::selection{background:rgba(230,0,18,.85);color:#fff}
 :where(a,button,input,textarea):focus-visible{outline:2px solid rgba(255,80,90,.75);outline-offset:3px}
-html{scrollbar-width:thin;scrollbar-color:#8a000b #070707}
-::-webkit-scrollbar{width:10px}
-::-webkit-scrollbar-track{background:#070707}
-::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#7a0009,#b3000e);border-radius:8px;border:2px solid #070707}
-::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,#b3000e,#ff1f2d)}
+/* 系统滚动条收起：右侧只保留一条品牌线（下方 .sb-rail），避免两条红线并排 */
+html{-ms-overflow-style:none;scrollbar-width:none}
+::-webkit-scrollbar{width:0;height:0}
+::-webkit-scrollbar-track,::-webkit-scrollbar-thumb{background:transparent}
 .grain{position:fixed;inset:0;z-index:3000;pointer-events:none;opacity:.045;mix-blend-mode:overlay;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   background-size:280px 280px}
@@ -517,6 +518,35 @@ html{scrollbar-width:thin;scrollbar-color:#8a000b #070707}
 @media(prefers-reduced-motion:reduce){
   *{animation:none!important;transition-duration:.01ms!important}
 }
+
+/* ---------- 右侧滚动进度（品牌红线） ---------- */
+/* ---------- 右侧品牌滚动线 ----------
+   3px 贴边红线随阅读进度生长，前端一颗呼吸的光头；滚动时光头亮起并拖出尾迹，
+   滚到底整条转亮。右侧 10px 范围可直接拖动定位，替代被收起的系统滚动条。 */
+.sb-rail{position:fixed;top:0;right:0;width:10px;height:100vh;z-index:1200;
+  cursor:grab;touch-action:none}
+.sb-rail.drag{cursor:grabbing}
+.sb-rail s,.sb-rail i,.sb-rail b{position:absolute;right:0;top:0;pointer-events:none;text-decoration:none;display:block}
+.sb-rail s{width:3px;height:100%;background:rgba(230,0,18,.07)}
+.sb-rail i{width:3px;height:100%;transform-origin:top center;transform:scaleY(var(--p,0));
+  background:linear-gradient(180deg,rgba(230,0,18,.42),rgba(255,45,58,.9));
+  box-shadow:0 0 10px rgba(230,0,18,.45);
+  transition:box-shadow .45s var(--ease-out),filter .45s var(--ease-out)}
+.sb-rail b{width:3px;height:22px;border-radius:3px;opacity:.9;
+  background:linear-gradient(180deg,rgba(255,80,90,0),#ff3b45 42%,#ffe3e5);
+  transform:translateY(calc(var(--y,22px) - 22px));
+  filter:drop-shadow(0 0 6px rgba(255,40,60,.85));
+  animation:sbBreath 2.6s ease-in-out infinite}
+@keyframes sbBreath{50%{opacity:.5}}
+.sb-rail.moving b{animation:none;opacity:1}
+.sb-rail.moving i{box-shadow:0 0 16px rgba(255,40,60,.8);filter:brightness(1.18)}
+.sb-rail.moving b::before{content:"";position:absolute;left:0;bottom:100%;width:100%;height:74px;
+  background:linear-gradient(0deg,rgba(255,59,69,.5),transparent);border-radius:2px}
+.sb-rail.at-end i{background:linear-gradient(180deg,rgba(230,0,18,.5),#ff6b73);
+  box-shadow:0 0 18px rgba(255,60,70,.9)}
+.sb-rail.at-end b{background:linear-gradient(180deg,rgba(255,120,130,0),#ff8a90 42%,#fff);
+  filter:drop-shadow(0 0 10px rgba(255,80,90,1));opacity:1}
+@media(prefers-reduced-motion:reduce){.sb-rail b{animation:none}.sb-rail i{transition:none}}
 </style>
 </head>
 <body>
@@ -759,8 +789,9 @@ html{scrollbar-width:thin;scrollbar-color:#8a000b #070707}
         </div>
       </div>
       <div class="f-col"><h5>服务</h5><a href="#scope">服务范围</a><a href="#flow">业务流程</a><a href="#trends">核心趋势</a><a href="#aftersale">售后保障</a></div>
-      <div class="f-col"><h5>案例</h5><a href="cases.html#transport">交通工具</a><a href="cases.html#medical">医疗设备</a><a href="cases.html#consumer">消费电子</a><a href="cases.html#military">军工装备</a></div>
+      <div class="f-col"><h5>案例</h5><a href="cases.html#transport">交通工具</a><a href="cases.html#medical">医疗设备</a><a href="cases.html#consumer">消费电子</a><a href="cases.html#military">军工装备</a><a href="cases.html#graphic">平面设计</a></div>
       <div class="f-col"><h5>关于</h5><a href="about.html#intro">公司介绍</a><a href="about.html#honor">企业荣誉</a><a href="news.html">新闻动态</a><a href="contact.html">联系方式</a></div>
+      <div class="f-col"><h5>联系</h5><a href="contact.html#reach">联系我们</a><a href="contact.html#jobs">招聘信息</a></div>
       <div class="f-qr">
         <div class="qr"><img src="assets/qrcode.png" alt="大方设计微信公众号二维码"></div>
         <p>关注我们的公众号</p>
@@ -941,5 +972,6 @@ async function submitForm(e){
   return false;
 }
 </script>
+<script src="assets/scroll.js"></script>
 </body>
 </html>
