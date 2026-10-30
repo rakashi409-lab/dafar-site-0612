@@ -196,8 +196,10 @@ ul{list-style:none}
 .hot-banner img{display:block;width:100%;height:auto}
 
 /* ============ 服务范围 大卡（1-4 编号） ============ */
-.scope-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:30px}
+/* 排版：第一张通栏大卡，后三张一排；动效不变 */
+.scope-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:30px}
 .scope-card{
+  display:flex;flex-direction:column;
   border-radius:16px;overflow:hidden;background:#101010;cursor:pointer;position:relative;
   transition:transform .5s var(--ease-spring),box-shadow .5s;
   border:1px solid var(--line);
@@ -212,7 +214,7 @@ ul{list-style:none}
 .scope-img img{width:100%;height:100%;object-fit:cover;object-position:50% 50%;display:block;
   transition:transform .7s var(--ease-out)}
 .scope-card:hover .scope-img img{transform:scale(1.07)}
-.scope-img::after{content:"";position:absolute;inset:0;pointer-events:none;
+.scope-img::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;
   background:linear-gradient(to top,rgba(0,0,0,.5),transparent 60%)}
 /* 四张卡各配一款主题渐变底（未替换实拍图前也有质感） */
 .scope-card:nth-child(1) .ph{background:linear-gradient(135deg,#1a2340,#0d1020 55%,#251015)}
@@ -245,6 +247,21 @@ ul{list-style:none}
   padding-left:26px;border-left:2px solid rgba(255,255,255,.55);line-height:1.3;
 }
 .scope-tags{color:#ffe3e5;font-size:13px;letter-spacing:1px;line-height:1.8;margin-top:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* 通栏大卡：画面拉宽，编号和标题放大一档 */
+.scope-card:first-child{grid-column:1/-1}
+.scope-card:first-child .scope-img{aspect-ratio:1600/490}
+/* 新图本身是 16:4.9 的宽幅，直接满铺 */
+.scope-card:first-child .scope-bar{padding:0 44px 22px}
+.scope-card:first-child .scope-bar .no{font-size:clamp(84px,9vw,132px);margin-top:-52px}
+.scope-card:first-child .scope-head h3{font-size:clamp(26px,2.8vw,36px)}
+.scope-card:first-child .scope-tags{font-size:14px}
+/* 下排三张小卡：画面偏方，编号收一档，标签允许折行，信息区撑满让三张底边齐平 */
+.scope-card:not(:first-child) .scope-img{aspect-ratio:16/10.5}
+.scope-card:not(:first-child) .scope-bar{flex:1;padding:0 24px 18px}
+.scope-card:not(:first-child) .scope-head{gap:18px}
+.scope-card:not(:first-child) .scope-bar .no{font-size:clamp(60px,6.4vw,92px);margin-top:-36px}
+.scope-card:not(:first-child) .scope-head h3{font-size:clamp(19px,1.9vw,25px);letter-spacing:3px;padding-left:18px}
+.scope-card:not(:first-child) .scope-tags{font-size:12px;white-space:normal;line-height:1.7}
 
 /* ============ 业务流程（波浪连线 6 节点） ============ */
 .flow-wrap{position:relative;padding:30px 0 10px}
@@ -492,6 +509,9 @@ html{-ms-overflow-style:none;scrollbar-width:none}
   .nav-toggle.active span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
   .sub-hero{min-height:100svh}
   .scope-grid{grid-template-columns:1fr}
+  .scope-card:first-child .scope-img,.scope-card:not(:first-child) .scope-img{aspect-ratio:16/8.6}
+  .scope-card:first-child .scope-bar{padding:0 30px 18px}
+  .scope-card:first-child .scope-tags{white-space:normal}
   .hot-banner{border-radius:14px;margin-top:48px}
   .as-visual{aspect-ratio:auto;min-height:240px}
   .as-badge{width:84px;height:84px;border-width:7px}
@@ -644,19 +664,19 @@ html{-ms-overflow-style:none;scrollbar-width:none}
     <div class="sec-head reveal"><h2>大方设计 <em>服务范围</em></h2><p>深耕产品创新设计领域</p></div>
     <div class="scope-grid">
       <article class="scope-card reveal-sc d1" onclick="openModal('工业设计','产品外观设计、结构配合设计、手板跟进、量产落地优化、文创产品设计。以制造可行性为根基，打造兼顾美学与工艺的产品。')">
-        <div class="scope-img"><img src="assets/cases/case1.png" alt="" loading="lazy"></div>
+        <div class="scope-img"><img src="assets/services/svc-2115.png" alt="" loading="lazy"></div>
         <div class="scope-bar"><div class="scope-head"><span class="no">1</span><h3>工业设计</h3></div><p class="scope-tags">产品外观设计 / 结构配合设计 / 手板跟进 / 量产落地优化 / 文创产品设计</p></div>
       </article>
       <article class="scope-card reveal-sc d2" onclick="openModal('品牌设计','LOGO设计、VI视觉系统、包装设计、宣传画册、品牌视觉升级。构建系统化品牌识别，提升品牌资产价值。')">
-        <div class="scope-img"><img src="assets/cases/case5.png" alt="" loading="lazy"></div>
+        <div class="scope-img"><img src="assets/services/svc-2116.png" alt="" loading="lazy"></div>
         <div class="scope-bar"><div class="scope-head"><span class="no">2</span><h3>品牌设计</h3></div><p class="scope-tags">LOGO设计 / VI视觉系统 / 包装设计 / 宣传画册 / 品牌视觉升级</p></div>
       </article>
       <article class="scope-card reveal-sc d3" onclick="openModal('交互设计','APP / 小程序界面设计、网页 UI、车载界面、操作逻辑优化、原型设计。以用户体验为核心，打磨流畅自然的人机交互。')">
-        <div class="scope-img"><img src="assets/cases/case7.png" alt="" loading="lazy"></div>
+        <div class="scope-img"><img src="assets/services/svc-2117.png" alt="" loading="lazy"></div>
         <div class="scope-bar"><div class="scope-head"><span class="no">3</span><h3>交互设计</h3></div><p class="scope-tags">APP / 小程序界面设计 / 网页UI / 车载界面 / 操作逻辑优化 / 原型设计</p></div>
       </article>
       <article class="scope-card reveal-sc d4" onclick="openModal('动画制作','产品演示动画、品牌宣传片、三维建模动画、MG 动态视觉、短视频内容。用动态影像讲好产品与品牌故事。')">
-        <div class="scope-img"><img src="assets/cases/case8.png" alt="" loading="lazy"></div>
+        <div class="scope-img"><img src="assets/services/svc-2119.png" alt="" loading="lazy"></div>
         <div class="scope-bar"><div class="scope-head"><span class="no">4</span><h3>动画制作</h3></div><p class="scope-tags">产品演示动画 / 品牌宣传片 / 三维建模动画 / MG动态视觉 / 短视频制作</p></div>
       </article>
     </div>

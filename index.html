@@ -397,6 +397,7 @@ ul{list-style:none}
 .svc-card:hover::before{opacity:1}
 .svc-icon{width:72px;height:72px;margin-bottom:22px;color:#333;transition:transform .5s var(--ease-spring)}
 .svc-card:hover .svc-icon{transform:scale(1.12) rotate(-4deg);color:var(--red)}
+.svc-card:hover .svc-icon img{filter:none}
 .svc-card h4{font-size:20px;font-weight:800;color:var(--red);margin-bottom:14px;letter-spacing:1px}
 .svc-card p{font-size:13.5px;color:#555;line-height:1.8;flex:1;margin-bottom:22px;text-align:left;width:100%}
 .svc-card .btn{width:100%;border-radius:8px;padding:12px;
@@ -412,6 +413,27 @@ ul{list-style:none}
   box-shadow:0 10px 24px rgba(230,0,18,.28);transform:translateY(-2px) scale(1.02)}
 .svc-card:hover .btn::before,.svc-card .btn:hover::before{transform:scaleX(1);opacity:1}
 .svc-card:hover .btn::after{opacity:1}
+/* 排版：第一张通栏横卡，后三张一排；图标收到右上角，标题/说明/按钮整列居中。动效沿用上面的规则 */
+.services-grid{grid-template-columns:repeat(3,1fr);gap:24px}
+.svc-card{padding:64px 34px 30px;justify-content:center}
+.svc-card .svc-icon{position:absolute;top:22px;right:26px;width:42px;height:42px;margin:0;z-index:1;object-fit:contain}
+.svc-card h4{position:relative;z-index:1;font-size:24px;letter-spacing:2px;margin-bottom:12px}
+.svc-card p{position:relative;z-index:1;flex:0 0 auto;text-align:center;color:#3a3a3a;margin-bottom:30px}
+.svc-card .btn{width:min(300px,86%)}
+.svc-card:first-child{grid-column:1/-1;min-height:300px;padding:72px 40px 40px}
+.svc-card:first-child .svc-icon{top:28px;right:34px;width:52px;height:52px;object-fit:contain}
+.svc-card:first-child h4{font-size:clamp(28px,2.8vw,38px);letter-spacing:4px;margin-bottom:16px}
+.svc-card:first-child p{font-size:16px;letter-spacing:1px}
+.svc-card:first-child .btn{width:min(300px,70%)}
+/* 通栏卡底纹：浅粉建筑图，悬停时缓缓推近 */
+.svc-card:first-child{background:linear-gradient(120deg,#fdf0f0,#fff 55%,#fbecec)}
+.svc-card:first-child .svc-bg{position:absolute;inset:0;z-index:0;
+  background:url(assets/services/wide-pink.png) center/cover no-repeat;
+  transform:scale(1.01);transition:transform 1.2s var(--ease-out)}
+.svc-card:first-child:hover .svc-bg{transform:scale(1.05)}
+.svc-card:first-child>*{position:relative;z-index:1}
+.svc-card:first-child .svc-bg{z-index:0}
+.svc-card:first-child .svc-icon{position:absolute}
 
 /* ============ 企业实力 ============ */
 .strength{background:linear-gradient(180deg,#000,#0a0405,#000)}
@@ -882,7 +904,9 @@ html{-ms-overflow-style:none;scrollbar-width:none}
 @media(max-width:1100px){
   .stats{grid-template-columns:repeat(3,1fr);gap:30px 20px}
   .logos{grid-template-columns:repeat(4,1fr)}
-  .services-grid,.trends-grid,.news-grid{grid-template-columns:repeat(2,1fr)}
+  .trends-grid,.news-grid{grid-template-columns:repeat(2,1fr)}
+  .services-grid{gap:18px}
+  .svc-card{padding:60px 22px 26px}
   .trend-card:nth-child(2),.trend-card:nth-child(4){margin-top:0}
   .footer-top{grid-template-columns:1fr 1fr 1fr}
   .f-qr{grid-column:span 3}
@@ -914,6 +938,8 @@ html{-ms-overflow-style:none;scrollbar-width:none}
   .card-actions .tag{flex:0 0 auto;padding:8px 18px}
   .card-actions{justify-content:center}
   .cases-grid{grid-template-columns:repeat(2,1fr)}
+  .services-grid{grid-template-columns:1fr}
+  .svc-card:first-child{min-height:0;padding:64px 26px 32px}
   .intro{grid-template-columns:1fr;padding:30px}
   .layout-wrap{grid-template-columns:1fr;min-height:auto}
   .globe-stage{left:50%;top:42%;transform:translate(-50%,-50%);width:min(440px,85vw);height:min(440px,85vw);opacity:.45}
@@ -1093,29 +1119,29 @@ html{-ms-overflow-style:none;scrollbar-width:none}
     <div class="sec-head reveal"><h2>大方设计 <em>服务范围</em></h2><p>深耕产品创新设计领域</p></div>
     <div class="services-grid">
       <!-- 工业设计 -->
-      <article class="svc-card reveal-sc d1" onclick="openModal('工业设计','产品外观设计、结构配合设计、手板跟进、量产落地优化、文创产品设计。以制造可行性为根基，打造兼顾美学与工艺的产品。')">
-        <svg class="svc-icon" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M32 6 56 19v26L32 58 8 45V19z"/><path d="M32 6v26m0 0L8 19m24 13 24-13M32 32v26"/></svg>
+      <article class="svc-card reveal-sc d1" onclick="openModal('工业设计','产品外观设计、结构配合设计、手板跟进、量产落地优化、文创产品设计。以制造可行性为根基，打造兼顾美学与工艺的产品。')"><div class="svc-bg" aria-hidden="true"></div>
+        <img class="svc-icon" src="assets/services/icon/ic-industrial.png" alt="">
         <h4>工业设计</h4>
         <p>产品外观设计、结构配合设计、手板跟进、量产落地优化、文创产品设计</p>
         <span class="btn">查看更多</span>
       </article>
       <!-- 品牌设计 -->
       <article class="svc-card reveal-sc d2" onclick="openModal('品牌设计','LOGO设计、VI视觉系统、包装设计、宣传画册、品牌视觉升级。构建系统化品牌识别，提升品牌资产价值。')">
-        <svg class="svc-icon" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M34 6H14a4 4 0 0 0-4 4v20l24 24 24-24z"/><circle cx="22" cy="22" r="4" fill="currentColor" stroke="none"/></svg>
+        <img class="svc-icon" src="assets/services/icon/ic-brand.png" alt="">
         <h4>品牌设计</h4>
         <p>LOGO设计、VI视觉系统、包装设计、宣传画册、品牌视觉升级</p>
         <span class="btn">查看更多</span>
       </article>
       <!-- 交互设计 -->
       <article class="svc-card reveal-sc d3" onclick="openModal('交互设计','APP / 小程序界面设计、网页 UI、车载界面、操作逻辑优化、原型设计。以用户体验为核心，打磨流畅自然的人机交互。')">
-        <svg class="svc-icon" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="8" y="10" width="20" height="20" rx="4"/><rect x="36" y="34" width="20" height="20" rx="4"/><path d="M40 22a14 14 0 0 0-14-14M24 42a14 14 0 0 0 14 14" stroke-linecap="round"/></svg>
+        <img class="svc-icon" src="assets/services/icon/ic-interaction.png" alt="">
         <h4>交互设计</h4>
         <p>APP / 小程序界面设计、网页 UI、车载界面、操作逻辑优化、原型设计</p>
         <span class="btn">查看更多</span>
       </article>
       <!-- 动画制作 -->
       <article class="svc-card reveal-sc d4" onclick="openModal('动画制作','产品演示动画、品牌宣传片、三维建模动画、MG 动态视觉、短视频内容。用动态影像讲好产品与品牌故事。')">
-        <svg class="svc-icon" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="8" y="20" width="48" height="30" rx="4"/><path d="M8 20l8-10h32l8 10M22 32l12 6-12 6z" stroke-linejoin="round"/></svg>
+        <img class="svc-icon" src="assets/services/icon/ic-animation.png" alt="">
         <h4>动画制作</h4>
         <p>产品演示动画、品牌宣传片、三维建模动画、MG 动态视觉、短视频内容</p>
         <span class="btn">查看更多</span>
