@@ -508,7 +508,7 @@ html{-ms-overflow-style:none;scrollbar-width:none}
   <div class="container">
     <div class="sec-head reveal"><h2>交通工具 <em>服务案例</em></h2><p>蜕变就是不停地革新</p></div>
     <div class="cases-grid" data-cat="transport"></div>
-    <div class="sec-more reveal"><button class="btn" onclick="moreCases('交通工具')">探索更多</button></div>
+    <div class="sec-more reveal"><a class="btn" href="case-list.html?cat=transport">探索更多</a></div>
   </div>
 </section>
 
@@ -517,7 +517,7 @@ html{-ms-overflow-style:none;scrollbar-width:none}
   <div class="container">
     <div class="sec-head reveal"><h2>医疗设备 <em>服务案例</em></h2><p>蜕变就是不停地革新</p></div>
     <div class="cases-grid" data-cat="medical"></div>
-    <div class="sec-more reveal"><button class="btn" onclick="moreCases('医疗设备')">探索更多</button></div>
+    <div class="sec-more reveal"><a class="btn" href="case-list.html?cat=medical">探索更多</a></div>
   </div>
 </section>
 
@@ -526,7 +526,7 @@ html{-ms-overflow-style:none;scrollbar-width:none}
   <div class="container">
     <div class="sec-head reveal"><h2>消费电子 <em>服务案例</em></h2><p>蜕变就是不停地革新</p></div>
     <div class="cases-grid" data-cat="consumer"></div>
-    <div class="sec-more reveal"><button class="btn" onclick="moreCases('消费电子')">探索更多</button></div>
+    <div class="sec-more reveal"><a class="btn" href="case-list.html?cat=consumer">探索更多</a></div>
   </div>
 </section>
 
@@ -535,7 +535,7 @@ html{-ms-overflow-style:none;scrollbar-width:none}
   <div class="container">
     <div class="sec-head reveal"><h2>军工装备 <em>服务案例</em></h2><p>蜕变就是不停地革新</p></div>
     <div class="cases-grid" data-cat="military"></div>
-    <div class="sec-more reveal"><button class="btn" onclick="moreCases('军工装备')">探索更多</button></div>
+    <div class="sec-more reveal"><a class="btn" href="case-list.html?cat=military">探索更多</a></div>
   </div>
 </section>
 
@@ -544,7 +544,7 @@ html{-ms-overflow-style:none;scrollbar-width:none}
   <div class="container">
     <div class="sec-head reveal"><h2>平面设计 <em>服务案例</em></h2><p>蜕变就是不停地革新</p></div>
     <div class="cases-grid" data-cat="graphic"></div>
-    <div class="sec-more reveal"><button class="btn" onclick="moreCases('平面设计')">探索更多</button></div>
+    <div class="sec-more reveal"><a class="btn" href="case-list.html?cat=graphic">探索更多</a></div>
   </div>
 </section>
 
@@ -660,7 +660,6 @@ document.querySelectorAll('.cases-grid[data-cat]').forEach(function(grid){
     grid.appendChild(el);
   });
 });
-function moreCases(cat){openModal('更多'+cat+'案例','更多精彩'+cat+'设计案例正在整理中，欢迎来电 027-87666138 或填写下方表单获取完整作品集。')}
 
 /* ====== 弹窗 ====== */
 const modal=document.getElementById('modal');
